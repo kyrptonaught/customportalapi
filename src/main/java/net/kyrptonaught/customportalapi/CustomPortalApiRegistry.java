@@ -3,6 +3,7 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
@@ -16,7 +17,7 @@ public class CustomPortalApiRegistry {
     //public static HashMap<Block, PortalLink> ignitions = new HashMap<>();
 
     public static void addPortal(Block frameBlock, PortalLink link) {
-        if (portals.containsKey(frameBlock)) {
+        if (portals.containsKey(frameBlock) || frameBlock.equals(Blocks.OBSIDIAN)) {
             System.out.println("ERROR: A portal is already registered with a frame of: " + frameBlock);
         } else {
             portals.put(frameBlock, link);

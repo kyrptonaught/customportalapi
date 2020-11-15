@@ -3,8 +3,10 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -32,6 +34,6 @@ public class CustomPortalsMod implements ModInitializer {
         
        */
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, Blocks.WATER, new Identifier("the_nether"), 11743532);
-        //CustomPortalApiRegistry.addPortal(Blocks.NETHERITE_BLOCK, Blocks.FIRE, new Identifier("the_nether"), 11743532);
+        //CustomPortalApiRegistry.addPortal(Blocks.OBSIDIAN, new Identifier("the_nether"), DyeColor.PURPLE.getMaterialColor().color);
     }
 }
