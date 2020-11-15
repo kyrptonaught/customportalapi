@@ -20,7 +20,7 @@ Add the dependency
   include 'net.kyrptonaught:customportalapi:<version>'
   ```
 
-Now onto registering the portal itself, all we need to do is call one of the overloads of CustomPortalApiRegistry.addPortal
+Now onto registering the portal itself, all we need to do is call one of the overloads of CustomPortalApiRegistry.addPortal in your mod initializer
 
 The most basic form is 
 ```java
