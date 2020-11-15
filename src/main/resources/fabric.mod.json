@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "id": "customportalapi",
+  "version": "0.0.1-beta7-1.16",
+  "name": "customportalapi",
+  "description": "customportalapi",
+  "authors": [
+    "kyrptonaught"
+  ],
+  "contact": {
+    "homepage": "https://github.com/kyrptonaught/customportalapi",
+    "sources": "https://github.com/kyrptonaught/customportalapi"
+  },
+  "license": "MIT",
+  "icon": "assets/customportalapi/icon.png",
+  "environment": "*",
+  "mixins": [
+    {
+      "config": "customportalapi.mixins.json",
+      "environment": "*"
+    }
+  ],
+  "entrypoints": {
+    "main": [
+      "net.kyrptonaught.customportalapi.CustomPortalsMod"
+    ],
+    "client": [
+      "net.kyrptonaught.customportalapi.client.CustomPortalsModClient"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.4.0",
+    "fabric": "*"
+  }
+}
