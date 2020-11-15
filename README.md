@@ -31,6 +31,7 @@ The most basic form is
    portal(nether portal being Blocks.Obsidian)  
  - a dimID: the identifier for the dimension
  - a portalColor, this is an integer specifying the tint color used for tinting the portal block itself
+ 
 A nether portal would be registered as follows: 
 ```java
 CustomPortalApiRegistry.addPortal(Blocks.OBSIDIAN, new Identifier("the_nether"), DyeColor.PURPLE.getMaterialColor().color);
