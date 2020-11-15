@@ -34,6 +34,6 @@ public class CustomPortalsMod implements ModInitializer {
         
        */
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, Blocks.WATER, new Identifier("the_nether"), 11743532);
-        //CustomPortalApiRegistry.addPortal(Blocks.OBSIDIAN, new Identifier("the_nether"), DyeColor.PURPLE.getMaterialColor().color);
+        //CustomPortalApiRegistry.addPortal(Blocks.GOLD_BLOCK, new Identifier("the_nether"), DyeColor.YELLOW.getMaterialColor().color);
     }
 }

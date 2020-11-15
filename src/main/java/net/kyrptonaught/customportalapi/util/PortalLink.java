@@ -6,7 +6,7 @@ import net.minecraft.util.Identifier;
 
 public class PortalLink {
     public Identifier block;
-    public Identifier ignitionBlock = new Identifier("fireblock");
+    public Identifier ignitionBlock = new Identifier("fire");
     public CustomPortalBlock portalBlock = CustomPortalsMod.portalBlock;
     public Identifier dimID;
     public int colorID;
