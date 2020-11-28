@@ -25,7 +25,9 @@ public class CustomPortalApiRegistry {
             System.out.println("ERROR: A portal is already registered with a frame of: " + frameBlock);
         } else {
             portals.put(frameBlock, link);
-            PORTAL_POIs.putIfAbsent(link.portalBlock, PointOfInterestHelper.register(new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.portalBlock).getPath() + "poi"), 0, 1, link.portalBlock));
+            Identifier POI_ID = new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.portalBlock).getPath() + "poi");
+            if (!Registry.POINT_OF_INTEREST_TYPE.containsId(POI_ID))
+                PORTAL_POIs.putIfAbsent(link.portalBlock, PointOfInterestHelper.register(POI_ID, 0, 1, link.portalBlock));
         }
     }
 
