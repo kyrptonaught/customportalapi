@@ -1,6 +1,7 @@
 package net.kyrptonaught.customportalapi;
 
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
+import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -14,7 +15,10 @@ import java.util.HashMap;
 public class CustomPortalApiRegistry {
     public static HashMap<Block, PortalLink> portals = new HashMap<>();
     public static HashMap<Block, PointOfInterestType> PORTAL_POIs = new HashMap<>();
-    //public static HashMap<Block, PortalLink> ignitions = new HashMap<>();
+
+    public static int getColorFromRGB(int r, int g, int b) {
+        return ColorUtil.getColorFromRGB(r, g, b);
+    }
 
     public static void addPortal(Block frameBlock, PortalLink link) {
         if (portals.containsKey(frameBlock) || frameBlock.equals(Blocks.OBSIDIAN)) {
@@ -38,5 +42,17 @@ public class CustomPortalApiRegistry {
     public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int portalColor) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), Registry.BLOCK.getId(ignitionBlock), portalBlock, dimID, portalColor);
         addPortal(frameBlock, link);
+    }
+
+    public static void addPortal(Block frameBlock, Identifier dimID, int r, int g, int b) {
+        addPortal(frameBlock, dimID, getColorFromRGB(r, g, b));
+    }
+
+    public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int r, int g, int b) {
+        addPortal(frameBlock, ignitionBlock, dimID, getColorFromRGB(r, g, b));
+    }
+
+    public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int r, int g, int b) {
+        addPortal(frameBlock, ignitionBlock, portalBlock, dimID, getColorFromRGB(r, g, b));
     }
 }

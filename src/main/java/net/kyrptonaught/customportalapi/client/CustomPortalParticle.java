@@ -3,6 +3,7 @@ package net.kyrptonaught.customportalapi.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.minecraft.block.Block;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;

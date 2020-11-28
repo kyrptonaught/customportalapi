@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.client;
+package net.kyrptonaught.customportalapi.util;
 
 import java.util.HashMap;
 
@@ -13,5 +13,11 @@ public class ColorUtil {
             COLOR_CACHE.put(color, new float[]{(float) l / 255.0F, (float) m / 255.0F, (float) n / 255.0F});
         }
         return COLOR_CACHE.get(color);
+    }
+
+    public static int getColorFromRGB(int r, int g, int b) {
+        int color = ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (b & 0x0ff);
+        COLOR_CACHE.putIfAbsent(color, new float[]{r, g, b});
+        return color;
     }
 }

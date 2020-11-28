@@ -26,8 +26,9 @@ public class BucketMixin {
     @Inject(method = "placeFluid", at = @At("HEAD"), cancellable = true)
     public void use(PlayerEntity player, World world, BlockPos pos, BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> cir) {
         if (this.fluid.isIn(FluidTags.WATER)) {
-            if (CreatePortal.createPortal(world, pos, Blocks.WATER))
+            if (CreatePortal.createPortal(world, pos, Blocks.WATER)) {
                 cir.setReturnValue(true);
+            }
         }
     }
 }

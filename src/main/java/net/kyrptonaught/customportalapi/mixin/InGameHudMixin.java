@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.client.ColorUtil;
+import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PlayerInCustomPortal;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.BlockState;
