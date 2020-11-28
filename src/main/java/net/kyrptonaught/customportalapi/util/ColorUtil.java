@@ -16,8 +16,6 @@ public class ColorUtil {
     }
 
     public static int getColorFromRGB(int r, int g, int b) {
-        int color = ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (b & 0x0ff);
-        COLOR_CACHE.putIfAbsent(color, new float[]{r, g, b});
-        return color;
+         return ((r & 0x0ff) << 16) | ((g & 0x0ff) << 8) | (b & 0x0ff);
     }
 }
