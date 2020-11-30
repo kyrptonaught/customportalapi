@@ -20,9 +20,6 @@ public class CustomPortalsMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        portalBlock = new CustomPortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
-
-        Registry.register(Registry.BLOCK, new Identifier(CustomPortalsMod.MOD_ID, "customportalblock"), portalBlock);
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
             for (RegistryKey<World> registryKey : server.getWorldRegistryKeys()) {
                 dims.put(registryKey.getValue(), registryKey);
@@ -33,7 +30,17 @@ public class CustomPortalsMod implements ModInitializer {
         });
        */
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, Blocks.WATER, (CustomPortalBlock)aetherBlock,  new Identifier("the_nether"), DyeColor.LIGHT_BLUE.getMaterialColor().color);
-        CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, Blocks.WATER, new Identifier("the_nether"), 66, 135, 245);
+        //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, Blocks.WATER, new Identifier("the_nether"), 66, 135, 245);
         //CustomPortalApiRegistry.addPortal(Blocks.GOLD_BLOCK, new Identifier("the_nether"), DyeColor.YELLOW.getMaterialColor().color);
+    }
+
+    public static void logError(String message) {
+        System.out.println("[" + MOD_ID + "]ERROR: " + message);
+    }
+
+    // to guarantee block exists before use, unsure how safe this is but works for now. Don't want to switch to using a custom entrypoint to break compatibility with existing mods just yet
+    static {
+        portalBlock = new CustomPortalBlock(Block.Settings.of(Material.PORTAL).noCollision().strength(-1).sounds(BlockSoundGroup.GLASS).luminance(state -> 11));
+        Registry.register(Registry.BLOCK, new Identifier(CustomPortalsMod.MOD_ID, "customportalblock"), portalBlock);
     }
 }

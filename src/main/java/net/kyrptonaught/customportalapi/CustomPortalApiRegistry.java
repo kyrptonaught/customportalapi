@@ -5,6 +5,8 @@ import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.Material;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
@@ -21,8 +23,12 @@ public class CustomPortalApiRegistry {
     }
 
     public static void addPortal(Block frameBlock, PortalLink link) {
+        if (frameBlock == null) CustomPortalsMod.logError("frameblock is null");
+        if (link.portalBlock == null) CustomPortalsMod.logError("portal block is null");
+        if (link.ignitionBlock == null) CustomPortalsMod.logError("ignition block is null");
+        if (CustomPortalsMod.portalBlock == null) CustomPortalsMod.logError("Built in CustomPortalBlock is null");
         if (portals.containsKey(frameBlock) || frameBlock.equals(Blocks.OBSIDIAN)) {
-            System.out.println("ERROR: A portal is already registered with a frame of: " + frameBlock);
+            CustomPortalsMod.logError("A portal(or the nether portal) is already registered with a frame of: " + frameBlock);
         } else {
             portals.put(frameBlock, link);
             Identifier POI_ID = new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.portalBlock).getPath() + "poi");
