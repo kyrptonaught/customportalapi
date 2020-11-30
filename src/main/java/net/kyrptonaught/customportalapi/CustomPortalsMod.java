@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
@@ -30,7 +31,7 @@ public class CustomPortalsMod implements ModInitializer {
         });
        */
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, Blocks.WATER, (CustomPortalBlock)aetherBlock,  new Identifier("the_nether"), DyeColor.LIGHT_BLUE.getMaterialColor().color);
-        //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, Blocks.WATER, new Identifier("the_nether"), 66, 135, 245);
+       // CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, Blocks.WATER, new Identifier("the_nether"), 66, 135, 245);
         //CustomPortalApiRegistry.addPortal(Blocks.GOLD_BLOCK, new Identifier("the_nether"), DyeColor.YELLOW.getMaterialColor().color);
     }
 

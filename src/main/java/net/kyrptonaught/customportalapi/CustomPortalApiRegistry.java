@@ -5,8 +5,6 @@ import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
@@ -32,7 +30,8 @@ public class CustomPortalApiRegistry {
         } else {
             portals.put(frameBlock, link);
             Identifier POI_ID = new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.portalBlock).getPath() + "poi");
-            if (!Registry.POINT_OF_INTEREST_TYPE.containsId(POI_ID))
+
+            if (!Registry.POINT_OF_INTEREST_TYPE.getOrEmpty(POI_ID).isPresent())//why tf is .containsID client only?
                 PORTAL_POIs.putIfAbsent(link.portalBlock, PointOfInterestHelper.register(POI_ID, 0, 1, link.portalBlock));
         }
     }
