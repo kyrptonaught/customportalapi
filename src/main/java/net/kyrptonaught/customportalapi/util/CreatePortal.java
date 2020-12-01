@@ -27,10 +27,10 @@ import java.util.Iterator;
 import java.util.Optional;
 
 public class CreatePortal {
-    public static boolean createPortal(World world, BlockPos pos, Block ignitionSource) {
+    public static boolean createPortal(World world, BlockPos pos, PortalIgnitionSource ignitionSource) {
         HashSet<Block> foundations = new HashSet<>();
         Block foundationBlock = world.getBlockState(pos.down()).getBlock();
-        if (!CustomPortalApiRegistry.portals.containsKey(foundationBlock) || !CustomPortalApiRegistry.portals.get(foundationBlock).ignitionBlock.equals(Registry.BLOCK.getId(ignitionSource)))
+        if (!CustomPortalApiRegistry.portals.containsKey(foundationBlock) || !CustomPortalApiRegistry.portals.get(foundationBlock).doesIgnitionMatch(ignitionSource))
             return false;
         foundations.add(foundationBlock);
         Optional<CustomAreaHelper> optional = CustomAreaHelper.method_30485(world, pos, Direction.Axis.X, foundations);
@@ -183,7 +183,6 @@ public class CreatePortal {
                 }
             }
         }
-
         return true;
     }
 }

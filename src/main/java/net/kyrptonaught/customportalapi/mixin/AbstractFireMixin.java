@@ -2,6 +2,7 @@ package net.kyrptonaught.customportalapi.mixin;
 
 
 import net.kyrptonaught.customportalapi.util.CreatePortal;
+import net.kyrptonaught.customportalapi.util.PortalIgnitionSource;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -17,7 +18,7 @@ public class AbstractFireMixin {
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"), cancellable = true)
     public void detectCustomPortal(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
-        if (CreatePortal.createPortal(world, pos, Blocks.FIRE))
+        if (CreatePortal.createPortal(world, pos, PortalIgnitionSource.BlockSource.FIRE))
             ci.cancel();
     }
 }

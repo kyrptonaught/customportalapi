@@ -2,9 +2,11 @@ package net.kyrptonaught.customportalapi;
 
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
+import net.kyrptonaught.customportalapi.util.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
@@ -21,9 +23,9 @@ public class CustomPortalApiRegistry {
     }
 
     public static void addPortal(Block frameBlock, PortalLink link) {
-        if (frameBlock == null) CustomPortalsMod.logError("frameblock is null");
-        if (link.portalBlock == null) CustomPortalsMod.logError("portal block is null");
-        if (link.ignitionBlock == null) CustomPortalsMod.logError("ignition block is null");
+        if (frameBlock == null) CustomPortalsMod.logError("Frameblock is null");
+        if (link.portalBlock == null) CustomPortalsMod.logError("Portal block is null");
+        if (link.portalIgnitionSource == null) CustomPortalsMod.logError("Portal ignition source is null");
         if (CustomPortalsMod.portalBlock == null) CustomPortalsMod.logError("Built in CustomPortalBlock is null");
         if (portals.containsKey(frameBlock) || frameBlock.equals(Blocks.OBSIDIAN)) {
             CustomPortalsMod.logError("A portal(or the nether portal) is already registered with a frame of: " + frameBlock);
@@ -35,19 +37,21 @@ public class CustomPortalApiRegistry {
                 PORTAL_POIs.putIfAbsent(link.portalBlock, PointOfInterestHelper.register(POI_ID, 0, 1, link.portalBlock));
         }
     }
-
+    @Deprecated
     public static void addPortal(Block frameBlock, Identifier dimID, int portalColor) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
         addPortal(frameBlock, link);
     }
-
+    @Deprecated
     public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int portalColor) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), Registry.BLOCK.getId(ignitionBlock), dimID, portalColor);
+        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER)? PortalIgnitionSource.FluidSource(Fluids.WATER):PortalIgnitionSource.BlockSource.FIRE;
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), pis, dimID, portalColor);
         addPortal(frameBlock, link);
     }
-
+    @Deprecated
     public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int portalColor) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), Registry.BLOCK.getId(ignitionBlock), portalBlock, dimID, portalColor);
+        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER)? PortalIgnitionSource.FluidSource(Fluids.WATER):PortalIgnitionSource.BlockSource.FIRE;
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), pis, portalBlock, dimID, portalColor);
         addPortal(frameBlock, link);
     }
 

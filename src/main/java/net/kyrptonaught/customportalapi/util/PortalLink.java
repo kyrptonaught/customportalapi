@@ -2,11 +2,13 @@ package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 
 public class PortalLink {
     public Identifier block;
-    public Identifier ignitionBlock = new Identifier("fire");
+    public PortalIgnitionSource portalIgnitionSource = PortalIgnitionSource.BlockSource.FIRE;
+    // public Identifier ignitionBlock = new Identifier("fire");
     public CustomPortalBlock portalBlock = CustomPortalsMod.portalBlock;
     public Identifier dimID;
     public Identifier returnDimID = new Identifier("overworld");
@@ -22,19 +24,23 @@ public class PortalLink {
         this(blockID, dimID, ColorUtil.getColorFromRGB(r, g, b));
     }
 
-    public PortalLink(Identifier blockID, Identifier ignitionBlock, Identifier dimID, int colorID) {
+    public PortalLink(Identifier blockID, PortalIgnitionSource portalIgnitionSource, Identifier dimID, int colorID) {
         this(blockID, dimID, colorID);
-        this.ignitionBlock = ignitionBlock;
+        this.portalIgnitionSource = portalIgnitionSource;
     }
 
-    public PortalLink(Identifier blockID, Identifier ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int colorID) {
-        this(blockID, ignitionBlock, dimID, colorID);
+    public PortalLink(Identifier blockID, PortalIgnitionSource portalIgnitionSource, CustomPortalBlock portalBlock, Identifier dimID, int colorID) {
+        this(blockID, portalIgnitionSource, dimID, colorID);
         this.portalBlock = portalBlock;
     }
 
-    public PortalLink(Identifier blockID, Identifier ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, Identifier returnDimId, int colorID) {
-        this(blockID, ignitionBlock, dimID, colorID);
+    public PortalLink(Identifier blockID, PortalIgnitionSource portalIgnitionSource, CustomPortalBlock portalBlock, Identifier dimID, Identifier returnDimId, int colorID) {
+        this(blockID, portalIgnitionSource, dimID, colorID);
         this.portalBlock = portalBlock;
         this.returnDimID = returnDimId;
+    }
+
+    public boolean doesIgnitionMatch(PortalIgnitionSource attemptedSource) {
+        return portalIgnitionSource.sourceType == attemptedSource.sourceType && portalIgnitionSource.ignitionSourceID == attemptedSource.ignitionSourceID;
     }
 }

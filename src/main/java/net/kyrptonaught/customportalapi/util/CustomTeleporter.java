@@ -36,6 +36,7 @@ public class CustomTeleporter {
         RegistryKey<World> destKey = world.getRegistryKey() == CustomPortalsMod.dims.get(link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
         if (destination == null) return;
+
         if (entity instanceof ServerPlayerEntity)
             CustomTeleporter.TPPlayer(destination, (ServerPlayerEntity) entity, portalBase, portalPoss);
         else {
@@ -125,6 +126,7 @@ public class CustomTeleporter {
     }
 }
 /*
+//old customTPTarget
         double scale = DimensionType.method_31109(player.getEntityWorld().getDimension(), world.getDimension());
         BlockPos pos = new BlockPos(player.getPos().x * scale, player.getPos().y, player.getPos().z * scale);
         BlockPos destinationPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos);

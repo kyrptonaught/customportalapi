@@ -26,6 +26,7 @@ public class CustomPortalParticle extends PortalParticle {
         }
 
         public Particle createParticle(BlockStateParticleEffect blockStateParticleEffect, ClientWorld clientWorld, double d, double e, double f, double g, double h, double i) {
+            // Particle portalParticle = (new PortalParticle.Factory(spriteProvider).createParticle(null,clientWorld,d,e,f,g,h,i));
             CustomPortalParticle portalParticle = new CustomPortalParticle(clientWorld, d, e, f, g, h, i);
             portalParticle.setSprite(this.spriteProvider);
             Block block = blockStateParticleEffect.getBlockState().getBlock();
