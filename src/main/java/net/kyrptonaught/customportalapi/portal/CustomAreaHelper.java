@@ -6,9 +6,12 @@ import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.WorldAccess;
 
 import java.util.HashSet;
@@ -16,7 +19,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class CustomAreaHelper {
-    HashSet<Block> VALID_FRAME;
+    private HashSet<Block> VALID_FRAME;
 
     private final WorldAccess world;
     private final Direction.Axis axis;
@@ -61,7 +64,7 @@ public class CustomAreaHelper {
     }
 
     private BlockPos method_30492(BlockPos blockPos) {
-        for (int i = Math.max(0, blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down())); blockPos = blockPos.down()) {
+        for (int i = Math.max(0, blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()),VALID_FRAME); blockPos = blockPos.down()) {
         }
         Direction direction = this.negativeDir.getOpposite();
         int j = this.method_30493(blockPos, direction) - 1;
@@ -79,7 +82,7 @@ public class CustomAreaHelper {
         for (int i = 0; i <= 21; ++i) {
             mutable.set(blockPos).move(direction, i);
             BlockState blockState = this.world.getBlockState(mutable);
-            if (!validStateInsidePortal(blockState)) {
+            if (!validStateInsidePortal(blockState,VALID_FRAME)) {
                 if (VALID_FRAME.contains(blockState.getBlock())) {
                     return i;
                 }
@@ -127,7 +130,7 @@ public class CustomAreaHelper {
             for (int j = 0; j < this.width; ++j) {
                 mutable.set(this.lowerCorner).move(Direction.UP, i).move(this.negativeDir, j);
                 BlockState blockState = this.world.getBlockState(mutable);
-                if (!validStateInsidePortal(blockState)) {
+                if (!validStateInsidePortal(blockState, VALID_FRAME)) {
                     return i;
                 }
 
@@ -140,8 +143,26 @@ public class CustomAreaHelper {
         return 21;
     }
 
-    private static boolean validStateInsidePortal(BlockState blockState) {
-        return blockState.isAir() || blockState.getBlock() instanceof CustomPortalBlock || blockState.isIn(BlockTags.FIRE) || blockState.isOf(Blocks.WATER);
+    private static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
+        PortalIgnitionSource ignitionSource = PortalIgnitionSource.FIRE;
+        for (Block block : foundations) {
+            if (CustomPortalApiRegistry.portals.containsKey(block)) {
+                ignitionSource = CustomPortalApiRegistry.portals.get(block).portalIgnitionSource;
+                break;
+            }
+        }
+        if (blockState.isAir() || blockState.getBlock() instanceof CustomPortalBlock)
+            return true;
+        if (ignitionSource == PortalIgnitionSource.FIRE)
+            return blockState.isIn(BlockTags.FIRE);
+        if (ignitionSource.isWater())
+            return blockState.getFluidState().isIn(FluidTags.WATER);
+        if (ignitionSource.isLava())
+            return blockState.getFluidState().isIn(FluidTags.LAVA);
+        if (ignitionSource.sourceType == PortalIgnitionSource.SourceType.FLUID) {
+            return Registry.FLUID.getId(blockState.getFluidState().getFluid()).equals(ignitionSource.ignitionSourceID);
+        }
+        return false;
     }
 
     public boolean wasAlreadyValid() {
