@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.util;
+package net.kyrptonaught.customportalapi.portal;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;

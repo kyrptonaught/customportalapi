@@ -2,12 +2,12 @@ package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.minecraft.block.Blocks;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.minecraft.util.Identifier;
 
 public class PortalLink {
     public Identifier block;
-    public PortalIgnitionSource portalIgnitionSource = PortalIgnitionSource.BlockSource.FIRE;
+    public PortalIgnitionSource portalIgnitionSource = PortalIgnitionSource.FIRE;
     // public Identifier ignitionBlock = new Identifier("fire");
     public CustomPortalBlock portalBlock = CustomPortalsMod.portalBlock;
     public Identifier dimID;

@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.util;
+package net.kyrptonaught.customportalapi.portal;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
@@ -14,7 +14,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
@@ -26,12 +25,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 
-public class CreatePortal {
-    public static boolean createPortal(World world, BlockPos pos, PortalIgnitionSource ignitionSource) {
+public class PortalPlacer {
+    public static boolean attemptPortalLight(World world, BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource) {
+        Block foundationBlock = world.getBlockState(framePos).getBlock();
+        if (!CustomPortalApiRegistry.portals.containsKey(foundationBlock) ||!CustomPortalApiRegistry.portals.get(foundationBlock).doesIgnitionMatch(ignitionSource))
+                return false;
+        return createPortal(world, portalPos, foundationBlock);
+    }
+
+    private static boolean createPortal(World world, BlockPos pos, Block foundationBlock) {
         HashSet<Block> foundations = new HashSet<>();
-        Block foundationBlock = world.getBlockState(pos.down()).getBlock();
-        if (!CustomPortalApiRegistry.portals.containsKey(foundationBlock) || !CustomPortalApiRegistry.portals.get(foundationBlock).doesIgnitionMatch(ignitionSource))
-            return false;
         foundations.add(foundationBlock);
         Optional<CustomAreaHelper> optional = CustomAreaHelper.method_30485(world, pos, Direction.Axis.X, foundations);
         if (optional.isPresent()) {

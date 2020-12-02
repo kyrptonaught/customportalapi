@@ -4,6 +4,7 @@ import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.mixin.ServerPlayerEntityTPAccessor;
+import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.class_5459;
@@ -98,7 +99,7 @@ public class CustomTeleporter {
         double h = DimensionType.method_31109(entity.world.getDimension(), destination.getDimension());
         BlockPos blockPos3 = new BlockPos(MathHelper.clamp(entity.getX() * h, d, f), entity.getY(), MathHelper.clamp(entity.getZ() * h, e, g));
         BlockState blockState = entity.world.getBlockState(portalPos);
-        return CreatePortal.findOrCreatePortal(destination, blockPos3, portalFrame, blockState.get(CustomPortalBlock.AXIS), destination.getRegistryKey() == World.NETHER).map((arg) -> {
+        return PortalPlacer.findOrCreatePortal(destination, blockPos3, portalFrame, blockState.get(CustomPortalBlock.AXIS), destination.getRegistryKey() == World.NETHER).map((arg) -> {
             Direction.Axis axis2;
             Vec3d vec3d2;
             if (blockState.contains(Properties.HORIZONTAL_AXIS)) {

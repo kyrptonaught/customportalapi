@@ -3,26 +3,22 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.kyrptonaught.customportalapi.mixin.BucketMixin;
-import net.kyrptonaught.customportalapi.util.CreatePortal;
-import net.kyrptonaught.customportalapi.util.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.portal.PortalPlacer;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import net.minecraft.world.gen.placer.BlockPlacer;
 
 import java.util.HashMap;
 
@@ -41,7 +37,7 @@ public class CustomPortalsMod implements ModInitializer {
         UseBlockCallback.EVENT.register((playerEntity, world, hand, hitResult) -> {
             Item item = playerEntity.getStackInHand(hand).getItem();
             if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
-                if (CreatePortal.createPortal(world, hitResult.getBlockPos().up(), PortalIgnitionSource.ItemUseSource(item))) {
+                if (PortalPlacer.attemptPortalLight(world, hitResult.getBlockPos().offset(hitResult.getSide()), hitResult.getBlockPos(), PortalIgnitionSource.ItemUseSource(item))) {
                     if (item instanceof BucketItem)
                         playerEntity.setStackInHand(hand, ((BucketMixin) item).invokegetEmptiedStack(playerEntity.getStackInHand(hand), playerEntity));
                     return ActionResult.SUCCESS;
@@ -50,9 +46,10 @@ public class CustomPortalsMod implements ModInitializer {
             return ActionResult.PASS;
         });
 
-        //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, Blocks.WATER, (CustomPortalBlock)aetherBlock,  new Identifier("the_nether"), DyeColor.LIGHT_BLUE.getMaterialColor().color);
-        CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, Blocks.WATER, new Identifier("the_nether"), 66, 135, 245);
-        CustomPortalApiRegistry.addPortal(Blocks.GOLD_BLOCK, new Identifier("the_end"), DyeColor.YELLOW.getMaterialColor().color);
+        CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, PortalIgnitionSource.FIRE, new Identifier("the_nether"), 135, 245, 66);
+        CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FluidSource(Fluids.WATER), new Identifier("the_nether"), 66, 135, 245);
+        CustomPortalApiRegistry.addPortal(Blocks.NETHERITE_BLOCK, PortalIgnitionSource.FluidSource(Fluids.LAVA), new Identifier("the_nether"), 245, 135, 66);
+        CustomPortalApiRegistry.addPortal(Blocks.GOLD_BLOCK, PortalIgnitionSource.ItemUseSource(Items.STICK), new Identifier("the_end"), 135, 66, 245);
     }
 
     public static void logError(String message) {

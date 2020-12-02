@@ -2,7 +2,7 @@ package net.kyrptonaught.customportalapi;
 
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
-import net.kyrptonaught.customportalapi.util.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -37,33 +37,26 @@ public class CustomPortalApiRegistry {
                 PORTAL_POIs.putIfAbsent(link.portalBlock, PointOfInterestHelper.register(POI_ID, 0, 1, link.portalBlock));
         }
     }
-    @Deprecated
-    public static void addPortal(Block frameBlock, Identifier dimID, int portalColor) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
-        addPortal(frameBlock, link);
-    }
-    @Deprecated
-    public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int portalColor) {
-        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER)? PortalIgnitionSource.FluidSource(Fluids.WATER):PortalIgnitionSource.BlockSource.FIRE;
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), pis, dimID, portalColor);
-        addPortal(frameBlock, link);
-    }
-    @Deprecated
-    public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int portalColor) {
-        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER)? PortalIgnitionSource.FluidSource(Fluids.WATER):PortalIgnitionSource.BlockSource.FIRE;
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), pis, portalBlock, dimID, portalColor);
+
+    @Deprecated //mostly keeping for the aether
+    public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int portalTint) {
+        PortalIgnitionSource ignitionSource = ignitionBlock.equals(Blocks.WATER) ? PortalIgnitionSource.FluidSource(Fluids.WATER) : PortalIgnitionSource.FIRE;
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), ignitionSource, portalBlock, dimID, portalTint);
         addPortal(frameBlock, link);
     }
 
     public static void addPortal(Block frameBlock, Identifier dimID, int r, int g, int b) {
-        addPortal(frameBlock, dimID, getColorFromRGB(r, g, b));
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
+        addPortal(frameBlock, link);
     }
 
-    public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int r, int g, int b) {
-        addPortal(frameBlock, ignitionBlock, dimID, getColorFromRGB(r, g, b));
+    public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, Identifier dimID, int r, int g, int b) {
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), ignitionSource, dimID, getColorFromRGB(r, g, b));
+        addPortal(frameBlock, link);
     }
 
-    public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int r, int g, int b) {
-        addPortal(frameBlock, ignitionBlock, portalBlock, dimID, getColorFromRGB(r, g, b));
+    public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, CustomPortalBlock portalBlock, Identifier dimID, int r, int g, int b) {
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), ignitionSource, portalBlock, dimID, getColorFromRGB(r, g, b));
+        addPortal(frameBlock, link);
     }
 }

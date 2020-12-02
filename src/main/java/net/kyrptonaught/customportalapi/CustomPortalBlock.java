@@ -3,7 +3,7 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
-import net.kyrptonaught.customportalapi.util.CustomAreaHelper;
+import net.kyrptonaught.customportalapi.portal.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.PlayerInCustomPortal;
 import net.minecraft.block.Block;
