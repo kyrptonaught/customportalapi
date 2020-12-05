@@ -14,14 +14,14 @@ import net.minecraft.util.registry.Registry;
 import java.util.HashSet;
 
 public class PortalIgnitionSource {
-    public static PortalIgnitionSource FIRE = new PortalIgnitionSource(SourceType.BLOCKPLACED, Registry.BLOCK.getId(Blocks.FIRE));
-    public static PortalIgnitionSource WATER = FluidSource(Fluids.WATER);
+    public final static PortalIgnitionSource FIRE = new PortalIgnitionSource(SourceType.BLOCKPLACED, Registry.BLOCK.getId(Blocks.FIRE));
+    public final static PortalIgnitionSource WATER = FluidSource(Fluids.WATER);
 
     public enum SourceType {
         USEITEM, BLOCKPLACED, FLUID, CUSTOM
     }
 
-    private static HashSet<Item> USEITEMS = new HashSet<>();
+    private static final HashSet<Item> USEITEMS = new HashSet<>();
     public SourceType sourceType;
     public Identifier ignitionSourceID;
 

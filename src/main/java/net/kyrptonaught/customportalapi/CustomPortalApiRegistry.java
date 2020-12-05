@@ -37,6 +37,18 @@ public class CustomPortalApiRegistry {
                 PORTAL_POIs.putIfAbsent(link.portalBlock, PointOfInterestHelper.register(POI_ID, 0, 1, link.portalBlock));
         }
     }
+    @Deprecated
+    public static void addPortal(Block frameBlock, Identifier dimID, int portalColor) {
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
+        addPortal(frameBlock, link);
+    }
+
+    @Deprecated
+    public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int portalColor) {
+        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER)? PortalIgnitionSource.FluidSource(Fluids.WATER):PortalIgnitionSource.FIRE;
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), pis, dimID, portalColor);
+        addPortal(frameBlock, link);
+    }
 
     @Deprecated //mostly keeping for the aether
     public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int portalTint) {

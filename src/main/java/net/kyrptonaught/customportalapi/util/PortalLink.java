@@ -3,6 +3,8 @@ package net.kyrptonaught.customportalapi.util;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.minecraft.tag.BlockTags;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Identifier;
 
 public class PortalLink {
@@ -17,6 +19,7 @@ public class PortalLink {
         this.block = blockID;
         this.dimID = dimID;
         this.colorID = colorID;
+
     }
 
     public PortalLink(Identifier blockID, Identifier dimID, int r, int g, int b) {
