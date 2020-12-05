@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.kyrptonaught.customportalapi.mixin.BucketMixin;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -38,8 +39,8 @@ public class CustomPortalsMod implements ModInitializer {
             Item item = playerEntity.getStackInHand(hand).getItem();
             if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
                 if (PortalPlacer.attemptPortalLight(world, hitResult.getBlockPos().offset(hitResult.getSide()), hitResult.getBlockPos(), PortalIgnitionSource.ItemUseSource(item))) {
-                    if (item instanceof BucketItem)
-                        playerEntity.setStackInHand(hand, ((BucketMixin) item).invokegetEmptiedStack(playerEntity.getStackInHand(hand), playerEntity));
+                    if (item instanceof CustomPortalFluidProvider)
+                        playerEntity.setStackInHand(hand, ((CustomPortalFluidProvider) item).emptyContents(playerEntity.getStackInHand(hand), playerEntity));
                     return ActionResult.SUCCESS;
                 }
             }

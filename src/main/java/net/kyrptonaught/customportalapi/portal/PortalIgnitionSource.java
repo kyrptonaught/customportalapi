@@ -1,6 +1,7 @@
 package net.kyrptonaught.customportalapi.portal;
 
 import net.kyrptonaught.customportalapi.mixin.BucketMixin;
+import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -32,8 +33,8 @@ public class PortalIgnitionSource {
 
     public static PortalIgnitionSource ItemUseSource(Item item) {
         USEITEMS.add(item);
-        if (item instanceof BucketItem)
-            return new PortalIgnitionSource(SourceType.FLUID, Registry.FLUID.getId(((BucketMixin) item).getFluidType()));
+        if (item instanceof CustomPortalFluidProvider)
+            return new PortalIgnitionSource(SourceType.FLUID, Registry.FLUID.getId(((CustomPortalFluidProvider) item).getFluidContent()));
         return new PortalIgnitionSource(SourceType.USEITEM, Registry.ITEM.getId(item));
     }
 

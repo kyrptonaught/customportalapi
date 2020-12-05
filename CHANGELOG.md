@@ -1,5 +1,8 @@
 ## Changelog
 
+**0.0.1-beta 17**
+Adds support for custom fluid providers(buckets)
+
 **0.0.1-beta 16**
 Adds PortalIgnitionSource
 
