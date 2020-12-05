@@ -12,6 +12,7 @@ The lib is hosted on [Bintray](https://bintray.com/kyrptonaught/customportalapi/
 
 # Usage: 
 **beta16 added new methods, deprecating the old ones. They will be removed eventually**
+
 Add the repository to your build.gradle 
 ```java
 maven { url "https://dl.bintray.com/kyrptonaught/customportalapi" }
@@ -46,9 +47,10 @@ Next we have
   As of beta16, PortalIgnitionSource has been introduced, allowing any item/fluid or fire to be specified as the source for igniting the portal.
   
   **PortalIgnitionSource**
+  
   PortalIgnitionSource features some presets and methods to create a custom ignition source.
-  As of now the only block allowed is fire. I would consider more as requested, but I'd like to keep it hardcoded to a limited number of blocks for performance reasons mostly. Rather than every single block being placed to check if it's a valid portal ignition source and attempting to light a portal, I'd rather just a set few.
-  All the usages are static.
+  As of now the only block allowed is fire. I would consider more as requested, but I'd like to keep it hardcoded to a limited number of blocks for performance reasons mostly. Rather than every single block being placed to check if it's a valid portal ignition source and attempting to light a portal, I'd rather just a set few. All the usages are static.
+  
  Fire and Water have fields usable like so: 
   `PortalIgnitionSource.FIRE` and `PortalIgnitionSource.WATER`
   
@@ -64,14 +66,19 @@ PortalIgnitionSource.FluidSource(Fluid fluid)
   ```java
 PortalIgnitionSource.CustomSource(Identifier ignitionSourceID)
   ``` 
-  Lastly we have a custom source. This is a completely custom source with no functionality by default allowing you to get as creative as you want. You also then need to trigger the custom activation attempt, when desired. The result should be saved for use in your activation attempt, Like so:
+  Lastly we have a custom source. The ignitionSourceID should be unique to prevent overlapping. The identifier should feature your modid, and a uniqie id. This is a completely custom source with no functionality by default allowing you to get as creative as you want. You also then need to trigger the custom activation attempt, when desired. The result should be saved for use in your activation attempt, Like so:
    ```java
   PortalPlacer.attemptPortalLight(World world, BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource)
   ``` 
+  
   -returns true if ignition was successful, false if not.
+  
  -portalPos - pos of an air block inside the desired portal.
+ 
  -framePos - pos of one of the frame blocks for the desired portal.
+ 
  -ignitionSource - the custom source used before. 
+ 
  The registered portal, and the activation attempt must have the same frame block, and ignitionSource in order for a successful light
  For example, here is how fire does it: 
   ```java
