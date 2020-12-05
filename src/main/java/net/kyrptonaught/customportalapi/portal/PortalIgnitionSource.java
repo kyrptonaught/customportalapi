@@ -55,6 +55,6 @@ public class PortalIgnitionSource {
     }
 
     public static boolean isRegisteredIgnitionSourceWith(Item item) {
-        return item instanceof BucketItem || USEITEMS.contains(item);
+        return item instanceof CustomPortalFluidProvider || USEITEMS.contains(item);
     }
 }
