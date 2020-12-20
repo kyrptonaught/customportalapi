@@ -37,7 +37,8 @@ public class PortalPlacer {
         HashSet<Block> foundations = new HashSet<>();
         foundations.add(foundationBlock);
         Optional<CustomAreaHelper> optional = CustomAreaHelper.method_30485(world, pos, Direction.Axis.X, foundations);
-        if (optional.isPresent()) {
+        //is valid frame, and is correct size(if applicable)
+        if (optional.isPresent() && CustomPortalApiRegistry.portals.get(foundationBlock).isCorrectForcedSize(optional.get().getWidth(),optional.get().getHeight())) {
             optional.get().createPortal(foundationBlock);
             return true;
         }

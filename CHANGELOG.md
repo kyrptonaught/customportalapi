@@ -1,5 +1,11 @@
 ## Changelog
 
+**0.0.1-beta 20**
+Really adds the ability to force a size for the portal this time.
+
+**0.0.1-beta 19**
+Adds the ability to force a size for the portal.
+
 **0.0.1-beta 18**
 Actually Adds support for custom fluid providers(buckets)
 

@@ -26,7 +26,9 @@ public class CustomPortalApiRegistry {
         if (frameBlock == null) CustomPortalsMod.logError("Frameblock is null");
         if (link.portalBlock == null) CustomPortalsMod.logError("Portal block is null");
         if (link.portalIgnitionSource == null) CustomPortalsMod.logError("Portal ignition source is null");
+        if (link.dimID == null) CustomPortalsMod.logError("Dimmension is null");
         if (CustomPortalsMod.portalBlock == null) CustomPortalsMod.logError("Built in CustomPortalBlock is null");
+
         if (portals.containsKey(frameBlock) || frameBlock.equals(Blocks.OBSIDIAN)) {
             CustomPortalsMod.logError("A portal(or the nether portal) is already registered with a frame of: " + frameBlock);
         } else {
@@ -37,6 +39,7 @@ public class CustomPortalApiRegistry {
                 PORTAL_POIs.putIfAbsent(link.portalBlock, PointOfInterestHelper.register(POI_ID, 0, 1, link.portalBlock));
         }
     }
+
     @Deprecated
     public static void addPortal(Block frameBlock, Identifier dimID, int portalColor) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
@@ -45,15 +48,18 @@ public class CustomPortalApiRegistry {
 
     @Deprecated
     public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int portalColor) {
-        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER)? PortalIgnitionSource.FluidSource(Fluids.WATER):PortalIgnitionSource.FIRE;
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), pis, dimID, portalColor);
+        PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER) ? PortalIgnitionSource.FluidSource(Fluids.WATER) : PortalIgnitionSource.FIRE;
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
+        link.portalIgnitionSource = pis;
         addPortal(frameBlock, link);
     }
 
     @Deprecated //mostly keeping for the aether
     public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int portalTint) {
         PortalIgnitionSource ignitionSource = ignitionBlock.equals(Blocks.WATER) ? PortalIgnitionSource.FluidSource(Fluids.WATER) : PortalIgnitionSource.FIRE;
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), ignitionSource, portalBlock, dimID, portalTint);
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalTint);
+        link.portalIgnitionSource = ignitionSource;
+        link.portalBlock = portalBlock;
         addPortal(frameBlock, link);
     }
 
@@ -63,12 +69,24 @@ public class CustomPortalApiRegistry {
     }
 
     public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, Identifier dimID, int r, int g, int b) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), ignitionSource, dimID, getColorFromRGB(r, g, b));
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
+        link.portalIgnitionSource = ignitionSource;
         addPortal(frameBlock, link);
     }
 
     public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, CustomPortalBlock portalBlock, Identifier dimID, int r, int g, int b) {
-        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), ignitionSource, portalBlock, dimID, getColorFromRGB(r, g, b));
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
+        link.portalIgnitionSource = ignitionSource;
+        link.portalBlock = portalBlock;
+        addPortal(frameBlock, link);
+    }
+
+    public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, CustomPortalBlock portalBlock, Identifier dimID, int forcePortalWidth, int forcePortalHeight, int r, int g, int b) {
+        PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
+        link.portalIgnitionSource = ignitionSource;
+        link.portalBlock = portalBlock;
+        link.forcedWidth = forcePortalWidth;
+        link.forcedHeight = forcePortalHeight;
         addPortal(frameBlock, link);
     }
 }

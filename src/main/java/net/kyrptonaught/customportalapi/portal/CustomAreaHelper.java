@@ -64,7 +64,7 @@ public class CustomAreaHelper {
     }
 
     private BlockPos method_30492(BlockPos blockPos) {
-        for (int i = Math.max(0, blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()),VALID_FRAME); blockPos = blockPos.down()) {
+        for (int i = Math.max(0, blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()), VALID_FRAME); blockPos = blockPos.down()) {
         }
         Direction direction = this.negativeDir.getOpposite();
         int j = this.method_30493(blockPos, direction) - 1;
@@ -82,7 +82,7 @@ public class CustomAreaHelper {
         for (int i = 0; i <= 21; ++i) {
             mutable.set(blockPos).move(direction, i);
             BlockState blockState = this.world.getBlockState(mutable);
-            if (!validStateInsidePortal(blockState,VALID_FRAME)) {
+            if (!validStateInsidePortal(blockState, VALID_FRAME)) {
                 if (VALID_FRAME.contains(blockState.getBlock())) {
                     return i;
                 }
@@ -180,5 +180,13 @@ public class CustomAreaHelper {
         BlockPos.iterate(this.lowerCorner, this.lowerCorner.offset(Direction.UP, this.height - 1).offset(this.negativeDir, this.width - 1)).forEach((blockPos) -> {
             this.world.setBlockState(blockPos, blockState, 18);
         });
+    }
+
+    public int getWidth() {
+        return this.width;
+    }
+
+    public int getHeight() {
+        return this.height;
     }
 }
