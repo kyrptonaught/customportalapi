@@ -16,8 +16,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public abstract class BucketMixin implements CustomPortalFluidProvider {
     @Shadow @Final private Fluid fluid;
 
-    @Shadow protected abstract ItemStack getEmptiedStack(ItemStack stack, PlayerEntity player);
-
     @Override
     public Fluid getFluidContent() {
         return this.fluid;
@@ -25,6 +23,6 @@ public abstract class BucketMixin implements CustomPortalFluidProvider {
 
     @Override
     public ItemStack emptyContents(ItemStack stack, PlayerEntity player) {
-        return this.getEmptiedStack(stack, player);
+        return BucketItem.getEmptiedStack(stack, player);
     }
 }

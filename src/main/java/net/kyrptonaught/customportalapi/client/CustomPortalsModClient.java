@@ -30,7 +30,7 @@ public class CustomPortalsModClient implements ClientModInitializer {
                 if (CustomPortalApiRegistry.portals.containsKey(block))
                     return CustomPortalApiRegistry.portals.get(block).colorID;
             }
-            return DyeColor.BLACK.getMaterialColor().color;
+            return 1908001;
         }, CustomPortalsMod.portalBlock);
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
     }

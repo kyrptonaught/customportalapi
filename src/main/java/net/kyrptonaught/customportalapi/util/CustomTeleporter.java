@@ -49,8 +49,7 @@ public class CustomTeleporter {
             newEntity.refreshPositionAndAngles(teleportTarget.position.x, teleportTarget.position.y, teleportTarget.position.z, teleportTarget.yaw, newEntity.pitch);
             newEntity.setVelocity(teleportTarget.velocity);
             destination.onDimensionChanged(newEntity);
-            entity.remove();
-
+           // entity.remove();
         }
     }
 
@@ -63,8 +62,8 @@ public class CustomTeleporter {
         player.networkHandler.sendPacket(new DifficultyS2CPacket(worldProperties.getDifficulty(), worldProperties.isDifficultyLocked()));
         PlayerManager playerManager = player.server.getPlayerManager();
         playerManager.sendCommandTree(player);
-        serverWorld.removePlayer(player);
-        player.removed = false;
+        serverWorld.removePlayer(player, Entity.RemovalReason.CHANGED_DIMENSION);
+        //player.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
         TeleportTarget teleportTarget = customTPTarget(destination, player, portalFrame, portalPos);
 
         serverWorld.getProfiler().push("placing");
@@ -76,7 +75,7 @@ public class CustomTeleporter {
         serverWorld.getProfiler().pop();
         ((ServerPlayerEntityTPAccessor) player).invokeworldChanged(serverWorld);
         player.interactionManager.setWorld(destination);
-        player.networkHandler.sendPacket(new PlayerAbilitiesS2CPacket(player.abilities));
+        player.networkHandler.sendPacket(new PlayerAbilitiesS2CPacket(player.getAbilities()));
         playerManager.sendWorldInfo(player, destination);
         playerManager.sendPlayerStatus(player);
 

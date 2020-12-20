@@ -79,7 +79,7 @@ public class PortalPlacer {
         double e = -1.0D;
         BlockPos blockPos3 = null;
         WorldBorder worldBorder = world.getWorldBorder();
-        int i = world.getDimensionHeight() - 1;
+        int i = world.getTopHeightLimit() - 1;
         BlockPos.Mutable mutable = blockPos.mutableCopy();
         Iterator var13 = BlockPos.method_30512(blockPos, 16, Direction.EAST, Direction.SOUTH).iterator();
 
@@ -96,7 +96,7 @@ public class PortalPlacer {
 
                         int o;
                         if (d == -1.0D) {
-                            blockPos2 = (new BlockPos(blockPos.getX(), MathHelper.clamp(blockPos.getY(), 70, world.getDimensionHeight() - 10), blockPos.getZ())).toImmutable();
+                            blockPos2 = (new BlockPos(blockPos.getX(), MathHelper.clamp(blockPos.getY(), 70, world.getTopHeightLimit() - 10), blockPos.getZ())).toImmutable();
                             Direction direction2 = direction.rotateYClockwise();
                             if (!worldBorder.contains(blockPos2)) {
                                 return Optional.empty();
