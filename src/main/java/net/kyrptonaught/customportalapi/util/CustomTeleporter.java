@@ -3,6 +3,7 @@ package net.kyrptonaught.customportalapi.util;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.mixin.EntityInvoker;
 import net.kyrptonaught.customportalapi.mixin.ServerPlayerEntityTPAccessor;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.minecraft.block.Block;
@@ -64,6 +65,7 @@ public class CustomTeleporter {
         playerManager.sendCommandTree(player);
         serverWorld.removePlayer(player, Entity.RemovalReason.CHANGED_DIMENSION);
         //player.setRemoved(Entity.RemovalReason.CHANGED_DIMENSION);
+        ((EntityInvoker) player).invokeunsetRemoved();
         TeleportTarget teleportTarget = customTPTarget(destination, player, portalFrame, portalPos);
 
         serverWorld.getProfiler().push("placing");
@@ -80,7 +82,7 @@ public class CustomTeleporter {
         playerManager.sendPlayerStatus(player);
 
         for (StatusEffectInstance statusEffectInstance : player.getStatusEffects()) {
-            player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getEntityId(), statusEffectInstance));
+            player.networkHandler.sendPacket(new EntityStatusEffectS2CPacket(player.getId(), statusEffectInstance));
         }
 
         player.networkHandler.sendPacket(new WorldEventS2CPacket(1032, BlockPos.ORIGIN, 0, false));
@@ -95,7 +97,7 @@ public class CustomTeleporter {
         double e = Math.max(-2.9999872E7D, worldBorder.getBoundNorth() + 16.0D);
         double f = Math.min(2.9999872E7D, worldBorder.getBoundEast() - 16.0D);
         double g = Math.min(2.9999872E7D, worldBorder.getBoundSouth() - 16.0D);
-        double h = DimensionType.method_31109(entity.world.getDimension(), destination.getDimension());
+        double h = DimensionType.getCoordinateScaleFactor(entity.world.getDimension(), destination.getDimension());
         BlockPos blockPos3 = new BlockPos(MathHelper.clamp(entity.getX() * h, d, f), entity.getY(), MathHelper.clamp(entity.getZ() * h, e, g));
         BlockState blockState = entity.world.getBlockState(portalPos);
         return PortalPlacer.findOrCreatePortal(destination, blockPos3, portalFrame, blockState.get(CustomPortalBlock.AXIS), destination.getRegistryKey() == World.NETHER).map((arg) -> {
