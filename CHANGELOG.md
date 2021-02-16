@@ -1,4 +1,9 @@
 ## Changelog
+**0.0.1-beta 22**
+Compatibility with 21w06a. Fixes entities looping in portals
+
+**0.0.1-beta 21**
+Update to 21w05b, fixes player being unable to interact with world after tp
 
 **0.0.1-beta 20**
 Really adds the ability to force a size for the portal this time.
