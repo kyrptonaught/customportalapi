@@ -1,5 +1,9 @@
 ## Changelog
 
+**0.0.1-beta 21**
+Adds portal syncing from server to client, requiring only the server to have the portal registered.
+Also adds the client side support for restoring features when playing on a server with the server side only version of CustomPortalApi
+
 **0.0.1-beta 20**
 Really adds the ability to force a size for the portal this time.
 

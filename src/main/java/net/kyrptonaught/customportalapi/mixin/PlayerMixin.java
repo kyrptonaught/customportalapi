@@ -1,7 +1,7 @@
 package net.kyrptonaught.customportalapi.mixin;
 
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
-import net.kyrptonaught.customportalapi.util.PlayerInCustomPortal;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
-public abstract class PlayerMixin extends Entity implements PlayerInCustomPortal {
+public abstract class PlayerMixin extends Entity implements EntityInCustomPortal {
     boolean inPortal = false;
     int timeInPortal = 0;
 
@@ -44,7 +44,7 @@ public abstract class PlayerMixin extends Entity implements PlayerInCustomPortal
     @Inject(method = "tick", at = @At(value = "TAIL"))
     public void inCustomPortal(CallbackInfo ci) {
         if (inPortal) {
-            if (!(this.world.getBlockState(this.getBlockPos()).getBlock() instanceof CustomPortalBlock)) {
+            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, this.getBlockPos())) {
                 inPortal = false;
                 timeInPortal = 0;
                 return;

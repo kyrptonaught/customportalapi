@@ -1,6 +1,6 @@
 package net.kyrptonaught.customportalapi.mixin;
 
-import net.kyrptonaught.customportalapi.util.PlayerInCustomPortal;
+import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.CompoundTag;
 import org.spongepowered.asm.mixin.Mixin;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements PlayerInCustomPortal {
+public abstract class EntityMixin implements EntityInCustomPortal {
 
     @Unique
     boolean didTP = false;

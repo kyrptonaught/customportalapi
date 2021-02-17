@@ -1,7 +1,7 @@
 package net.kyrptonaught.customportalapi.mixin;
 
 
-import net.kyrptonaught.customportalapi.util.PlayerInCustomPortal;
+import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -38,18 +39,19 @@ public abstract class ClientPlayerMixin extends LivingEntity {
     @Shadow
     public abstract void closeHandledScreen();
 
-
+    @Unique
     @Inject(method = "updateNausea", at = @At(value = "HEAD"), cancellable = true)
-    public void doStuff(CallbackInfo ci) {
-        if (((PlayerInCustomPortal) this).getTimeInPortal() > 0) {
+    public void injectCustomNausea(CallbackInfo ci) {
+        if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
             updateCustomNausea();
             ci.cancel();
         }
     }
 
+    @Unique
     private void updateCustomNausea() {
         this.lastNauseaStrength = this.nextNauseaStrength;
-        if (((PlayerInCustomPortal) this).getTimeInPortal() > 0) {
+        if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
             if (this.client.currentScreen != null && !this.client.currentScreen.isPauseScreen()) {
                 if (this.client.currentScreen instanceof HandledScreen) {
                     this.closeHandledScreen();

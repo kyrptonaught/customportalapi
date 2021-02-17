@@ -4,17 +4,15 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
-import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.*;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.registry.Registry;
 
 @Environment(EnvType.CLIENT)
@@ -30,8 +28,11 @@ public class CustomPortalsModClient implements ClientModInitializer {
                 if (CustomPortalApiRegistry.portals.containsKey(block))
                     return CustomPortalApiRegistry.portals.get(block).colorID;
             }
-            return DyeColor.BLACK.getMaterialColor().color;
+            return 1908001;
         }, CustomPortalsMod.portalBlock);
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
+        ServerSideOnly.clientSendHasMod();
+        ClientLoginConnectionEvents.QUERY_START.register((clientLoginNetworkHandler, minecraftClient) -> PerWorldPortals.removeOldPortalsFromRegistry());
+        //ClientPlayConnectionEvents.INIT.register((clientPlayNetworkHandler, minecraftClient) -> PerWorldPortals.removeOldPortalsFromRegistry());
     }
 }

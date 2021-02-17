@@ -5,8 +5,7 @@ import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluids;
+import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
@@ -19,7 +18,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class CustomAreaHelper {
-    private HashSet<Block> VALID_FRAME;
+    private final HashSet<Block> VALID_FRAME;
 
     private final WorldAccess world;
     private final Direction.Axis axis;
@@ -27,7 +26,7 @@ public class CustomAreaHelper {
     private int foundPortalBlocks;
     private BlockPos lowerCorner;
     private int height;
-    private int width;
+    private final int width;
 
     public CustomAreaHelper(WorldAccess world, BlockPos blockPos, Direction.Axis axis, HashSet<Block> foundations) {
         VALID_FRAME = foundations;
@@ -175,8 +174,8 @@ public class CustomAreaHelper {
 
     public void createPortal(Block frameBlock) {
         BlockState blockState = CustomPortalApiRegistry.portals.containsKey(frameBlock) ?
-                CustomPortalApiRegistry.portals.get(frameBlock).portalBlock.getDefaultState().with(CustomPortalBlock.AXIS, axis)
-                : CustomPortalsMod.portalBlock.getDefaultState().with(CustomPortalBlock.AXIS, axis);
+                CustomPortalApiRegistry.portals.get(frameBlock).getPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis)
+                : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis);
         BlockPos.iterate(this.lowerCorner, this.lowerCorner.offset(Direction.UP, this.height - 1).offset(this.negativeDir, this.width - 1)).forEach((blockPos) -> {
             this.world.setBlockState(blockPos, blockState, 18);
         });

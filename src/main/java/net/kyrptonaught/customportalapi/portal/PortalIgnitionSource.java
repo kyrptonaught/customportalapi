@@ -1,13 +1,10 @@
 package net.kyrptonaught.customportalapi.portal;
 
-import net.kyrptonaught.customportalapi.mixin.BucketMixin;
 import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
-import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -16,9 +13,6 @@ import net.minecraft.world.World;
 
 import java.util.HashSet;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class PortalIgnitionSource {
     public final static PortalIgnitionSource FIRE = new PortalIgnitionSource(SourceType.BLOCKPLACED, Registry.BLOCK.getId(Blocks.FIRE));
@@ -53,7 +47,7 @@ public class PortalIgnitionSource {
     }
 
     public void withCondition(BiFunction<World, BlockPos, Boolean> condition) {
-        
+
     }
 
     public boolean isWater() {

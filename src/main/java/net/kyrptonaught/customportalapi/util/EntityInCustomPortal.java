@@ -1,6 +1,6 @@
 package net.kyrptonaught.customportalapi.util;
 
-public interface PlayerInCustomPortal {
+public interface EntityInCustomPortal {
 
     void setInPortal(boolean inPortal);
 

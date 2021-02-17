@@ -6,6 +6,7 @@ import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.class_5459;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
@@ -28,8 +29,8 @@ import java.util.Optional;
 public class PortalPlacer {
     public static boolean attemptPortalLight(World world, BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource) {
         Block foundationBlock = world.getBlockState(framePos).getBlock();
-        if (!CustomPortalApiRegistry.portals.containsKey(foundationBlock) ||!CustomPortalApiRegistry.portals.get(foundationBlock).doesIgnitionMatch(ignitionSource))
-                return false;
+        if (!CustomPortalApiRegistry.portals.containsKey(foundationBlock) || !CustomPortalApiRegistry.portals.get(foundationBlock).doesIgnitionMatch(ignitionSource))
+            return false;
         return createPortal(world, portalPos, foundationBlock);
     }
 
@@ -38,7 +39,7 @@ public class PortalPlacer {
         foundations.add(foundationBlock);
         Optional<CustomAreaHelper> optional = CustomAreaHelper.method_30485(world, pos, Direction.Axis.X, foundations);
         //is valid frame, and is correct size(if applicable)
-        if (optional.isPresent() && CustomPortalApiRegistry.portals.get(foundationBlock).isCorrectForcedSize(optional.get().getWidth(),optional.get().getHeight())) {
+        if (optional.isPresent() && CustomPortalApiRegistry.portals.get(foundationBlock).isCorrectForcedSize(optional.get().getWidth(), optional.get().getHeight())) {
             optional.get().createPortal(foundationBlock);
             return true;
         }
@@ -55,9 +56,8 @@ public class PortalPlacer {
         PointOfInterestStorage pointOfInterestStorage = world.getPointOfInterestStorage();
         int i = bl ? 16 : 128;
         pointOfInterestStorage.preloadChunks(world, blockPos, i);
-        Optional<PointOfInterest> optional = pointOfInterestStorage.getInSquare((pointOfInterestType) ->
-                CustomPortalApiRegistry.PORTAL_POIs.containsValue(pointOfInterestType), blockPos, i, PointOfInterestStorage.OccupationStatus.ANY).filter(pointOfInterest -> {
-            if (world.getBlockState(pointOfInterest.getPos()).getBlock() instanceof CustomPortalBlock)
+        Optional<PointOfInterest> optional = pointOfInterestStorage.getInSquare(CustomPortalApiRegistry::isCustomPortalPOI, blockPos, i, PointOfInterestStorage.OccupationStatus.ANY).filter(pointOfInterest -> {
+            if (CustomPortalsMod.isInstanceOfCustomPortal(world, pointOfInterest.getPos()))
                 return CustomPortalBlock.getPortalBase(world, pointOfInterest.getPos()).equals(portalFrame);
             return false;
         }).sorted(Comparator.comparingDouble((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getSquaredDistance(blockPos))
@@ -123,8 +123,8 @@ public class PortalPlacer {
                         }
 
                         BlockState blockState2 = CustomPortalApiRegistry.portals.containsKey(frameBlock.getBlock()) ?
-                                CustomPortalApiRegistry.portals.get(frameBlock.getBlock()).portalBlock.getDefaultState().with(CustomPortalBlock.AXIS, axis)
-                                : CustomPortalsMod.portalBlock.getDefaultState().with(CustomPortalBlock.AXIS, axis);
+                                CustomPortalApiRegistry.portals.get(frameBlock.getBlock()).getPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis)
+                                : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis);
 
                         for (o = 0; o < 2; ++o) {
                             for (p = 0; p < 3; ++p) {

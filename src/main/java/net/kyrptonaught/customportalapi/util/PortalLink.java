@@ -3,14 +3,13 @@ package net.kyrptonaught.customportalapi.util;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.FluidTags;
+import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 
 public class PortalLink {
     public Identifier block;
     public PortalIgnitionSource portalIgnitionSource = PortalIgnitionSource.FIRE;
-    public CustomPortalBlock portalBlock = CustomPortalsMod.portalBlock;
+    private CustomPortalBlock portalBlock = CustomPortalsMod.portalBlock;
     public Identifier dimID;
     public Identifier returnDimID = new Identifier("overworld");
     public int colorID;
@@ -20,6 +19,14 @@ public class PortalLink {
         this.block = blockID;
         this.dimID = dimID;
         this.colorID = colorID;
+    }
+
+    public Block getPortalBlock() {
+        return portalBlock;
+    }
+
+    public void setPortalBlock(CustomPortalBlock block) {
+        this.portalBlock = block;
     }
 
     public boolean doesIgnitionMatch(PortalIgnitionSource attemptedSource) {

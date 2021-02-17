@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
 import net.kyrptonaught.customportalapi.portal.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
-import net.kyrptonaught.customportalapi.util.PlayerInCustomPortal;
+import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -97,7 +97,7 @@ public class CustomPortalBlock extends Block {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        PlayerInCustomPortal entityInPortal = (PlayerInCustomPortal) entity;
+        EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
         if (entity instanceof PlayerEntity) {
             if (!entityInPortal.didTeleport()) {
                 entityInPortal.setInPortal(true);
@@ -117,7 +117,7 @@ public class CustomPortalBlock extends Block {
     }
 
     public static Block getPortalBase(BlockView world, BlockPos pos) {
-        if (world.getBlockState(pos.down()).getBlock() instanceof CustomPortalBlock)
+        if (CustomPortalsMod.isInstanceOfCustomPortal(world, pos.down()))
             return getPortalBase(world, pos.down());
         return world.getBlockState(pos.down()).getBlock();
     }

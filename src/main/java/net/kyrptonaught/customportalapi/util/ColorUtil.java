@@ -3,7 +3,7 @@ package net.kyrptonaught.customportalapi.util;
 import java.util.HashMap;
 
 public class ColorUtil {
-    private static HashMap<Integer, float[]> COLOR_CACHE = new HashMap<>();
+    private static final HashMap<Integer, float[]> COLOR_CACHE = new HashMap<>();
 
     public static float[] getColorForBlock(int color) {
         if (!COLOR_CACHE.containsKey(color)) {

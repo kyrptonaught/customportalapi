@@ -5,18 +5,18 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.gen.Accessor;
-import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(BucketItem.class)
 public abstract class BucketMixin implements CustomPortalFluidProvider {
-    @Shadow @Final private Fluid fluid;
+    @Shadow
+    @Final
+    private Fluid fluid;
 
-    @Shadow protected abstract ItemStack getEmptiedStack(ItemStack stack, PlayerEntity player);
+    @Shadow
+    protected abstract ItemStack getEmptiedStack(ItemStack stack, PlayerEntity player);
 
     @Override
     public Fluid getFluidContent() {

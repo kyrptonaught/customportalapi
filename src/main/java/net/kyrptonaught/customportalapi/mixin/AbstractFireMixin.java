@@ -1,8 +1,8 @@
 package net.kyrptonaught.customportalapi.mixin;
 
 
-import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.minecraft.block.AbstractFireBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
