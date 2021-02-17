@@ -1,15 +1,18 @@
 package net.kyrptonaught.customportalapi.client;
 
+import com.mojang.bridge.game.GameSession;
+import com.mojang.bridge.launcher.SessionEventListener;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
-import net.fabricmc.fabric.api.client.networking.v1.ClientLoginConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
 import net.kyrptonaught.customportalapi.*;
+import net.kyrptonaught.customportalapi.networking.PortalRegistrySync;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
@@ -31,8 +34,17 @@ public class CustomPortalsModClient implements ClientModInitializer {
             return 1908001;
         }, CustomPortalsMod.portalBlock);
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
-        ServerSideOnly.clientSendHasMod();
-        ClientLoginConnectionEvents.QUERY_START.register((clientLoginNetworkHandler, minecraftClient) -> PerWorldPortals.removeOldPortalsFromRegistry());
-        //ClientPlayConnectionEvents.INIT.register((clientPlayNetworkHandler, minecraftClient) -> PerWorldPortals.removeOldPortalsFromRegistry());
+
+        PortalRegistrySync.registerReceivePortalData();
+
+        MinecraftClient.getInstance().getGame().setSessionEventListener(new SessionEventListener() {
+            @Override
+            public void onStartGameSession(GameSession session){}
+
+            @Override
+            public void onLeaveGameSession(GameSession session) {
+                PerWorldPortals.removeOldPortalsFromRegistry();
+            }
+        });
     }
 }

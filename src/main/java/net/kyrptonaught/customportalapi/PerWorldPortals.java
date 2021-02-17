@@ -4,10 +4,11 @@ import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 
-import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PerWorldPortals {
-    private static final HashSet<Block> worldPortals = new HashSet<>();
+    private static final Set<Block> worldPortals = ConcurrentHashMap.newKeySet();
 
     public static void removeOldPortalsFromRegistry() {
         for (Block block : worldPortals) {

@@ -1,4 +1,9 @@
 ## Changelog
+**0.0.1-beta 23**
+More work on syncing and better support for DataPack portals and ServerCustomPortals
+
+**0.0.1-beta 22**
+Fixes beta 21
 
 **0.0.1-beta 21**
 Adds portal syncing from server to client, requiring only the server to have the portal registered.

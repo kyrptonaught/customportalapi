@@ -39,7 +39,6 @@ public abstract class ClientPlayerMixin extends LivingEntity {
     @Shadow
     public abstract void closeHandledScreen();
 
-    @Unique
     @Inject(method = "updateNausea", at = @At(value = "HEAD"), cancellable = true)
     public void injectCustomNausea(CallbackInfo ci) {
         if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {

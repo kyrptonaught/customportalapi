@@ -31,5 +31,10 @@
       <option name="name" value="BintrayJCenter" />
       <option name="url" value="https://jcenter.bintray.com/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="UserLocalRemappedMods" />
+      <option name="name" value="UserLocalRemappedMods" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../Minecraft%20Mod%20Dev/customportalapi/.gradle/loom-cache/remapped_mods/" />
+    </remote-repository>
   </component>
 </project>
