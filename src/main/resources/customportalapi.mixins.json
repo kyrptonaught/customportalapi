@@ -6,12 +6,11 @@
     "AbstractFireMixin",
     "BucketMixin",
     "EntityMixin",
-    "PlayerMixin",
-    "ServerPlayerEntityTPAccessor"
+    "PlayerMixin"
   ],
   "client": [
-    "ClientPlayerMixin",
-    "InGameHudMixin"
+    "client.ClientPlayerMixin",
+    "client.InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

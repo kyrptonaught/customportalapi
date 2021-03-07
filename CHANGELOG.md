@@ -1,4 +1,11 @@
 ## Changelog
+
+**0.0.1-beta 25**
+Further improves and simplifies the previous
+
+**0.0.1-beta 24**
+Now calls vanilla teleport methods instead of our own modified vanilla methods. Fixes compat with other mods notably Immersive Portals
+
 **0.0.1-beta 23**
 More work on syncing and better support for DataPack portals and ServerCustomPortals
 

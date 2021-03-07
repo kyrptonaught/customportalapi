@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.mixin;
+package net.kyrptonaught.customportalapi.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;

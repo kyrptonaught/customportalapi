@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.mixin;
+package net.kyrptonaught.customportalapi.mixin.client;
 
 
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;

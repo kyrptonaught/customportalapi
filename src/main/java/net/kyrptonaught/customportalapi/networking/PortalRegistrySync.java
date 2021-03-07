@@ -1,7 +1,6 @@
 package net.kyrptonaught.customportalapi.networking;
 
 import io.netty.buffer.Unpooled;
-import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
