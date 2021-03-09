@@ -1,4 +1,6 @@
 ## Changelog
+**0.0.1-beta 25**
+Remove Mod Menu from the dev environment 
 
 **0.0.1-beta 25**
 Further improves and simplifies the previous

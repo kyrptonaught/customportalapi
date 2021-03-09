@@ -22,10 +22,6 @@ dependencies {
 	modCompile "net.fabricmc:fabric-loader:${project.loader_version}"
 	modCompile "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	modImplementation ("io.github.prospector:modmenu:1.14.9+build.13"){
-		transitive(false)
-	}
-
 }
 bintray {
 	user = System.getenv('BINTRAY_USER')
