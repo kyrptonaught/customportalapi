@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "customportalapi",
-  "version": "0.0.1-beta26-1.16",
+  "version": "0.0.1-beta27-1.16",
   "name": "Custom Portals",
   "description": "Create portals out of anything!",
   "authors": [
@@ -12,7 +12,7 @@
     "sources": "https://github.com/kyrptonaught/customportalapi"
   },
   "license": "MIT",
-  "icon": "assets/customportals/icon.png",
+  "icon": "assets/customportalapi/icon.png",
   "environment": "*",
   "mixins": [
     {

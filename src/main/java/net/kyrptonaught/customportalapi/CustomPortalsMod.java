@@ -24,7 +24,7 @@ import net.minecraft.world.World;
 import java.util.HashMap;
 
 public class CustomPortalsMod implements ModInitializer {
-    public static final String MOD_ID = "customportals";
+    public static final String MOD_ID = "customportalapi";
     public static CustomPortalBlock portalBlock;
     public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
 
@@ -47,7 +47,7 @@ public class CustomPortalsMod implements ModInitializer {
             return ActionResult.PASS;
         });
 
-        //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
+        CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, PortalIgnitionSource.WATER, (CustomPortalBlock) portalBlock, new Identifier("the_nether"), 2, 3, 55, 89, 195);
         //CustomPortalApiRegistry.addPortal(Blocks.NETHERITE_BLOCK, PortalIgnitionSource.FluidSource(Fluids.LAVA), new Identifier("the_nether"), 245, 135, 66);
         //CustomPortalApiRegistry.addPortal(Blocks.SNOW_BLOCK, PortalIgnitionSource.ItemUseSource(Items.STICK), new Identifier("the_end"), 247, 250, 255);

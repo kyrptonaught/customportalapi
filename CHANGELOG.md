@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 27**
+Rename the modid to what it should've been in the first place. This does break existing portals but after a relight they should be fine
+
 **0.0.1-beta 26**
 Remove Mod Menu from the dev environment 
 
