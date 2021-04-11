@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "customportalapi",
-  "version": "0.0.1-beta27-1.16",
+  "version": "0.0.1-beta28-1.16",
   "name": "Custom Portals",
   "description": "Create portals out of anything!",
   "authors": [

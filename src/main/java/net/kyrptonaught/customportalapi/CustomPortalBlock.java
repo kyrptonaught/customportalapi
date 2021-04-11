@@ -117,8 +117,17 @@ public class CustomPortalBlock extends Block {
     }
 
     public static Block getPortalBase(BlockView world, BlockPos pos) {
-        if (CustomPortalsMod.isInstanceOfCustomPortal(world, pos.down()))
-            return getPortalBase(world, pos.down());
-        return world.getBlockState(pos.down()).getBlock();
+        if (CustomPortalsMod.isInstanceOfCustomPortal(world, pos)) {
+            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.down()))
+                return world.getBlockState(pos.down()).getBlock();
+            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.up()))
+                return world.getBlockState(pos.up()).getBlock();
+            Direction.Axis axis = world.getBlockState(pos).get(AXIS);
+            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, 1)))
+                return world.getBlockState(pos.offset(axis, 1)).getBlock();
+            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, -1)))
+                return world.getBlockState(pos.offset(axis, -1)).getBlock();
+        }
+        return getPortalBase(world, pos.down());
     }
 }

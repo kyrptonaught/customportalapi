@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.util.ClientPlayerInColoredPortal;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.util.PortalLink;
@@ -29,9 +30,9 @@ public class InGameHudMixin {
 
     @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;color4f(FFFF)V"))
     public void changeColor(float red, float green, float blue, float alpha) {
-        if (((EntityInCustomPortal) client.player).getTimeInPortal() > 0) {
-            PortalLink link = CustomPortalApiRegistry.portals.get(CustomPortalBlock.getPortalBase(client.world, client.player.getBlockPos()));
-            float[] colors = link != null ? ColorUtil.getColorForBlock(link.colorID) : DyeColor.WHITE.getColorComponents();
+        int color = ((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor();
+        if (color >= 0) {
+            float[] colors = ColorUtil.getColorForBlock(color);
             RenderSystem.color4f(colors[0], colors[1], colors[2], alpha);
         } else
             RenderSystem.color4f(red, green, blue, alpha);
@@ -39,7 +40,7 @@ public class InGameHudMixin {
 
     @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;getSprite(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/texture/Sprite;"))
     public Sprite renderCustomPortalOverlay(BlockModels blockModels, BlockState blockState) {
-        if (((EntityInCustomPortal) client.player).getTimeInPortal() > 0) {
+        if (((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor() >= 0) {
             return blockModels.getSprite(CustomPortalsMod.portalBlock.getDefaultState());
         }
         return blockModels.getSprite(Blocks.NETHER_PORTAL.getDefaultState());

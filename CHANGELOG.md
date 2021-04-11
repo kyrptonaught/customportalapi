@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 28**
+Fix portal nausea effect sometimes flashing back to the purple nether portal instance
+
 **0.0.1-beta 27**
 Rename the modid to what it should've been in the first place. This does break existing portals but after a relight they should be fine
 

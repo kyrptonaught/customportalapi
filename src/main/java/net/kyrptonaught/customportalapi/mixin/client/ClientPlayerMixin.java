@@ -1,7 +1,12 @@
 package net.kyrptonaught.customportalapi.mixin.client;
 
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.kyrptonaught.customportalapi.util.ClientPlayerInColoredPortal;
+import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -10,6 +15,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.DyeColor;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerMixin extends LivingEntity {
+public abstract class ClientPlayerMixin extends LivingEntity implements ClientPlayerInColoredPortal {
 
     @Shadow
     public float lastNauseaStrength;
@@ -39,9 +45,27 @@ public abstract class ClientPlayerMixin extends LivingEntity {
     @Shadow
     public abstract void closeHandledScreen();
 
+    int portalColor;
+
+    @Override
+    public void setLastUsedPortalColor(int color) {
+        this.portalColor = color;
+
+    }
+
+    @Override
+    public int getLastUsedPortalColor() {
+        return portalColor;
+    }
+
+
     @Inject(method = "updateNausea", at = @At(value = "HEAD"), cancellable = true)
     public void injectCustomNausea(CallbackInfo ci) {
-        if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
+        if (this.inNetherPortal) {
+            setLastUsedPortalColor(-1);
+        } else if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
+            PortalLink link = CustomPortalApiRegistry.portals.get(CustomPortalBlock.getPortalBase(this.world, this.getBlockPos()));
+            setLastUsedPortalColor(link != null ? link.colorID : 1908001);
             updateCustomNausea();
             ci.cancel();
         }
