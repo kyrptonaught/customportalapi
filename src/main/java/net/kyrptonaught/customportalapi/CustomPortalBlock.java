@@ -128,6 +128,9 @@ public class CustomPortalBlock extends Block {
             if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, -1)))
                 return world.getBlockState(pos.offset(axis, -1)).getBlock();
         }
+        if(pos.getY() < 0){
+            return null;
+        }
         return getPortalBase(world, pos.down());
     }
 }
