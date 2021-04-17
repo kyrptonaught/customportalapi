@@ -9,7 +9,7 @@ Fix portal nausea effect sometimes flashing back to the purple nether portal ins
 Rename the modid to what it should've been in the first place. This does break existing portals but after a relight they should be fine
 
 **0.0.1-beta 26**
-Remove Mod Menu from the dev environment 
+Remove Mod Menu from the dev environment
 
 **0.0.1-beta 25**
 Further improves and simplifies the previous
@@ -26,6 +26,12 @@ Fixes beta 21
 **0.0.1-beta 21**
 Adds portal syncing from server to client, requiring only the server to have the portal registered.
 Also adds the client side support for restoring features when playing on a server with the server side only version of CustomPortalApi
+
+**0.0.1-beta 22 -1.17**
+Compatibility with 21w06a. Fixes entities looping in portals
+
+**0.0.1-beta 21 -1.17**
+Update to 21w05b, fixes player being unable to interact with world after tp
 
 **0.0.1-beta 20**
 Really adds the ability to force a size for the portal this time.
@@ -57,5 +63,3 @@ Fix issue with duplicate POI's
 
 **0.0.1-beta 11**
 Full support for RGB color tinting!
-
-
