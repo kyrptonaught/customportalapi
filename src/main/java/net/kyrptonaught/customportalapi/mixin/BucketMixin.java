@@ -25,6 +25,6 @@ public abstract class BucketMixin implements CustomPortalFluidProvider {
 
     @Override
     public ItemStack emptyContents(ItemStack stack, PlayerEntity player) {
-        return BucketItem.getEmptiedStack(stack, player);
+        return this.getEmptiedStack(stack, player);
     }
 }

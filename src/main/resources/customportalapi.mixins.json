@@ -5,7 +5,6 @@
   "mixins": [
     "AbstractFireMixin",
     "BucketMixin",
-    "EntityInvoker",
     "EntityMixin",
     "PlayerMixin"
   ],
