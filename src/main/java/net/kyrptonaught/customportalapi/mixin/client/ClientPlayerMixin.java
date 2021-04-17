@@ -3,6 +3,7 @@ package net.kyrptonaught.customportalapi.mixin.client;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.ClientPlayerInColoredPortal;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
@@ -64,7 +65,7 @@ public abstract class ClientPlayerMixin extends LivingEntity implements ClientPl
         if (this.inNetherPortal) {
             setLastUsedPortalColor(-1);
         } else if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
-            PortalLink link = CustomPortalApiRegistry.portals.get(CustomPortalBlock.getPortalBase(this.world, this.getBlockPos()));
+            PortalLink link = CustomPortalApiRegistry.portals.get(CustomPortalsMod.getPortalBase(this.world, this.getBlockPos()));
             setLastUsedPortalColor(link != null ? link.colorID : 1908001);
             updateCustomNausea();
             ci.cancel();

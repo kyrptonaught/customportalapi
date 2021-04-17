@@ -58,7 +58,7 @@ public class PortalPlacer {
         pointOfInterestStorage.preloadChunks(world, blockPos, i);
         Optional<PointOfInterest> optional = pointOfInterestStorage.getInSquare(CustomPortalApiRegistry::isCustomPortalPOI, blockPos, i, PointOfInterestStorage.OccupationStatus.ANY).filter(pointOfInterest -> {
             if (CustomPortalsMod.isInstanceOfCustomPortal(world, pointOfInterest.getPos()))
-                return CustomPortalBlock.getPortalBase(world, pointOfInterest.getPos()).equals(portalFrame);
+                return CustomPortalsMod.getPortalBase(world, pointOfInterest.getPos()).equals(portalFrame);
             return false;
         }).sorted(Comparator.comparingDouble((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getSquaredDistance(blockPos))
                 .thenComparingInt((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getY()))

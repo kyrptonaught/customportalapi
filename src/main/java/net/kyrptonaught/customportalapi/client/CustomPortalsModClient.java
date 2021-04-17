@@ -30,7 +30,7 @@ public class CustomPortalsModClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(CustomPortalsMod.portalBlock, RenderLayer.getTranslucent());
         ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> {
             if (world != null && pos != null) {
-                Block block = CustomPortalBlock.getPortalBase(world, pos);
+                Block block = CustomPortalsMod.getPortalBase(world, pos);
                 if (CustomPortalApiRegistry.portals.containsKey(block))
                     return CustomPortalApiRegistry.portals.get(block).colorID;
             }

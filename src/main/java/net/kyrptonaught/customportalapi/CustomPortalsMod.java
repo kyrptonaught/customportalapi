@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
@@ -50,7 +51,7 @@ public class CustomPortalsMod implements ModInitializer {
             return ActionResult.PASS;
         });
 
-        //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
+        CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, PortalIgnitionSource.WATER, (CustomPortalBlock) portalBlock, new Identifier("the_nether"), 2, 3, 55, 89, 195);
         //CustomPortalApiRegistry.addPortal(Blocks.NETHERITE_BLOCK, PortalIgnitionSource.FluidSource(Fluids.LAVA), new Identifier("the_nether"), 245, 135, 66);
         //CustomPortalApiRegistry.addPortal(Blocks.SNOW_BLOCK, PortalIgnitionSource.ItemUseSource(Items.STICK), new Identifier("the_end"), 247, 250, 255);
@@ -67,6 +68,10 @@ public class CustomPortalsMod implements ModInitializer {
 
     public static Block getDefaultPortalBlock() {
         return portalBlock;
+    }
+
+    public static Block getPortalBase(BlockView world, BlockPos pos) {
+        return ((CustomPortalBlock) world.getBlockState(pos).getBlock()).getPortalBase(world, pos);
     }
 
     // to guarantee block exists before use, unsure how safe this is but works for now. Don't want to switch to using a custom entrypoint to break compatibility with existing mods just yet

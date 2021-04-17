@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 29**
+Fixes an infinite loop when searching for a portalbase(thanks #17, Jack-Papel). Also makes CustomPortalBlock:getPortalBase non-static, allowing custom portal blocks to overwrite its logic
+
 **0.0.1-beta 28**
 Fix portal nausea effect sometimes flashing back to the purple nether portal instance
 
