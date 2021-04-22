@@ -71,7 +71,9 @@ public class CustomPortalsMod implements ModInitializer {
     }
 
     public static Block getPortalBase(BlockView world, BlockPos pos) {
-        return ((CustomPortalBlock) world.getBlockState(pos).getBlock()).getPortalBase(world, pos);
+        if (isInstanceOfCustomPortal(world, pos))
+            return ((CustomPortalBlock) world.getBlockState(pos).getBlock()).getPortalBase(world, pos);
+        else return null;
     }
 
     // to guarantee block exists before use, unsure how safe this is but works for now. Don't want to switch to using a custom entrypoint to break compatibility with existing mods just yet

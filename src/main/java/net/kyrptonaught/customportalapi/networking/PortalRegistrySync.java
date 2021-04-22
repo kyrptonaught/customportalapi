@@ -20,7 +20,7 @@ public class PortalRegistrySync {
         ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
             if (shouldSyncToPlayers)
                 if (NetworkManager.doesPlayerHaveMod(serverPlayNetworkHandler.player))
-                    for (PortalLink link : CustomPortalApiRegistry.portals.values()) {
+                    for (PortalLink link : CustomPortalApiRegistry.getAllPortalLinks()) {
                         PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                         buf.writeIdentifier(link.block);
                         //buf.writeInt(link.portalIgnitionSource.sourceType.ordinal());

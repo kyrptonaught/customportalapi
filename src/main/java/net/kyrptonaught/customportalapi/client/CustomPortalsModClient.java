@@ -14,6 +14,7 @@ import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.PerWorldPortals;
 import net.kyrptonaught.customportalapi.networking.PortalRegistrySync;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.RenderLayer;
@@ -31,8 +32,8 @@ public class CustomPortalsModClient implements ClientModInitializer {
         ColorProviderRegistryImpl.BLOCK.register((state, world, pos, tintIndex) -> {
             if (world != null && pos != null) {
                 Block block = CustomPortalsMod.getPortalBase(world, pos);
-                if (CustomPortalApiRegistry.portals.containsKey(block))
-                    return CustomPortalApiRegistry.portals.get(block).colorID;
+                PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
+                if (link != null) return link.colorID;
             }
             return 1908001;
         }, CustomPortalsMod.portalBlock);
