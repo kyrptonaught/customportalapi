@@ -40,18 +40,20 @@ public class CustomPortalsMod implements ModInitializer {
             }
         });
         UseBlockCallback.EVENT.register((playerEntity, world, hand, hitResult) -> {
-            Item item = playerEntity.getStackInHand(hand).getItem();
-            if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
-                if (PortalPlacer.attemptPortalLight(world, hitResult.getBlockPos().offset(hitResult.getSide()), hitResult.getBlockPos(), PortalIgnitionSource.ItemUseSource(item))) {
-                    if (item instanceof CustomPortalFluidProvider)
-                        playerEntity.setStackInHand(hand, ((CustomPortalFluidProvider) item).emptyContents(playerEntity.getStackInHand(hand), playerEntity));
-                    return ActionResult.SUCCESS;
+            if (!world.isClient) {
+                Item item = playerEntity.getStackInHand(hand).getItem();
+                if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
+                    if (PortalPlacer.attemptPortalLight(world, hitResult.getBlockPos().offset(hitResult.getSide()), hitResult.getBlockPos(), PortalIgnitionSource.ItemUseSource(item))) {
+                        if (item instanceof CustomPortalFluidProvider)
+                            playerEntity.setStackInHand(hand, ((CustomPortalFluidProvider) item).emptyContents(playerEntity.getStackInHand(hand), playerEntity));
+                        return ActionResult.SUCCESS;
+                    }
                 }
             }
             return ActionResult.PASS;
         });
 
-        CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
+        //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, PortalIgnitionSource.WATER, (CustomPortalBlock) portalBlock, new Identifier("the_nether"), 2, 3, 55, 89, 195);
         //CustomPortalApiRegistry.addPortal(Blocks.NETHERITE_BLOCK, PortalIgnitionSource.FluidSource(Fluids.LAVA), new Identifier("the_nether"), 245, 135, 66);
         //CustomPortalApiRegistry.addPortal(Blocks.SNOW_BLOCK, PortalIgnitionSource.ItemUseSource(Items.STICK), new Identifier("the_end"), 247, 250, 255);

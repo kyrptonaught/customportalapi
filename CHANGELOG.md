@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 31**
+Fix portals not lighting
+
 **0.0.1-beta 30**
 Make PortalLinks more safe, prevents some crashes too
 
