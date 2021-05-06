@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.NetherPortalBlock;
-import net.minecraft.class_5459;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
@@ -16,6 +15,7 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.Heightmap;
+import net.minecraft.world.PortalUtil;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.poi.PointOfInterest;
@@ -46,13 +46,13 @@ public class PortalPlacer {
         return false;
     }
 
-    public static Optional<class_5459.class_5460> findOrCreatePortal(ServerWorld world, BlockPos blockPos, Block portalFrame, Direction.Axis axis, boolean bl) {
-        Optional<class_5459.class_5460> found = findDestinationPortal(world, blockPos, portalFrame, bl);
+    public static Optional<PortalUtil.Rectangle> findOrCreatePortal(ServerWorld world, BlockPos blockPos, Block portalFrame, Direction.Axis axis, boolean bl) {
+        Optional<PortalUtil.Rectangle> found = findDestinationPortal(world, blockPos, portalFrame, bl);
         if (found.isPresent()) return found;
         return createDestinationPortal(world, blockPos, portalFrame.getDefaultState(), axis);
     }
 
-    private static Optional<class_5459.class_5460> findDestinationPortal(ServerWorld world, BlockPos blockPos, Block portalFrame, boolean bl) {
+    private static Optional<PortalUtil.Rectangle> findDestinationPortal(ServerWorld world, BlockPos blockPos, Block portalFrame, boolean bl) {
         PointOfInterestStorage pointOfInterestStorage = world.getPointOfInterestStorage();
         int i = bl ? 16 : 128;
         pointOfInterestStorage.preloadChunks(world, blockPos, i);
@@ -68,20 +68,20 @@ public class PortalPlacer {
             BlockPos blockPos2 = pointOfInterest.getPos();
             world.getChunkManager().addTicket(ChunkTicketType.PORTAL, new ChunkPos(blockPos2), 3, blockPos2);
             BlockState blockState = world.getBlockState(blockPos2);
-            return class_5459.method_30574(blockPos2, blockState.get(Properties.HORIZONTAL_AXIS), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
+            return PortalUtil.getLargestRectangle(blockPos2, blockState.get(Properties.HORIZONTAL_AXIS), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
         });
     }
 
-    private static Optional<class_5459.class_5460> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
+    private static Optional<PortalUtil.Rectangle> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
         Direction direction = Direction.get(Direction.AxisDirection.POSITIVE, axis);
         double d = -1.0D;
         BlockPos blockPos2 = null;
         double e = -1.0D;
         BlockPos blockPos3 = null;
         WorldBorder worldBorder = world.getWorldBorder();
-        int i = world.getDimensionHeight() - 1;
+        int i = world.getTopY() - 1;
         BlockPos.Mutable mutable = blockPos.mutableCopy();
-        Iterator var13 = BlockPos.method_30512(blockPos, 16, Direction.EAST, Direction.SOUTH).iterator();
+        Iterator var13 = BlockPos.iterateInSquare(blockPos, 16, Direction.EAST, Direction.SOUTH).iterator();
 
         while (true) {
             BlockPos.Mutable mutable2;
@@ -96,7 +96,7 @@ public class PortalPlacer {
 
                         int o;
                         if (d == -1.0D) {
-                            blockPos2 = (new BlockPos(blockPos.getX(), MathHelper.clamp(blockPos.getY(), 70, world.getDimensionHeight() - 10), blockPos.getZ())).toImmutable();
+                            blockPos2 = (new BlockPos(blockPos.getX(), MathHelper.clamp(blockPos.getY(), 70, world.getTopY() - 10), blockPos.getZ())).toImmutable();
                             Direction direction2 = direction.rotateYClockwise();
                             if (!worldBorder.contains(blockPos2)) {
                                 return Optional.empty();
@@ -133,7 +133,7 @@ public class PortalPlacer {
                             }
                         }
 
-                        return Optional.of(new class_5459.class_5460(blockPos2.toImmutable(), 2, 3));
+                        return Optional.of(new PortalUtil.Rectangle(blockPos2.toImmutable(), 2, 3));
                     }
 
                     mutable2 = (BlockPos.Mutable) var13.next();

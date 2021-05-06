@@ -28,14 +28,14 @@ public class InGameHudMixin {
     @Final
     private MinecraftClient client;
 
-    @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;color4f(FFFF)V"))
+    @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V"))
     public void changeColor(float red, float green, float blue, float alpha) {
         int color = ((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor();
         if (color >= 0) {
             float[] colors = ColorUtil.getColorForBlock(color);
-            RenderSystem.color4f(colors[0], colors[1], colors[2], alpha);
+            RenderSystem.setShaderColor(colors[0], colors[1], colors[2], alpha);
         } else
-            RenderSystem.color4f(red, green, blue, alpha);
+            RenderSystem.setShaderColor(red, green, blue, alpha);
     }
 
     @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;getSprite(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/texture/Sprite;"))

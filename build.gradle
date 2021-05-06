@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '0.7-SNAPSHOT'
+	id 'fabric-loom' version '0.6-SNAPSHOT'
 	id 'maven-publish'
 	id "com.jfrog.bintray" version "1.8.4"
 }
@@ -12,6 +12,7 @@ version = project.mod_version
 group = project.maven_group
 
 minecraft {
+	accessWidener =  file("src/main/resources/customportalapi.accesswidener")
 }
 repositories {
 }
