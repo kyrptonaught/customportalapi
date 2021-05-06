@@ -26,8 +26,8 @@ import net.minecraft.world.dimension.DimensionType;
 public class CustomTeleporter {
 
     public static void TPToDim(World world, Entity entity, Block portalBase, BlockPos portalPoss) {
-        if (!CustomPortalApiRegistry.portals.containsKey(portalBase)) return;
-        PortalLink link = CustomPortalApiRegistry.portals.get(portalBase);
+        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
+        if (link == null) return;
         RegistryKey<World> destKey = world.getRegistryKey() == CustomPortalsMod.dims.get(link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
         if (destination == null) return;

@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleFactory;
@@ -30,8 +31,9 @@ public class CustomPortalParticle extends PortalParticle {
             CustomPortalParticle portalParticle = new CustomPortalParticle(clientWorld, d, e, f, g, h, i);
             portalParticle.setSprite(this.spriteProvider);
             Block block = blockStateParticleEffect.getBlockState().getBlock();
-            if (CustomPortalApiRegistry.portals.containsKey(block)) {
-                float[] rgb = ColorUtil.getColorForBlock(CustomPortalApiRegistry.portals.get(block).colorID);
+            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
+            if (link != null) {
+                float[] rgb = ColorUtil.getColorForBlock(link.colorID);
                 portalParticle.setColor(rgb[0], rgb[1], rgb[2]);
             }
             return portalParticle;

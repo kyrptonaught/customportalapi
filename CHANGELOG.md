@@ -1,4 +1,10 @@
 ## Changelog
+**0.0.1-beta 31**
+Fix portals not lighting
+
+**0.0.1-beta 30**
+Make PortalLinks more safe, prevents some crashes too
+
 **0.0.1-beta 29**
 Fixes an infinite loop when searching for a portalbase(thanks #17, Jack-Papel). Also makes CustomPortalBlock:getPortalBase non-static, allowing custom portal blocks to overwrite its logic
 
