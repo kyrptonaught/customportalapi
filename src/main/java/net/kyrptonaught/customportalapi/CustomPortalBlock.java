@@ -6,7 +6,6 @@ import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
 import net.kyrptonaught.customportalapi.portal.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -129,7 +128,7 @@ public class CustomPortalBlock extends Block {
             if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, -1)))
                 return world.getBlockState(pos.offset(axis, -1)).getBlock();
         }
-        if (pos.getY() < 0) {
+        if (pos.getY() < 0 || world.getBlockState(pos).isAir()) {
             return null;
         }
         return CustomPortalsMod.getPortalBase(world, pos.down());

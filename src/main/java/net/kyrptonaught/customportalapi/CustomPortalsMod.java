@@ -3,19 +3,13 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
-import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
-import net.minecraft.entity.effect.StatusEffect;
-import net.minecraft.entity.effect.StatusEffectType;
-import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
@@ -40,18 +34,21 @@ public class CustomPortalsMod implements ModInitializer {
             }
         });
         UseBlockCallback.EVENT.register((playerEntity, world, hand, hitResult) -> {
-            Item item = playerEntity.getStackInHand(hand).getItem();
-            if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
-                if (PortalPlacer.attemptPortalLight(world, hitResult.getBlockPos().offset(hitResult.getSide()), hitResult.getBlockPos(), PortalIgnitionSource.ItemUseSource(item))) {
-                    if (item instanceof CustomPortalFluidProvider)
-                        playerEntity.setStackInHand(hand, ((CustomPortalFluidProvider) item).emptyContents(playerEntity.getStackInHand(hand), playerEntity));
-                    return ActionResult.SUCCESS;
+            if (!world.isClient) {
+                Item item = playerEntity.getStackInHand(hand).getItem();
+                if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
+                    if (PortalPlacer.attemptPortalLight(world, hitResult.getBlockPos().offset(hitResult.getSide()), hitResult.getBlockPos(), PortalIgnitionSource.ItemUseSource(item))) {
+                        if (item instanceof CustomPortalFluidProvider)
+                            playerEntity.setStackInHand(hand, ((CustomPortalFluidProvider) item).emptyContents(playerEntity.getStackInHand(hand), playerEntity));
+                        return ActionResult.SUCCESS;
+                    }
                 }
             }
             return ActionResult.PASS;
         });
 
-        CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
+
+        //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, PortalIgnitionSource.WATER, (CustomPortalBlock) portalBlock, new Identifier("the_nether"), 2, 3, 55, 89, 195);
         //CustomPortalApiRegistry.addPortal(Blocks.NETHERITE_BLOCK, PortalIgnitionSource.FluidSource(Fluids.LAVA), new Identifier("the_nether"), 245, 135, 66);
         //CustomPortalApiRegistry.addPortal(Blocks.SNOW_BLOCK, PortalIgnitionSource.ItemUseSource(Items.STICK), new Identifier("the_end"), 247, 250, 255);
@@ -71,7 +68,9 @@ public class CustomPortalsMod implements ModInitializer {
     }
 
     public static Block getPortalBase(BlockView world, BlockPos pos) {
-        return ((CustomPortalBlock) world.getBlockState(pos).getBlock()).getPortalBase(world, pos);
+        if (isInstanceOfCustomPortal(world, pos))
+            return ((CustomPortalBlock) world.getBlockState(pos).getBlock()).getPortalBase(world, pos);
+        else return null;
     }
 
     // to guarantee block exists before use, unsure how safe this is but works for now. Don't want to switch to using a custom entrypoint to break compatibility with existing mods just yet

@@ -11,12 +11,23 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 
+import java.util.Collection;
 import java.util.HashMap;
 
 
 public class CustomPortalApiRegistry {
-    public static HashMap<Block, PortalLink> portals = new HashMap<>();
+    protected static HashMap<Block, PortalLink> portals = new HashMap<>();
     public static HashMap<Block, PointOfInterestType> PORTAL_POIs = new HashMap<>();
+
+    public static PortalLink getPortalLinkFromBase(Block baseBlock) {
+        if (baseBlock == null) return null;
+        if (portals.containsKey(baseBlock)) return portals.get(baseBlock);
+        return null;
+    }
+
+    public static Collection<PortalLink> getAllPortalLinks() {
+        return portals.values();
+    }
 
     public static int getColorFromRGB(int r, int g, int b) {
         return ColorUtil.getColorFromRGB(r, g, b);

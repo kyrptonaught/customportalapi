@@ -2,10 +2,8 @@ package net.kyrptonaught.customportalapi.mixin.client;
 
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.ClientPlayerInColoredPortal;
-import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.client.MinecraftClient;
@@ -16,7 +14,6 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.DyeColor;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -65,7 +62,7 @@ public abstract class ClientPlayerMixin extends LivingEntity implements ClientPl
         if (this.inNetherPortal) {
             setLastUsedPortalColor(-1);
         } else if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
-            PortalLink link = CustomPortalApiRegistry.portals.get(CustomPortalsMod.getPortalBase(this.world, this.getBlockPos()));
+            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(CustomPortalsMod.getPortalBase(this.world, this.getBlockPos()));
             setLastUsedPortalColor(link != null ? link.colorID : 1908001);
             updateCustomNausea();
             ci.cancel();

@@ -3,6 +3,7 @@ package net.kyrptonaught.customportalapi.portal;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
@@ -145,8 +146,9 @@ public class CustomAreaHelper {
     private static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
         PortalIgnitionSource ignitionSource = PortalIgnitionSource.FIRE;
         for (Block block : foundations) {
-            if (CustomPortalApiRegistry.portals.containsKey(block)) {
-                ignitionSource = CustomPortalApiRegistry.portals.get(block).portalIgnitionSource;
+            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
+            if (link != null) {
+                ignitionSource = link.portalIgnitionSource;
                 break;
             }
         }
@@ -173,9 +175,8 @@ public class CustomAreaHelper {
     }
 
     public void createPortal(Block frameBlock) {
-        BlockState blockState = CustomPortalApiRegistry.portals.containsKey(frameBlock) ?
-                CustomPortalApiRegistry.portals.get(frameBlock).getPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis)
-                : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis);
+        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
+        BlockState blockState = link != null ? link.getPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis) : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis);
         BlockPos.iterate(this.lowerCorner, this.lowerCorner.offset(Direction.UP, this.height - 1).offset(this.negativeDir, this.width - 1)).forEach((blockPos) -> {
             this.world.setBlockState(blockPos, blockState, 18);
         });
