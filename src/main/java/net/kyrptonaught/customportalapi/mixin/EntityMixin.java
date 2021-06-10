@@ -2,7 +2,7 @@ package net.kyrptonaught.customportalapi.mixin;
 
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.TeleportTarget;
 import org.jetbrains.annotations.Nullable;
@@ -61,14 +61,14 @@ public abstract class EntityMixin implements EntityInCustomPortal {
         }
     }
 
-    @Inject(method = "fromTag", at = @At(value = "TAIL"))
-    public void readCustomPortalFromTag(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "readNbt", at = @At(value = "TAIL"))
+    public void readCustomPortalFromTag(NbtCompound tag, CallbackInfo ci) {
         this.didTP = tag.getBoolean("cpadidTP");
         this.coolDown = tag.getInt("cpacooldown");
     }
 
-    @Inject(method = "toTag", at = @At(value = "RETURN"))
-    public void writeCustomPortalToTag(CompoundTag tag, CallbackInfoReturnable<CompoundTag> cir) {
+    @Inject(method = "writeNbt", at = @At(value = "RETURN"))
+    public void writeCustomPortalToTag(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir) {
         cir.getReturnValue().putBoolean("cpadidTP", didTP);
         cir.getReturnValue().putInt("cpacooldown", coolDown);
     }
