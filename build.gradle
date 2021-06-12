@@ -69,10 +69,12 @@ publishing {
 	}
 	repositories {
 		maven {
-			url 's3://kyrptonaught.maven-repo/release'
+			url 's3://maven.kyrptonaught.dev/release'
 			credentials(AwsCredentials) {
 				accessKey = System.getenv('maven-key-id')
 				secretKey = System.getenv('maven-key')
+				//https://s3.us-east-2.amazonaws.com/maven.kyrptonaught.dev/release/net/kyrptonaught/customportalapi/maven-metadata.xml
+				//https://s3.us-east-2.amazonaws.com/kyrptonaught.maven-repo/release
 			}
 		}
 	}
