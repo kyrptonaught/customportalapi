@@ -1,21 +1,15 @@
 plugins {
-	id 'fabric-loom' version '0.7-SNAPSHOT'
+	id 'fabric-loom' version '0.8-SNAPSHOT'
 	id 'maven-publish'
-	id "com.jfrog.bintray" version "1.8.4"
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = JavaVersion.VERSION_16
+targetCompatibility = JavaVersion.VERSION_16
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
-minecraft {
-	accessWidener =  file("src/main/resources/customportalapi.accesswidener")
-}
-repositories {
-}
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	//mappings minecraft.officialMojangMappings()
@@ -24,23 +18,7 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 }
-bintray {
-	user = System.getenv('BINTRAY_USER')
-	key = System.getenv('BINTRAY_KEY')
-	publications = ['bintrayPublication']
-	pkg {
-		repo = 'customportalapi'
-		name = 'customportalapi'
-		userOrg = 'kyrptonaught'
-		licenses = ['MIT']
-		vcsUrl = 'https://github.com/kyrptonaught/customportalapi'
-		version {
-			name = project.version
-			released  = new Date()
-			vcsTag = project.version
-		}
-	}
-}
+
 processResources {
 	inputs.property "version", project.version
 
@@ -71,11 +49,8 @@ jar {
 // configure the maven publication
 publishing {
 	publications {
-		bintrayPublication(MavenPublication) {
-			groupId 'net.kyrptonaught'
+		mavenJava(MavenPublication) {
 			artifactId 'customportalapi'
-			version project.version
-
 			artifact(remapJar) {
 				builtBy remapJar
 			}
@@ -84,8 +59,15 @@ publishing {
 			}
 		}
 	}
-
 	repositories {
-		mavenLocal()
+		maven {
+			url 's3://maven.kyrptonaught.dev/release'
+			credentials(AwsCredentials) {
+				accessKey = System.getenv('maven-key-id')
+				secretKey = System.getenv('maven-key')
+				//https://s3.us-east-2.amazonaws.com/maven.kyrptonaught.dev/release/net/kyrptonaught/customportalapi/maven-metadata.xml
+				//https://s3.us-east-2.amazonaws.com/kyrptonaught.maven-repo/release
+			}
+		}
 	}
 }

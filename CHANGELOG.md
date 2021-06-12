@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 32**
+Fix crash
+
 **0.0.1-beta 31**
 Fix portals not lighting
 

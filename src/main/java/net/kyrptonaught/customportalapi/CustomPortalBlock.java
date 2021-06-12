@@ -6,7 +6,6 @@ import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
 import net.kyrptonaught.customportalapi.portal.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
-import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

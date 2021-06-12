@@ -40,7 +40,7 @@ public class CustomTeleporter {
             entity.detach();
             Entity newEntity = entity.getType().create(destination);
             newEntity.copyFrom(entity);
-            newEntity.refreshPositionAndAngles(target.position.x, target.position.y, target.position.z, target.yaw, newEntity.pitch);
+            newEntity.refreshPositionAndAngles(target.position.x, target.position.y, target.position.z, target.yaw, newEntity.getPitch());
             newEntity.setVelocity(target.velocity);
             destination.onDimensionChanged(newEntity);
             entity.remove(Entity.RemovalReason.CHANGED_DIMENSION);
@@ -69,7 +69,7 @@ public class CustomTeleporter {
                 vec3d2 = new Vec3d(0.5D, 0.0D, 0.0D);
             }
 
-            return AreaHelper.getNetherTeleportTarget(destination, arg, axis2, vec3d2, entity.getDimensions(entity.getPose()), entity.getVelocity(), entity.yaw, entity.pitch);
+            return AreaHelper.getNetherTeleportTarget(destination, arg, axis2, vec3d2, entity.getDimensions(entity.getPose()), entity.getVelocity(), entity.getYaw(), entity.getPitch());
         }).orElse(idkWhereToPutYou(destination, entity, blockPos3));
 
     }
@@ -80,6 +80,6 @@ public class CustomTeleporter {
 
     protected static TeleportTarget idkWhereToPutYou(ServerWorld world, Entity entity, BlockPos pos) {
         BlockPos destinationPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos);
-        return new TeleportTarget(new Vec3d(destinationPos.getX() + .5, destinationPos.getY(), destinationPos.getZ() + .5), entity.getVelocity(), entity.yaw, entity.pitch);
+        return new TeleportTarget(new Vec3d(destinationPos.getX() + .5, destinationPos.getY(), destinationPos.getZ() + .5), entity.getVelocity(), entity.getYaw(), entity.getPitch());
     }
 }
