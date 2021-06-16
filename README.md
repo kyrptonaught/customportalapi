@@ -3,20 +3,20 @@
 # Custom Portal Api
 Library mod allowing developers to easily create portals to their custom dimensions. These custom portals will function exactly like nether portals except being fully customizable. You can control the frame block, portal block or tinting of the default, ignition source, and destination
 
-# This lib is now hosted on my own maven repo now that bintray is down: http://maven.kyrptonaught.dev
-The lib is hosted on [Bintray](https://bintray.com/kyrptonaught/customportalapi/customportalapi)
- [ ![Download](https://api.bintray.com/packages/kyrptonaught/customportalapi/customportalapi/images/download.svg) ](https://bintray.com/kyrptonaught/customportalapi/customportalapi/_latestVersion) 
+#This lib is now hosted on my own maven repo now that bintray is down, see usage below: http://maven.kyrptonaught.dev
 
 |![Some example of portals](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-10-05_04.02.08.png)| ![](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-11-11_15.01.14.png) |
 |----------------------------|--|
 |     ![p](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-11-15_17.06.44.png)                       |![p](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-11-15_17.07.38.png)  |
 
 # Usage: 
-**beta16 added new methods, deprecating the old ones. They will be removed eventually**
 
-Add the repository to your build.gradle 
+Add the repository to your build.gradle. Note: as of now, you must use http as I currently do not have a ssl cert for https
 ```java
-maven { url "https://dl.bintray.com/kyrptonaught/customportalapi" }
+maven { 
+        url = "http://maven.kyrptonaught.dev"
+        allowInsecureProtocol = true
+}
   ```
 Add the dependency
 ```java
