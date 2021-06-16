@@ -3,7 +3,7 @@
 # Custom Portal Api
 Library mod allowing developers to easily create portals to their custom dimensions. These custom portals will function exactly like nether portals except being fully customizable. You can control the frame block, portal block or tinting of the default, ignition source, and destination
 
-#This lib is now hosted on my own maven repo now that bintray is down, see usage below: http://maven.kyrptonaught.dev
+# This lib is now hosted on my own maven repo now that bintray is down, see usage below: http://maven.kyrptonaught.dev
 
 |![Some example of portals](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-10-05_04.02.08.png)| ![](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-11-11_15.01.14.png) |
 |----------------------------|--|
