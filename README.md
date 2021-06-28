@@ -1,9 +1,10 @@
 
 
+
 # Custom Portal Api
 Library mod allowing developers to easily create portals to their custom dimensions. These custom portals will function exactly like nether portals except being fully customizable. You can control the frame block, portal block or tinting of the default, ignition source, and destination
 
-# This lib is now hosted on my own maven repo now that bintray is down, see usage below: http://maven.kyrptonaught.dev
+# This lib is now hosted on my own maven repo now that bintray is down, see usage below: https://maven.kyrptonaught.dev
 
 |![Some example of portals](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-10-05_04.02.08.png)| ![](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-11-11_15.01.14.png) |
 |----------------------------|--|
@@ -11,12 +12,9 @@ Library mod allowing developers to easily create portals to their custom dimensi
 
 # Usage: 
 
-Add the repository to your build.gradle. Note: as of now, you must use http as I currently do not have a ssl cert for https
+Add the repository to your build.gradle. ~~Note: as of now, you must use http as I currently do not have a ssl cert for https.~~ https is now working.
 ```java
-maven { 
-        url = "http://maven.kyrptonaught.dev"
-        allowInsecureProtocol = true
-}
+maven {url = "https://maven.kyrptonaught.dev"}
   ```
 Add the dependency
 ```java
