@@ -25,9 +25,11 @@ public class CustomPortalApiRegistry {
         if (portals.containsKey(baseBlock)) return portals.get(baseBlock);
         return null;
     }
-    public static Collection<PortalLink> getAllPortalLinks(){
-        return  portals.values();
+
+    public static Collection<PortalLink> getAllPortalLinks() {
+        return portals.values();
     }
+
     public static int getColorFromRGB(int r, int g, int b) {
         return ColorUtil.getColorFromRGB(r, g, b);
     }

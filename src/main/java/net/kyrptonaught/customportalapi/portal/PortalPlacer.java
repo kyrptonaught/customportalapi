@@ -32,7 +32,7 @@ public class PortalPlacer {
         Block foundationBlock = world.getBlockState(framePos).getBlock();
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(foundationBlock);
 
-        if(link == null || !link.doesIgnitionMatch(ignitionSource) || !link.canLightInDim(world.getRegistryKey().getValue()))
+        if (link == null || !link.doesIgnitionMatch(ignitionSource) || !link.canLightInDim(world.getRegistryKey().getValue()))
             return false;
         return createPortal(world, portalPos, foundationBlock);
     }

@@ -13,12 +13,15 @@ import net.minecraft.util.registry.Registry;
 
 public class CustomPortalBuilder {
     PortalLink portalLink;
+
     private CustomPortalBuilder() {
         portalLink = new PortalLink();
     }
-    public static CustomPortalBuilder beginPortal(){
+
+    public static CustomPortalBuilder beginPortal() {
         return new CustomPortalBuilder();
     }
+
     public void registerPortal() {
         CustomPortalApiRegistry.addPortal(Registry.BLOCK.get(portalLink.block), portalLink);
     }
@@ -89,7 +92,8 @@ public class CustomPortalBuilder {
         portalLink.onlyIgnitableInReturnDim = onlyIgnitableInReturnDim;
         return this;
     }
-    public CustomPortalBuilder onlyLightInOverworld(){
+
+    public CustomPortalBuilder onlyLightInOverworld() {
         portalLink.onlyIgnitableInReturnDim = true;
         return this;
     }
