@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 33**
+Fix buckets placing the liquid when creating a portal
+
 **0.0.1-beta 32**
 Fix crash
 

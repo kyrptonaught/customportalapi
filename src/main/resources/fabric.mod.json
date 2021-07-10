@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
   "id": "customportalapi",
-  "version": "0.0.1-beta32-1.17",
-  "name": "Custom Portals",
+  "version": "0.0.1-beta37-1.17",
+  "name": "Custom Portal Api",
   "description": "Create portals out of anything!",
   "authors": [
     "kyrptonaught"

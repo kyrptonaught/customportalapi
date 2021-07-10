@@ -1,7 +1,6 @@
 package net.kyrptonaught.customportalapi.portal;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
@@ -51,15 +50,15 @@ public class PortalPlacer {
         return false;
     }
 
-    public static Optional<PortalUtil.Rectangle> findOrCreatePortal(ServerWorld world, BlockPos blockPos, Block portalFrame, Direction.Axis axis, boolean bl) {
-        Optional<PortalUtil.Rectangle> found = findDestinationPortal(world, blockPos, portalFrame, bl);
+    public static Optional<PortalUtil.Rectangle> findOrCreatePortal(ServerWorld world, BlockPos blockPos, Block portalFrame, Direction.Axis axis, boolean destIsNether) {
+        Optional<PortalUtil.Rectangle> found = findDestinationPortal(world, blockPos, portalFrame, destIsNether);
         if (found.isPresent()) return found;
         return createDestinationPortal(world, blockPos, portalFrame.getDefaultState(), axis);
     }
 
-    private static Optional<PortalUtil.Rectangle> findDestinationPortal(ServerWorld world, BlockPos blockPos, Block portalFrame, boolean bl) {
+    private static Optional<PortalUtil.Rectangle> findDestinationPortal(ServerWorld world, BlockPos blockPos, Block portalFrame, boolean destIsNether) {
         PointOfInterestStorage pointOfInterestStorage = world.getPointOfInterestStorage();
-        int i = bl ? 16 : 128;
+        int i = destIsNether ? 16 : 128;
         pointOfInterestStorage.preloadChunks(world, blockPos, i);
         Optional<PointOfInterest> optional = pointOfInterestStorage.getInSquare(CustomPortalApiRegistry::isCustomPortalPOI, blockPos, i, PointOfInterestStorage.OccupationStatus.ANY).filter(pointOfInterest -> {
             if (CustomPortalsMod.isInstanceOfCustomPortal(world, pointOfInterest.getPos()))

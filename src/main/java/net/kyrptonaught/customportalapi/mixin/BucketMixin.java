@@ -16,7 +16,7 @@ public abstract class BucketMixin implements CustomPortalFluidProvider {
     private Fluid fluid;
 
     @Shadow
-    protected static ItemStack getEmptiedStack(ItemStack stack, PlayerEntity player) {
+    public static ItemStack getEmptiedStack(ItemStack stack, PlayerEntity player) {
         return null;
     }
 

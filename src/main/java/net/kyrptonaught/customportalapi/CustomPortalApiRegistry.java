@@ -12,7 +12,6 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 
 
@@ -43,6 +42,8 @@ public class CustomPortalApiRegistry {
         if (link.getPortalBlock() == null) CustomPortalsMod.logError("Portal block is null");
         if (link.portalIgnitionSource == null) CustomPortalsMod.logError("Portal ignition source is null");
         if (link.dimID == null) CustomPortalsMod.logError("Dimmension is null");
+        if(CustomPortalsMod.dims.size() > 0 && !CustomPortalsMod.dims.containsKey(link.dimID)) CustomPortalsMod.logError("Dimmension not found");
+            CustomPortalsMod.dims.keySet().forEach(System.out::println);
         if (CustomPortalsMod.getDefaultPortalBlock() == null)
             CustomPortalsMod.logError("Built in CustomPortalBlock is null");
 
@@ -51,7 +52,7 @@ public class CustomPortalApiRegistry {
         } else {
             portals.put(frameBlock, link);
             Identifier POI_ID = new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.getPortalBlock()).getPath() + "poi");
-            if (!Registry.POINT_OF_INTEREST_TYPE.getOrEmpty(POI_ID).isPresent())//why tf is .containsID client only?
+            if (Registry.POINT_OF_INTEREST_TYPE.getOrEmpty(POI_ID).isEmpty())//why tf is .containsID client only?
                 PORTAL_POIs.putIfAbsent(link.getPortalBlock(), PointOfInterestHelper.register(POI_ID, 0, 1, link.getPortalBlock()));
         }
     }

@@ -17,10 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityInCustomPortal {
 
-    @Shadow
-    @Nullable
-    protected abstract TeleportTarget getTeleportTarget(ServerWorld destination);
-
     @Unique
     boolean didTP = false;
 
@@ -73,4 +69,3 @@ public abstract class EntityMixin implements EntityInCustomPortal {
         cir.getReturnValue().putInt("cpacooldown", coolDown);
     }
 }
-

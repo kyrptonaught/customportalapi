@@ -10,12 +10,15 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+
+
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	//mappings minecraft.officialMojangMappings()
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
 
 }
 

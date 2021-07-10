@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
@@ -28,6 +29,8 @@ public class CustomTeleporter {
     public static void TPToDim(World world, Entity entity, Block portalBase, BlockPos portalPoss) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
         if (link == null) return;
+        if (link.executeBeforeTPEvent(entity) == SHOULDTP.CANCEL_TP)
+            return;
         RegistryKey<World> destKey = world.getRegistryKey() == CustomPortalsMod.dims.get(link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
         if (destination == null) return;
@@ -35,8 +38,10 @@ public class CustomTeleporter {
         TeleportTarget target = customTPTarget(destination, entity, portalBase, portalPoss);
         if (entity instanceof ServerPlayerEntity) {
             ((ServerPlayerEntity) entity).teleport(destination, target.position.x, target.position.y, target.position.z, target.yaw, target.pitch);
+            link.executePostTPEvent(entity);
         } else {
             //copied from entity.moveToWorld(destination);
+            System.out.println("Before TP: " +((EntityInCustomPortal)entity).didTeleport());
             entity.detach();
             Entity newEntity = entity.getType().create(destination);
             newEntity.copyFrom(entity);
@@ -44,6 +49,8 @@ public class CustomTeleporter {
             newEntity.setVelocity(target.velocity);
             destination.onDimensionChanged(newEntity);
             entity.remove(Entity.RemovalReason.CHANGED_DIMENSION);
+            link.executePostTPEvent(newEntity);
+            System.out.println("After TP: " +((EntityInCustomPortal)newEntity).didTeleport());
         }
     }
 
@@ -56,7 +63,7 @@ public class CustomTeleporter {
         double h = DimensionType.getCoordinateScaleFactor(entity.world.getDimension(), destination.getDimension());
         BlockPos blockPos3 = new BlockPos(MathHelper.clamp(entity.getX() * h, d, f), entity.getY(), MathHelper.clamp(entity.getZ() * h, e, g));
         BlockState blockState = entity.world.getBlockState(portalPos);
-        return PortalPlacer.findOrCreatePortal(destination, blockPos3, portalFrame, blockState.get(NetherPortalBlock.AXIS), destination.getRegistryKey() == World.NETHER).map((arg) -> {
+        return PortalPlacer.findOrCreatePortal(destination, blockPos3, portalFrame, blockState.get(NetherPortalBlock.AXIS), true).map((arg) -> {
             Direction.Axis axis2;
             Vec3d vec3d2;
             if (blockState.contains(Properties.HORIZONTAL_AXIS)) {
@@ -80,6 +87,7 @@ public class CustomTeleporter {
 
     protected static TeleportTarget idkWhereToPutYou(ServerWorld world, Entity entity, BlockPos pos) {
         BlockPos destinationPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos);
+        //CustomPortalsMod.logError("Unable to find find tp location, forced to place on top of world");
         return new TeleportTarget(new Vec3d(destinationPos.getX() + .5, destinationPos.getY(), destinationPos.getZ() + .5), entity.getVelocity(), entity.getYaw(), entity.getPitch());
     }
 }
