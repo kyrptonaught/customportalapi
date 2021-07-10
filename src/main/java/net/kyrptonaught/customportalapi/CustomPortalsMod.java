@@ -9,7 +9,6 @@ import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
@@ -52,12 +51,11 @@ public class CustomPortalsMod implements ModInitializer {
             }
             return ActionResult.PASS;
         });
-
+        //CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortal();
         //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, PortalIgnitionSource.FIRE, new Identifier("the_end"), 66, 135, 245);
         //CustomPortalApiRegistry.addPortal(Blocks.GLOWSTONE, PortalIgnitionSource.WATER, (CustomPortalBlock) portalBlock, new Identifier("the_nether"), 2, 3, 55, 89, 195);
         //CustomPortalApiRegistry.addPortal(Blocks.NETHERITE_BLOCK, PortalIgnitionSource.FluidSource(Fluids.LAVA), new Identifier("the_nether"), 245, 135, 66);
         //CustomPortalApiRegistry.addPortal(Blocks.SNOW_BLOCK, PortalIgnitionSource.ItemUseSource(Items.STICK), new Identifier("the_end"), 247, 250, 255);
-
     }
 
     public static void logError(String message) {

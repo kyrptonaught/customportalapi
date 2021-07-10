@@ -12,8 +12,13 @@ public class PortalLink {
     private CustomPortalBlock portalBlock = CustomPortalsMod.portalBlock;
     public Identifier dimID;
     public Identifier returnDimID = new Identifier("overworld");
+    public boolean onlyIgnitableInReturnDim = false;
     public int colorID;
     public int forcedWidth, forcedHeight;
+
+    public PortalLink() {
+
+    }
 
     public PortalLink(Identifier blockID, Identifier dimID, int colorID) {
         this.block = blockID;
@@ -30,7 +35,12 @@ public class PortalLink {
     }
 
     public boolean doesIgnitionMatch(PortalIgnitionSource attemptedSource) {
-        return portalIgnitionSource.sourceType == attemptedSource.sourceType && portalIgnitionSource.ignitionSourceID == attemptedSource.ignitionSourceID;
+        return portalIgnitionSource.sourceType == attemptedSource.sourceType && portalIgnitionSource.ignitionSourceID.equals(attemptedSource.ignitionSourceID);
+    }
+
+    public boolean canLightInDim(Identifier dim) {
+        if (!onlyIgnitableInReturnDim) return true;
+        return dim.equals(returnDimID) || dim.equals(dimID);
     }
 
     public boolean isCorrectForcedSize(int attempWidth, int attemptHeight) {

@@ -46,6 +46,8 @@ public class PortalIgnitionSource {
         return new PortalIgnitionSource(SourceType.CUSTOM, ignitionSourceID);
     }
 
+    // TODO: implement
+    @Deprecated
     public void withCondition(BiFunction<World, BlockPos, Boolean> condition) {
 
     }
