@@ -143,7 +143,7 @@ public class CustomAreaHelper {
         return 21;
     }
 
-    private static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
+    public static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
         PortalIgnitionSource ignitionSource = PortalIgnitionSource.FIRE;
         for (Block block : foundations) {
             PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
