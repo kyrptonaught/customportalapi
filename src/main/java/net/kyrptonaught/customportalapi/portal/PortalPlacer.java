@@ -39,11 +39,11 @@ public class PortalPlacer {
     private static boolean createPortal(World world, BlockPos pos, Block foundationBlock) {
         HashSet<Block> foundations = new HashSet<>();
         foundations.add(foundationBlock);
-        Optional<CustomAreaHelper> optional = CustomAreaHelper.method_30485(world, pos, Direction.Axis.X, foundations);
+        Optional<CustomAreaHelper> optional = CustomAreaHelper.getNewPortal(world, pos, Direction.Axis.X, foundations);
         //is valid frame, and is correct size(if applicable)
         if (optional.isPresent()) {
             PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(foundationBlock);
-            if (link.isCorrectForcedSize(optional.get().getWidth(), optional.get().getHeight()))
+            if (link.isCorrectForcedSize(optional.get().getPortalWidth(), optional.get().getPortalHeight()))
                 optional.get().createPortal(foundationBlock);
             return true;
         }

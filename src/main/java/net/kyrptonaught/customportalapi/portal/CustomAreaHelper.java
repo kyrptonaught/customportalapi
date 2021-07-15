@@ -34,26 +34,26 @@ public class CustomAreaHelper {
         this.world = world;
         this.axis = axis;
         this.negativeDir = axis == Direction.Axis.X ? Direction.WEST : Direction.SOUTH;
-        this.lowerCorner = this.method_30492(blockPos);
+        this.lowerCorner = this.getLowerCorner(blockPos);
         if (this.lowerCorner == null) {
             this.lowerCorner = blockPos;
             this.width = 1;
             this.height = 1;
         } else {
-            this.width = this.method_30495();
+            this.width = this.getWidth();
             if (this.width > 0) {
-                this.height = this.method_30496();
+                this.height = this.getHeight();
             }
         }
     }
 
-    public static Optional<CustomAreaHelper> method_30485(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, HashSet<Block> foundations) {
-        return method_30486(worldAccess, blockPos, (CustomAreaHelper) -> {
+    public static Optional<CustomAreaHelper> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, HashSet<Block> foundations) {
+        return getOrEmpty(worldAccess, blockPos, (CustomAreaHelper) -> {
             return CustomAreaHelper.isValid() && CustomAreaHelper.foundPortalBlocks == 0;
         }, axis, foundations);
     }
 
-    public static Optional<CustomAreaHelper> method_30486(WorldAccess worldAccess, BlockPos blockPos, Predicate<CustomAreaHelper> predicate, Direction.Axis axis, HashSet<Block> foundations) {
+    public static Optional<CustomAreaHelper> getOrEmpty(WorldAccess worldAccess, BlockPos blockPos, Predicate<CustomAreaHelper> predicate, Direction.Axis axis, HashSet<Block> foundations) {
         Optional<CustomAreaHelper> optional = Optional.of(new CustomAreaHelper(worldAccess, blockPos, axis, foundations)).filter(predicate);
         if (optional.isPresent()) {
             return optional;
@@ -63,20 +63,20 @@ public class CustomAreaHelper {
         }
     }
 
-    private BlockPos method_30492(BlockPos blockPos) {
-        for (int i = Math.max(0, blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()), VALID_FRAME); blockPos = blockPos.down()) {
+    private BlockPos getLowerCorner(BlockPos blockPos) {
+        for(int i = Math.max(this.world.getBottomY(), blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()),VALID_FRAME); blockPos = blockPos.down()) {
         }
         Direction direction = this.negativeDir.getOpposite();
-        int j = this.method_30493(blockPos, direction) - 1;
+        int j = this.getWidth(blockPos, direction) - 1;
         return j < 0 ? null : blockPos.offset(direction, j);
     }
 
-    private int method_30495() {
-        int i = this.method_30493(this.lowerCorner, this.negativeDir);
+    private int getWidth() {
+        int i = this.getWidth(this.lowerCorner, this.negativeDir);
         return i >= 2 && i <= 21 ? i : 0;
     }
 
-    private int method_30493(BlockPos blockPos, Direction direction) {
+    private int getWidth(BlockPos blockPos, Direction direction) {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
 
         for (int i = 0; i <= 21; ++i) {
@@ -98,7 +98,7 @@ public class CustomAreaHelper {
         return 0;
     }
 
-    private int method_30496() {
+    private int getHeight() {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         int i = this.method_30490(mutable);
         return i >= 3 && i <= 21 && this.method_30491(mutable, i) ? i : 0;
@@ -182,11 +182,11 @@ public class CustomAreaHelper {
         });
     }
 
-    public int getWidth() {
+    public int getPortalWidth() {
         return this.width;
     }
 
-    public int getHeight() {
+    public int getPortalHeight() {
         return this.height;
     }
 }

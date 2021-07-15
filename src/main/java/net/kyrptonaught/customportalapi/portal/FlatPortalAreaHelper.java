@@ -1,26 +1,33 @@
 package net.kyrptonaught.customportalapi.portal;
 
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Optional;
 
 public class FlatPortalAreaHelper {
     private final HashSet<Block> VALID_FRAME;
-    private int foundPortalBlocks = 0;
+    protected int foundPortalBlocks = 0;
 
     public FlatPortalAreaHelper() {
         VALID_FRAME = new HashSet<>();
         VALID_FRAME.add(Blocks.COBBLESTONE);
     }
-
-    public HashSet<BlockPos> foundPortals = new HashSet<>();
+    public static Optional<FlatPortalAreaHelper> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, HashSet<Block> foundations) {
+        return getOrEmpty(worldAccess, blockPos, (areaHelper) -> {
+            return areaHelper.isValid() && areaHelper.foundPortalBlocks == 0;
+        }, axis, foundations);
+    }
+    public HashSet<BlockPos> insidePos = new HashSet<>();
 
     public boolean detectPortal(World world, BlockPos portalPos) {
         spreadPos(world, portalPos);
@@ -31,10 +38,11 @@ public class FlatPortalAreaHelper {
     }
 
     public void spreadPos(World world, BlockPos portalPos) {
-        if (foundPortals.size() > 30 || foundPortals.contains(portalPos) || !CustomAreaHelper.validStateInsidePortal(world.getBlockState(portalPos), VALID_FRAME))
+        if (insidePos.size() > 30 || insidePos.contains(portalPos) || !CustomAreaHelper.validStateInsidePortal(world.getBlockState(portalPos), VALID_FRAME))
             return;
-        foundPortalBlocks++;
-        foundPortals.add(portalPos);
+        if (CustomPortalsMod.isInstanceOfCustomPortal(world, portalPos))
+            foundPortalBlocks++;
+        insidePos.add(portalPos);
         spreadPos(world, portalPos.north());
         spreadPos(world, portalPos.east());
         spreadPos(world, portalPos.south());
@@ -44,7 +52,7 @@ public class FlatPortalAreaHelper {
     public Pair<Integer,Integer> isValidShape() {
         HashMap<Integer, Integer> X_Coords = new HashMap<>();
         HashMap<Integer, Integer> Z_Coords = new HashMap<>();
-        for (BlockPos pos : foundPortals) {
+        for (BlockPos pos : insidePos) {
             X_Coords.put(pos.getX(), X_Coords.getOrDefault(pos.getX(), 0) + 1);
             Z_Coords.put(pos.getZ(), Z_Coords.getOrDefault(pos.getZ(), 0) + 1);
         }
@@ -61,7 +69,7 @@ public class FlatPortalAreaHelper {
     }
 
     public boolean isValidFrame(World world) {
-        for (BlockPos pos : foundPortals) {
+        for (BlockPos pos : insidePos) {
             if (!checkFrame(world.getBlockState(pos.north())) ||
                     !checkFrame(world.getBlockState(pos.east())) ||
                     !checkFrame(world.getBlockState(pos.south())) ||
