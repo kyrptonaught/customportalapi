@@ -3,14 +3,18 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.kyrptonaught.customportalapi.portal.FlatPortalAreaHelper;
+import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
+import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
+import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.Material;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -23,12 +27,15 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Optional;
 
 public class CustomPortalsMod implements ModInitializer {
     public static final String MOD_ID = "customportalapi";
     public static CustomPortalBlock portalBlock;
     public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
-
+    public static Identifier VANILLA_NETHERPORTAL_FRAMETESTER = new Identifier(MOD_ID, "vanillanether");
+    public static Identifier FLATPORTAL_FRAMETESTER = new Identifier(MOD_ID, "flat");
     @Override
     public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
@@ -36,6 +43,8 @@ public class CustomPortalsMod implements ModInitializer {
                 dims.put(registryKey.getValue(), registryKey);
             }
         });
+        CustomPortalApiRegistry.registerPortalFrameTester(VANILLA_NETHERPORTAL_FRAMETESTER, CustomAreaHelper::new);
+        CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         UseItemCallback.EVENT.register(((player, world, hand) -> {
             ItemStack stack = player.getStackInHand(hand);
             if (!world.isClient) {
@@ -55,24 +64,8 @@ public class CustomPortalsMod implements ModInitializer {
             }
             return TypedActionResult.pass(stack);
         }));
-        /*
-        UseItemCallback.EVENT.register(((player, world, hand) -> {
-            ItemStack stack = player.getStackInHand(hand);
-            if (!world.isClient) {
-                FlatPortalAreaHelper flat = new FlatPortalAreaHelper();
-                HitResult hit = player.raycast(6, 1, false);
-                if (hit.getType() == HitResult.Type.BLOCK) {
-                    BlockHitResult blockHit = (BlockHitResult) hit;
-                    BlockPos usedBlockPos = blockHit.getBlockPos();
-                    flat.detectPortal(world,usedBlockPos.up());
-                }
-            }
-            return TypedActionResult.pass(stack);
-        }));
-
-         */
-        //CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortal();
-        //CustomPortalApiRegistry.addPortal(Blocks.DIAMOND_BLOCK, World.END.getValue(), 100, 23, 45);
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortal();
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
 
     }
 

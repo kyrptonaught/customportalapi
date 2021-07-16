@@ -3,9 +3,11 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
-import net.kyrptonaught.customportalapi.portal.CustomAreaHelper;
+import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
+import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -27,12 +29,14 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Random;
 
 public class CustomPortalBlock extends Block {
-    public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
+    public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
     protected static final VoxelShape X_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
     protected static final VoxelShape Z_SHAPE = Block.createCuboidShape(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
+    protected static final VoxelShape Y_SHAPE = Block.createCuboidShape(0.0D, 6.0D, 0.0D, 16.0D, 10.0D, 16.0D);
 
     public CustomPortalBlock(Settings settings) {
         super(settings);
@@ -41,23 +45,24 @@ public class CustomPortalBlock extends Block {
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        switch (state.get(AXIS)) {
-            case Z:
-                return Z_SHAPE;
-            case X:
-            default:
-                return X_SHAPE;
-        }
+        return switch (state.get(AXIS)) {
+            case Z -> Z_SHAPE;
+            case Y -> Y_SHAPE;
+            default -> X_SHAPE;
+        };
     }
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
-        Direction.Axis axis = direction.getAxis();
-        Direction.Axis axis2 = state.get(AXIS);
-        boolean bl = axis2 != axis && axis.isHorizontal();
-        HashSet<Block> foundations = new HashSet<>();
         Block block = getPortalBase(world, pos);
-        foundations.add(block);
-        return !bl && !newState.isOf(this) && !(new CustomAreaHelper(world, pos, axis2, foundations)).wasAlreadyValid() ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
+        if (link != null) {
+            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, state.get(AXIS), block);
+            if (portalFrameTester.wasAlreadyValid())
+                return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+        }
+        //todo handle unknown portallink
+
+        return Blocks.AIR.getDefaultState();
     }
 
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
@@ -118,11 +123,15 @@ public class CustomPortalBlock extends Block {
 
     public Block getPortalBase(BlockView world, BlockPos pos) {
         if (CustomPortalsMod.isInstanceOfCustomPortal(world, pos)) {
-            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.down()))
-                return world.getBlockState(pos.down()).getBlock();
-            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.up()))
-                return world.getBlockState(pos.up()).getBlock();
             Direction.Axis axis = world.getBlockState(pos).get(AXIS);
+
+            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, moveTowardsFrame(pos, axis, false)))
+                return world.getBlockState(moveTowardsFrame(pos, axis, false)).getBlock();
+            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, moveTowardsFrame(pos, axis, true)))
+                return world.getBlockState(moveTowardsFrame(pos, axis, true)).getBlock();
+
+            if (axis == Direction.Axis.Y) axis = Direction.Axis.Z;
+
             if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, 1)))
                 return world.getBlockState(pos.offset(axis, 1)).getBlock();
             if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, -1)))
@@ -131,6 +140,13 @@ public class CustomPortalBlock extends Block {
         if (pos.getY() < 0 || world.getBlockState(pos).isAir()) {
             return null;
         }
-        return CustomPortalsMod.getPortalBase(world, pos.down());
+        Direction.Axis axis = world.getBlockState(pos).get(AXIS);
+        return CustomPortalsMod.getPortalBase(world, moveTowardsFrame(pos, axis, false));
+    }
+
+    public BlockPos moveTowardsFrame(BlockPos pos, Direction.Axis portalAxis, boolean positiveMove) {
+        if (portalAxis.isHorizontal())
+            return pos.offset(positiveMove ? Direction.UP : Direction.DOWN);
+        return pos.offset(positiveMove ? Direction.EAST : Direction.WEST);
     }
 }

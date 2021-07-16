@@ -1,12 +1,18 @@
 package net.kyrptonaught.customportalapi.util;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.WorldAccess;
 
+import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -19,6 +25,7 @@ public class PortalLink {
     public boolean onlyIgnitableInReturnDim = false;
     public int colorID;
     public int forcedWidth, forcedHeight;
+    public Identifier portalFrameTester = CustomPortalsMod.VANILLA_NETHERPORTAL_FRAMETESTER;
 
     public PortalLink() {
 
@@ -71,5 +78,9 @@ public class PortalLink {
     public void executePostTPEvent(Entity entity) {
         if (postTPEvent != null)
             postTPEvent.accept(entity);
+    }
+
+    public PortalFrameTester.PortalFrameTesterFactory getFrameTester() {
+        return CustomPortalApiRegistry.getPortalFrameTester(portalFrameTester);
     }
 }

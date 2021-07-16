@@ -2,6 +2,7 @@ package net.kyrptonaught.customportalapi;
 
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
@@ -17,8 +18,8 @@ import java.util.HashMap;
 
 public class CustomPortalApiRegistry {
     protected static HashMap<Block, PortalLink> portals = new HashMap<>();
-    public static HashMap<Block, PointOfInterestType> PORTAL_POIs = new HashMap<>();
-
+    private static final HashMap<Block, PointOfInterestType> PORTAL_POIs = new HashMap<>();
+    private static final HashMap<Identifier, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters = new HashMap<>();
     public static PortalLink getPortalLinkFromBase(Block baseBlock) {
         if (baseBlock == null) return null;
         if (portals.containsKey(baseBlock)) return portals.get(baseBlock);
@@ -36,14 +37,20 @@ public class CustomPortalApiRegistry {
     public static boolean isCustomPortalPOI(PointOfInterestType poi) {
         return CustomPortalApiRegistry.PORTAL_POIs.containsValue(poi);
     }
-
+    public static void registerPortalFrameTester(Identifier frameTesterID, PortalFrameTester.PortalFrameTesterFactory createPortalFrameTester){
+        PortalFrameTesters.put(frameTesterID,createPortalFrameTester);
+    }
+    public static PortalFrameTester.PortalFrameTesterFactory getPortalFrameTester(Identifier frameTesterID){
+        return PortalFrameTesters.getOrDefault(frameTesterID,null);
+    }
     public static void addPortal(Block frameBlock, PortalLink link) {
         if (frameBlock == null) CustomPortalsMod.logError("Frameblock is null");
         if (link.getPortalBlock() == null) CustomPortalsMod.logError("Portal block is null");
         if (link.portalIgnitionSource == null) CustomPortalsMod.logError("Portal ignition source is null");
-        if (link.dimID == null) CustomPortalsMod.logError("Dimmension is null");
-        if(CustomPortalsMod.dims.size() > 0 && !CustomPortalsMod.dims.containsKey(link.dimID)) CustomPortalsMod.logError("Dimmension not found");
-            CustomPortalsMod.dims.keySet().forEach(System.out::println);
+        if (link.dimID == null) CustomPortalsMod.logError("Dimension is null");
+        if (CustomPortalsMod.dims.size() > 0 && !CustomPortalsMod.dims.containsKey(link.dimID))
+            CustomPortalsMod.logError("Dimension not found");
+        CustomPortalsMod.dims.keySet().forEach(System.out::println);
         if (CustomPortalsMod.getDefaultPortalBlock() == null)
             CustomPortalsMod.logError("Built in CustomPortalBlock is null");
 
@@ -57,12 +64,18 @@ public class CustomPortalApiRegistry {
         }
     }
 
+    /**
+     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.kyrptonaught.customportalapi.api.CustomPortalBuilder} instead for more flexibility
+     */
     @Deprecated
     public static void addPortal(Block frameBlock, Identifier dimID, int portalColor) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalColor);
         addPortal(frameBlock, link);
     }
 
+    /**
+     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.kyrptonaught.customportalapi.api.CustomPortalBuilder} instead for more flexibility
+     */
     @Deprecated
     public static void addPortal(Block frameBlock, Block ignitionBlock, Identifier dimID, int portalColor) {
         PortalIgnitionSource pis = ignitionBlock.equals(Blocks.WATER) ? PortalIgnitionSource.FluidSource(Fluids.WATER) : PortalIgnitionSource.FIRE;
@@ -71,7 +84,10 @@ public class CustomPortalApiRegistry {
         addPortal(frameBlock, link);
     }
 
-    @Deprecated //mostly keeping for the aether
+    /**
+     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.kyrptonaught.customportalapi.api.CustomPortalBuilder} instead for more flexibility
+     */
+    @Deprecated
     public static void addPortal(Block frameBlock, Block ignitionBlock, CustomPortalBlock portalBlock, Identifier dimID, int portalTint) {
         PortalIgnitionSource ignitionSource = ignitionBlock.equals(Blocks.WATER) ? PortalIgnitionSource.FluidSource(Fluids.WATER) : PortalIgnitionSource.FIRE;
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, portalTint);
@@ -80,17 +96,29 @@ public class CustomPortalApiRegistry {
         addPortal(frameBlock, link);
     }
 
+    /**
+     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.kyrptonaught.customportalapi.api.CustomPortalBuilder} instead for more flexibility
+     */
+    @Deprecated
     public static void addPortal(Block frameBlock, Identifier dimID, int r, int g, int b) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
         addPortal(frameBlock, link);
     }
 
+    /**
+     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.kyrptonaught.customportalapi.api.CustomPortalBuilder} instead for more flexibility
+     */
+    @Deprecated
     public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, Identifier dimID, int r, int g, int b) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
         link.portalIgnitionSource = ignitionSource;
         addPortal(frameBlock, link);
     }
 
+    /**
+     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.kyrptonaught.customportalapi.api.CustomPortalBuilder} instead for more flexibility
+     */
+    @Deprecated
     public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, CustomPortalBlock portalBlock, Identifier dimID, int r, int g, int b) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
         link.portalIgnitionSource = ignitionSource;
@@ -98,6 +126,10 @@ public class CustomPortalApiRegistry {
         addPortal(frameBlock, link);
     }
 
+    /**
+     * @deprecated CustomPortalApiRegistry is being phased out and replaced with {@link net.kyrptonaught.customportalapi.api.CustomPortalBuilder} instead for more flexibility
+     */
+    @Deprecated
     public static void addPortal(Block frameBlock, PortalIgnitionSource ignitionSource, CustomPortalBlock portalBlock, Identifier dimID, int forcePortalWidth, int forcePortalHeight, int r, int g, int b) {
         PortalLink link = new PortalLink(Registry.BLOCK.getId(frameBlock), dimID, getColorFromRGB(r, g, b));
         link.portalIgnitionSource = ignitionSource;

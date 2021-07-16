@@ -1,7 +1,10 @@
 package net.kyrptonaught.customportalapi.portal;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
+import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -33,17 +36,14 @@ public class PortalPlacer {
 
         if (link == null || !link.doesIgnitionMatch(ignitionSource) || !link.canLightInDim(world.getRegistryKey().getValue()))
             return false;
-        return createPortal(world, portalPos, foundationBlock);
+        return createPortal(link,world, portalPos, foundationBlock);
     }
 
-    private static boolean createPortal(World world, BlockPos pos, Block foundationBlock) {
-        HashSet<Block> foundations = new HashSet<>();
-        foundations.add(foundationBlock);
-        Optional<CustomAreaHelper> optional = CustomAreaHelper.getNewPortal(world, pos, Direction.Axis.X, foundations);
+    private static boolean createPortal(PortalLink link, World world, BlockPos pos, Block foundationBlock) {
+        Optional<PortalFrameTester> optional = link.getFrameTester().createInstanceOfPortalFrameTester().getNewPortal(world, pos, Direction.Axis.X, foundationBlock);
         //is valid frame, and is correct size(if applicable)
         if (optional.isPresent()) {
-            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(foundationBlock);
-            if (link.isCorrectForcedSize(optional.get().getPortalWidth(), optional.get().getPortalHeight()))
+            if (optional.get().isRequestedSize(link.forcedWidth, link.forcedHeight))
                 optional.get().createPortal(foundationBlock);
             return true;
         }
@@ -126,7 +126,7 @@ public class PortalPlacer {
                             }
                         }
                         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-                        BlockState blockState2 = link != null ? link.getPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis) : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis);
+                        BlockState blockState2 = link != null ? link.getPortalBlock().getDefaultState().with(CustomPortalBlock.AXIS, axis) : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(CustomPortalBlock.AXIS, axis);
 
                         for (o = 0; o < 2; ++o) {
                             for (p = 0; p < 3; ++p) {

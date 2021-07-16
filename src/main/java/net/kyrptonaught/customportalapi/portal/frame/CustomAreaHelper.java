@@ -1,12 +1,13 @@
-package net.kyrptonaught.customportalapi.portal;
+package net.kyrptonaught.customportalapi.portal.frame;
 
+import com.google.common.collect.Sets;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
@@ -18,19 +19,18 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-public class CustomAreaHelper {
-    private final HashSet<Block> VALID_FRAME;
-
-    private final WorldAccess world;
-    private final Direction.Axis axis;
-    private final Direction negativeDir;
-    private int foundPortalBlocks;
-    private BlockPos lowerCorner;
+public class CustomAreaHelper extends PortalFrameTester {
+    private Direction.Axis axis;
+    private Direction negativeDir;
     private int height;
-    private final int width;
+    private int width;
 
-    public CustomAreaHelper(WorldAccess world, BlockPos blockPos, Direction.Axis axis, HashSet<Block> foundations) {
-        VALID_FRAME = foundations;
+    public CustomAreaHelper() {
+
+    }
+
+    public PortalFrameTester init(WorldAccess world, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
+        VALID_FRAME = Sets.newHashSet(foundations);
         this.world = world;
         this.axis = axis;
         this.negativeDir = axis == Direction.Axis.X ? Direction.WEST : Direction.SOUTH;
@@ -45,27 +45,28 @@ public class CustomAreaHelper {
                 this.height = this.getHeight();
             }
         }
+        return this;
     }
 
-    public static Optional<CustomAreaHelper> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, HashSet<Block> foundations) {
+    public Optional<PortalFrameTester> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
         return getOrEmpty(worldAccess, blockPos, (CustomAreaHelper) -> {
             return CustomAreaHelper.isValid() && CustomAreaHelper.foundPortalBlocks == 0;
         }, axis, foundations);
     }
 
-    public static Optional<CustomAreaHelper> getOrEmpty(WorldAccess worldAccess, BlockPos blockPos, Predicate<CustomAreaHelper> predicate, Direction.Axis axis, HashSet<Block> foundations) {
-        Optional<CustomAreaHelper> optional = Optional.of(new CustomAreaHelper(worldAccess, blockPos, axis, foundations)).filter(predicate);
+    public Optional<PortalFrameTester> getOrEmpty(WorldAccess worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations) {
+        Optional<PortalFrameTester> optional = Optional.of((PortalFrameTester) new CustomAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
         if (optional.isPresent()) {
             return optional;
         } else {
             Direction.Axis axis2 = axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
-            return Optional.of(new CustomAreaHelper(worldAccess, blockPos, axis2, foundations)).filter(predicate);
+            return Optional.of((PortalFrameTester) new CustomAreaHelper().init(worldAccess, blockPos, axis2, foundations)).filter(predicate);
         }
     }
 
     private BlockPos getLowerCorner(BlockPos blockPos) {
-        for(int i = Math.max(this.world.getBottomY(), blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()),VALID_FRAME); blockPos = blockPos.down()) {
-        }
+        for (int i = Math.max(this.world.getBottomY(), blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()), VALID_FRAME); blockPos = blockPos.down())
+            ;
         Direction direction = this.negativeDir.getOpposite();
         int j = this.getWidth(blockPos, direction) - 1;
         return j < 0 ? null : blockPos.offset(direction, j);
@@ -176,17 +177,14 @@ public class CustomAreaHelper {
 
     public void createPortal(Block frameBlock) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
-        BlockState blockState = link != null ? link.getPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis) : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(NetherPortalBlock.AXIS, axis);
+        BlockState blockState = (link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState()).with(CustomPortalBlock.AXIS, axis);
         BlockPos.iterate(this.lowerCorner, this.lowerCorner.offset(Direction.UP, this.height - 1).offset(this.negativeDir, this.width - 1)).forEach((blockPos) -> {
             this.world.setBlockState(blockPos, blockState, 18);
         });
     }
 
-    public int getPortalWidth() {
-        return this.width;
-    }
-
-    public int getPortalHeight() {
-        return this.height;
+    @Override
+    public boolean isRequestedSize(int attemptWidth, int attemptHeight) {
+        return ((attemptWidth == 0 || width == attemptWidth) && (attemptHeight == 0 || this.height == attemptHeight));
     }
 }

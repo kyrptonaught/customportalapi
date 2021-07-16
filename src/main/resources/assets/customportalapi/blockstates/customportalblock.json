@@ -5,6 +5,9 @@
     },
     "axis=z": {
       "model": "customportalapi:block/customportalblock_ew"
+    },
+    "axis=y": {
+      "model": "customportalapi:block/customportalblock_flat"
     }
   }
 }

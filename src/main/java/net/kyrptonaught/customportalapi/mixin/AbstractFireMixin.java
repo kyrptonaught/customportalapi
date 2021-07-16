@@ -17,6 +17,7 @@ public class AbstractFireMixin {
 
     @Inject(method = "onBlockAdded", at = @At("HEAD"), cancellable = true)
     public void detectCustomPortal(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
+        //todo does not work with flat portals
         if (PortalPlacer.attemptPortalLight(world, pos, pos.down(), PortalIgnitionSource.FIRE))
             ci.cancel();
     }
