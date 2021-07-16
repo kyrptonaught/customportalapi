@@ -16,8 +16,26 @@
         16
       ],
       "faces": {
-        "up": {"uv": [0, 0, 16, 16], "texture": "#portal", "tintindex": 4},
-        "down": {"uv": [0, 0, 16, 16], "texture": "#portal", "tintindex": 4}
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#portal",
+          "tintindex": 4
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#portal",
+          "tintindex": 4
+        }
       }
     }
   ]

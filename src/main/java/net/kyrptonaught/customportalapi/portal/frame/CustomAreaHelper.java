@@ -55,12 +55,12 @@ public class CustomAreaHelper extends PortalFrameTester {
     }
 
     public Optional<PortalFrameTester> getOrEmpty(WorldAccess worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations) {
-        Optional<PortalFrameTester> optional = Optional.of((PortalFrameTester) new CustomAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
+        Optional<PortalFrameTester> optional = Optional.of(new CustomAreaHelper().init(worldAccess, blockPos, axis, foundations)).filter(predicate);
         if (optional.isPresent()) {
             return optional;
         } else {
             Direction.Axis axis2 = axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
-            return Optional.of((PortalFrameTester) new CustomAreaHelper().init(worldAccess, blockPos, axis2, foundations)).filter(predicate);
+            return Optional.of(new CustomAreaHelper().init(worldAccess, blockPos, axis2, foundations)).filter(predicate);
         }
     }
 

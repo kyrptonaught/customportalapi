@@ -3,13 +3,11 @@ package net.kyrptonaught.customportalapi.portal;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
@@ -25,7 +23,6 @@ import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestStorage;
 
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 
@@ -36,7 +33,7 @@ public class PortalPlacer {
 
         if (link == null || !link.doesIgnitionMatch(ignitionSource) || !link.canLightInDim(world.getRegistryKey().getValue()))
             return false;
-        return createPortal(link,world, portalPos, foundationBlock);
+        return createPortal(link, world, portalPos, foundationBlock);
     }
 
     private static boolean createPortal(PortalLink link, World world, BlockPos pos, Block foundationBlock) {

@@ -20,6 +20,7 @@ public class CustomPortalApiRegistry {
     protected static HashMap<Block, PortalLink> portals = new HashMap<>();
     private static final HashMap<Block, PointOfInterestType> PORTAL_POIs = new HashMap<>();
     private static final HashMap<Identifier, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters = new HashMap<>();
+
     public static PortalLink getPortalLinkFromBase(Block baseBlock) {
         if (baseBlock == null) return null;
         if (portals.containsKey(baseBlock)) return portals.get(baseBlock);
@@ -37,12 +38,15 @@ public class CustomPortalApiRegistry {
     public static boolean isCustomPortalPOI(PointOfInterestType poi) {
         return CustomPortalApiRegistry.PORTAL_POIs.containsValue(poi);
     }
-    public static void registerPortalFrameTester(Identifier frameTesterID, PortalFrameTester.PortalFrameTesterFactory createPortalFrameTester){
-        PortalFrameTesters.put(frameTesterID,createPortalFrameTester);
+
+    public static void registerPortalFrameTester(Identifier frameTesterID, PortalFrameTester.PortalFrameTesterFactory createPortalFrameTester) {
+        PortalFrameTesters.put(frameTesterID, createPortalFrameTester);
     }
-    public static PortalFrameTester.PortalFrameTesterFactory getPortalFrameTester(Identifier frameTesterID){
-        return PortalFrameTesters.getOrDefault(frameTesterID,null);
+
+    public static PortalFrameTester.PortalFrameTesterFactory getPortalFrameTester(Identifier frameTesterID) {
+        return PortalFrameTesters.getOrDefault(frameTesterID, null);
     }
+
     public static void addPortal(Block frameBlock, PortalLink link) {
         if (frameBlock == null) CustomPortalsMod.logError("Frameblock is null");
         if (link.getPortalBlock() == null) CustomPortalsMod.logError("Portal block is null");

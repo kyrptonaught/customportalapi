@@ -8,11 +8,7 @@ import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.WorldAccess;
 
-import java.util.HashSet;
 import java.util.function.Consumer;
 import java.util.function.Function;
 

@@ -21,6 +21,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     public FlatPortalAreaHelper() {
     }
+
     public FlatPortalAreaHelper init(WorldAccess world, BlockPos pos, Direction.Axis axis, Block... foundations) {
         VALID_FRAME = Sets.newHashSet(foundations);
         this.world = world;

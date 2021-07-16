@@ -6,9 +6,7 @@ import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.NetherPortalBlock;
 import net.minecraft.entity.Entity;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.property.Properties;
@@ -42,7 +40,7 @@ public class CustomTeleporter {
             link.executePostTPEvent(entity);
         } else {
             //copied from entity.moveToWorld(destination);
-            System.out.println("Before TP: " +((EntityInCustomPortal)entity).didTeleport());
+            System.out.println("Before TP: " + ((EntityInCustomPortal) entity).didTeleport());
             entity.detach();
             Entity newEntity = entity.getType().create(destination);
             newEntity.copyFrom(entity);
@@ -51,7 +49,7 @@ public class CustomTeleporter {
             destination.onDimensionChanged(newEntity);
             entity.remove(Entity.RemovalReason.CHANGED_DIMENSION);
             link.executePostTPEvent(newEntity);
-            System.out.println("After TP: " +((EntityInCustomPortal)newEntity).didTeleport());
+            System.out.println("After TP: " + ((EntityInCustomPortal) newEntity).didTeleport());
         }
     }
 

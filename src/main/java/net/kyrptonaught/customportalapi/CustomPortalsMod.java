@@ -4,10 +4,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
-import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
-import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
+import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
+import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
 import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -27,8 +27,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Optional;
 
 public class CustomPortalsMod implements ModInitializer {
     public static final String MOD_ID = "customportalapi";
@@ -36,6 +34,7 @@ public class CustomPortalsMod implements ModInitializer {
     public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
     public static Identifier VANILLA_NETHERPORTAL_FRAMETESTER = new Identifier(MOD_ID, "vanillanether");
     public static Identifier FLATPORTAL_FRAMETESTER = new Identifier(MOD_ID, "flat");
+
     @Override
     public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
