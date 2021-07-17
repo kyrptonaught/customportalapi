@@ -64,12 +64,12 @@ public class PortalPlacer {
         }).sorted(Comparator.comparingDouble((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getSquaredDistance(blockPos))
                 .thenComparingInt((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getY()))
                 .filter((pointOfInterest) -> world.getBlockState(pointOfInterest.getPos())
-                        .contains(Properties.HORIZONTAL_AXIS)).findFirst();
+                        .contains(Properties.AXIS)).findFirst();
         return optional.map((pointOfInterest) -> {
             BlockPos blockPos2 = pointOfInterest.getPos();
             world.getChunkManager().addTicket(ChunkTicketType.PORTAL, new ChunkPos(blockPos2), 3, blockPos2);
             BlockState blockState = world.getBlockState(blockPos2);
-            return PortalUtil.getLargestRectangle(blockPos2, blockState.get(Properties.HORIZONTAL_AXIS), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
+            return PortalUtil.getLargestRectangle(blockPos2, blockState.get(Properties.AXIS), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
         });
     }
 
@@ -173,7 +173,6 @@ public class PortalPlacer {
 
     private static boolean canHostFrame(World world, BlockPos blockPos, BlockPos.Mutable mutable, Direction direction, int i) {
         Direction direction2 = direction.rotateYClockwise();
-
         for (int j = -1; j < 3; ++j) {
             for (int k = -1; k < 4; ++k) {
                 mutable.set(blockPos, direction.getOffsetX() * j + direction2.getOffsetX() * i, k, direction.getOffsetZ() * j + direction2.getOffsetZ() * i);
