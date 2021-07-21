@@ -77,8 +77,7 @@ public abstract class ClientPlayerMixin extends LivingEntity implements ClientPl
                 if (this.client.currentScreen instanceof HandledScreen) {
                     this.closeHandledScreen();
                 }
-
-                this.client.openScreen(null);
+                this.client.setScreen(null);
             }
 
             if (this.nextNauseaStrength == 0.0F) {

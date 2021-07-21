@@ -15,12 +15,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.BlockLocating;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.PortalUtil;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestStorage;
+import net.minecraft.world.BlockLocating.Rectangle;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -47,13 +48,13 @@ public class PortalPlacer {
         return false;
     }
 
-    public static Optional<PortalUtil.Rectangle> findOrCreatePortal(ServerWorld world, BlockPos blockPos, Block portalFrame, Direction.Axis axis, boolean destIsNether) {
-        Optional<PortalUtil.Rectangle> found = findDestinationPortal(world, blockPos, portalFrame, destIsNether);
+    public static Optional<Rectangle> findOrCreatePortal(ServerWorld world, BlockPos blockPos, Block portalFrame, Direction.Axis axis, boolean destIsNether) {
+        Optional<Rectangle> found = findDestinationPortal(world, blockPos, portalFrame, destIsNether);
         if (found.isPresent()) return found;
         return createDestinationPortal(world, blockPos, portalFrame.getDefaultState(), axis);
     }
 
-    private static Optional<PortalUtil.Rectangle> findDestinationPortal(ServerWorld world, BlockPos blockPos, Block portalFrame, boolean destIsNether) {
+    private static Optional<Rectangle> findDestinationPortal(ServerWorld world, BlockPos blockPos, Block portalFrame, boolean destIsNether) {
         PointOfInterestStorage pointOfInterestStorage = world.getPointOfInterestStorage();
         int i = destIsNether ? 16 : 128;
         pointOfInterestStorage.preloadChunks(world, blockPos, i);
@@ -69,11 +70,11 @@ public class PortalPlacer {
             BlockPos blockPos2 = pointOfInterest.getPos();
             world.getChunkManager().addTicket(ChunkTicketType.PORTAL, new ChunkPos(blockPos2), 3, blockPos2);
             BlockState blockState = world.getBlockState(blockPos2);
-            return PortalUtil.getLargestRectangle(blockPos2, blockState.get(Properties.AXIS), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
+            return BlockLocating.getLargestRectangle(blockPos2, blockState.get(Properties.AXIS), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
         });
     }
 
-    private static Optional<PortalUtil.Rectangle> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
+    private static Optional<Rectangle> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
         Direction direction = Direction.get(Direction.AxisDirection.POSITIVE, axis);
         double d = -1.0D;
         BlockPos blockPos2 = null;
@@ -132,7 +133,7 @@ public class PortalPlacer {
                             }
                         }
 
-                        return Optional.of(new PortalUtil.Rectangle(blockPos2.toImmutable(), 2, 3));
+                        return Optional.of(new Rectangle(blockPos2.toImmutable(), 2, 3));
                     }
 
                     mutable2 = (BlockPos.Mutable) var13.next();

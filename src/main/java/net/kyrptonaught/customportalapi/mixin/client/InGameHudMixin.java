@@ -33,11 +33,11 @@ public class InGameHudMixin {
             RenderSystem.setShaderColor(red, green, blue, alpha);
     }
 
-    @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;getSprite(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/texture/Sprite;"))
+    @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;getModelParticleSprite(Lnet/minecraft/block/BlockState;)Lnet/minecraft/client/texture/Sprite;"))
     public Sprite renderCustomPortalOverlay(BlockModels blockModels, BlockState blockState) {
         if (((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor() >= 0) {
-            return blockModels.getSprite(CustomPortalsMod.portalBlock.getDefaultState());
+            return this.client.getBlockRenderManager().getModels().getModelParticleSprite(CustomPortalsMod.portalBlock.getDefaultState());
         }
-        return blockModels.getSprite(Blocks.NETHER_PORTAL.getDefaultState());
+        return this.client.getBlockRenderManager().getModels().getModelParticleSprite(Blocks.NETHER_PORTAL.getDefaultState());
     }
 }

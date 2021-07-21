@@ -15,8 +15,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.BlockLocating;
 import net.minecraft.world.Heightmap;
-import net.minecraft.world.PortalUtil;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
@@ -67,7 +67,7 @@ public class CustomTeleporter {
             Vec3d vec3d2;
             if (blockState.contains(Properties.HORIZONTAL_AXIS)) {
                 axis2 = blockState.get(Properties.HORIZONTAL_AXIS);
-                PortalUtil.Rectangle lv = PortalUtil.getLargestRectangle(portalPos, axis2, 21, Direction.Axis.Y, 21, (blockPos) ->
+                BlockLocating.Rectangle lv = BlockLocating.getLargestRectangle(portalPos, axis2, 21, Direction.Axis.Y, 21, (blockPos) ->
                         entity.world.getBlockState(blockPos) == blockState);
                 vec3d2 = method_30633(axis2, lv, entity);
             } else {
@@ -80,7 +80,7 @@ public class CustomTeleporter {
 
     }
 
-    protected static Vec3d method_30633(Direction.Axis axis, PortalUtil.Rectangle arg, Entity entity) {
+    protected static Vec3d method_30633(Direction.Axis axis, BlockLocating.Rectangle arg, Entity entity) {
         return AreaHelper.entityPosInPortal(arg, axis, entity.getPos(), entity.getDimensions(entity.getPose()));
     }
 
