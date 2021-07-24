@@ -6,7 +6,8 @@
     "AbstractFireMixin",
     "BucketMixin",
     "EntityMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "PotionEntityMixin"
   ],
   "client": [
     "client.ClientPlayerMixin",

@@ -40,7 +40,6 @@ public class CustomTeleporter {
             link.executePostTPEvent(entity);
         } else {
             //copied from entity.moveToWorld(destination);
-            System.out.println("Before TP: " + ((EntityInCustomPortal) entity).didTeleport());
             entity.detach();
             Entity newEntity = entity.getType().create(destination);
             newEntity.copyFrom(entity);
@@ -49,7 +48,6 @@ public class CustomTeleporter {
             destination.onDimensionChanged(newEntity);
             entity.remove(Entity.RemovalReason.CHANGED_DIMENSION);
             link.executePostTPEvent(newEntity);
-            System.out.println("After TP: " + ((EntityInCustomPortal) newEntity).didTeleport());
         }
     }
 
