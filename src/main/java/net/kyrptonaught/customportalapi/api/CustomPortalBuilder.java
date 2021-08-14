@@ -6,11 +6,16 @@ import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
+import net.kyrptonaught.customportalapi.util.SHOULDTP;
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class CustomPortalBuilder {
     PortalLink portalLink;
@@ -167,8 +172,19 @@ public class CustomPortalBuilder {
      *
      * @return
      */
+    @Deprecated
     public CustomPortalBuilder flatPortal() {
         portalLink.portalFrameTester = CustomPortalsMod.FLATPORTAL_FRAMETESTER;
+        return this;
+    }
+
+    public CustomPortalBuilder registerBeforeTPEvent(Function<Entity, SHOULDTP> event) {
+        portalLink.beforeTPEvent(event);
+        return this;
+    }
+
+    public CustomPortalBuilder registerPostTPEvent(Consumer<Entity> event) {
+        portalLink.setPostTPEvent(event);
         return this;
     }
 }

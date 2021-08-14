@@ -18,8 +18,10 @@ public class PerWorldPortals {
     }
 
     public static void registerWorldPortal(PortalLink portalLink) {
-        Block blockId = Registry.BLOCK.get(portalLink.block);
-        worldPortals.add(blockId);
-        CustomPortalApiRegistry.addPortal(blockId, portalLink);
+        if (!CustomPortalApiRegistry.portals.containsKey(Registry.BLOCK.get(portalLink.block))) {
+            Block blockId = Registry.BLOCK.get(portalLink.block);
+            worldPortals.add(blockId);
+            CustomPortalApiRegistry.addPortal(blockId, portalLink);
+        }
     }
 }

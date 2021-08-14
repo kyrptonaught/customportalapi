@@ -1,6 +1,7 @@
 package net.kyrptonaught.customportalapi;
 
 import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
+import net.kyrptonaught.customportalapi.networking.NetworkManager;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
@@ -13,13 +14,13 @@ import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 
 public class CustomPortalApiRegistry {
-    protected static HashMap<Block, PortalLink> portals = new HashMap<>();
-    private static final HashMap<Block, PointOfInterestType> PORTAL_POIs = new HashMap<>();
-    private static final HashMap<Identifier, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters = new HashMap<>();
+    protected static ConcurrentHashMap<Block, PortalLink> portals = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Block, PointOfInterestType> PORTAL_POIs = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Identifier, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters = new ConcurrentHashMap<>();
 
     public static PortalLink getPortalLinkFromBase(Block baseBlock) {
         if (baseBlock == null) return null;
@@ -36,7 +37,7 @@ public class CustomPortalApiRegistry {
     }
 
     public static boolean isCustomPortalPOI(PointOfInterestType poi) {
-        return CustomPortalApiRegistry.PORTAL_POIs.containsValue(poi);
+        return CustomPortalApiRegistry.PORTAL_POIs.containsValue(poi) || (NetworkManager.isServerSideOnlyMode() && poi.equals(PointOfInterestType.NETHER_PORTAL));
     }
 
     public static void registerPortalFrameTester(Identifier frameTesterID, PortalFrameTester.PortalFrameTesterFactory createPortalFrameTester) {
@@ -49,7 +50,7 @@ public class CustomPortalApiRegistry {
 
     public static void addPortal(Block frameBlock, PortalLink link) {
         if (frameBlock == null) CustomPortalsMod.logError("Frameblock is null");
-        if (link.getPortalBlock() == null) CustomPortalsMod.logError("Portal block is null");
+        if (link.getPortalBlock(true) == null) CustomPortalsMod.logError("Portal block is null");
         if (link.portalIgnitionSource == null) CustomPortalsMod.logError("Portal ignition source is null");
         if (link.dimID == null) CustomPortalsMod.logError("Dimension is null");
         if (CustomPortalsMod.dims.size() > 0 && !CustomPortalsMod.dims.containsKey(link.dimID))
@@ -62,9 +63,11 @@ public class CustomPortalApiRegistry {
             CustomPortalsMod.logError("A portal(or the nether portal) is already registered with a frame of: " + frameBlock);
         } else {
             portals.put(frameBlock, link);
-            Identifier POI_ID = new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.getPortalBlock()).getPath() + "poi");
-            if (Registry.POINT_OF_INTEREST_TYPE.getOrEmpty(POI_ID).isEmpty())//why tf is .containsID client only?
-                PORTAL_POIs.putIfAbsent(link.getPortalBlock(), PointOfInterestHelper.register(POI_ID, 0, 1, link.getPortalBlock()));
+            if (link.getPortalBlock(true) != Blocks.NETHER_PORTAL) {
+                Identifier POI_ID = new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.getPortalBlock(true)).getPath() + "poi");
+                if (Registry.POINT_OF_INTEREST_TYPE.getOrEmpty(POI_ID).isEmpty())//why tf is .containsID client only?
+                    PORTAL_POIs.putIfAbsent(link.getPortalBlock(true), PointOfInterestHelper.register(POI_ID, 0, 1, link.getPortalBlock(true)));
+            }
         }
     }
 

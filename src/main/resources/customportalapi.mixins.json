@@ -6,11 +6,13 @@
     "AbstractFireMixin",
     "BucketMixin",
     "EntityMixin",
-    "PlayerMixin"
+    "PlayerMixin",
+    "NetherPortalMixin"
   ],
   "client": [
     "client.ClientPlayerMixin",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.ClientWorldMixin"
   ],
   "injectors": {
     "defaultRequire": 1

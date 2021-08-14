@@ -3,9 +3,11 @@ package net.kyrptonaught.customportalapi.util;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.networking.NetworkManager;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 
@@ -36,7 +38,9 @@ public class PortalLink {
         this.colorID = colorID;
     }
 
-    public Block getPortalBlock() {
+    public Block getPortalBlock(boolean isServer) {
+        if (isServer)
+            return NetworkManager.isServerSideOnlyMode() ? Blocks.NETHER_PORTAL : portalBlock;
         return portalBlock;
     }
 

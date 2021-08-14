@@ -1,7 +1,6 @@
 package net.kyrptonaught.customportalapi.portal;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.PortalLink;
@@ -10,18 +9,17 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.BlockLocating;
+import net.minecraft.world.BlockLocating.Rectangle;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.poi.PointOfInterest;
 import net.minecraft.world.poi.PointOfInterestStorage;
-import net.minecraft.world.BlockLocating.Rectangle;
 
 import java.util.Comparator;
 import java.util.Iterator;
@@ -62,15 +60,13 @@ public class PortalPlacer {
             if (CustomPortalsMod.isInstanceOfCustomPortal(world, pointOfInterest.getPos()))
                 return CustomPortalsMod.getPortalBase(world, pointOfInterest.getPos()).equals(portalFrame);
             return false;
-        }).sorted(Comparator.comparingDouble((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getSquaredDistance(blockPos))
-                .thenComparingInt((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getY()))
-                .filter((pointOfInterest) -> world.getBlockState(pointOfInterest.getPos())
-                        .contains(Properties.AXIS)).findFirst();
+        }).min(Comparator.comparingDouble((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getSquaredDistance(blockPos))
+                .thenComparingInt((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getY()));
         return optional.map((pointOfInterest) -> {
             BlockPos blockPos2 = pointOfInterest.getPos();
             world.getChunkManager().addTicket(ChunkTicketType.PORTAL, new ChunkPos(blockPos2), 3, blockPos2);
             BlockState blockState = world.getBlockState(blockPos2);
-            return BlockLocating.getLargestRectangle(blockPos2, blockState.get(Properties.AXIS), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
+            return BlockLocating.getLargestRectangle(blockPos2, CustomPortalsMod.getAxisFrom(blockState), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
         });
     }
 
@@ -124,7 +120,7 @@ public class PortalPlacer {
                             }
                         }
                         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-                        BlockState blockState2 = link != null ? link.getPortalBlock().getDefaultState().with(CustomPortalBlock.AXIS, axis) : CustomPortalsMod.getDefaultPortalBlock().getDefaultState().with(CustomPortalBlock.AXIS, axis);
+                        BlockState blockState2 = CustomPortalsMod.blockWithAxis(link != null ? link.getPortalBlock(!world.isClient).getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
 
                         for (o = 0; o < 2; ++o) {
                             for (p = 0; p < 3; ++p) {

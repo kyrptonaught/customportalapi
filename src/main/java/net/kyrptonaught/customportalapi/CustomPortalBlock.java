@@ -53,7 +53,7 @@ public class CustomPortalBlock extends Block {
         Block block = getPortalBase(world, pos);
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
-            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, state.get(AXIS), block);
+            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, CustomPortalsMod.getAxisFrom(state), block);
             if (portalFrameTester.wasAlreadyValid())
                 return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         }
@@ -119,31 +119,6 @@ public class CustomPortalBlock extends Block {
     }
 
     public Block getPortalBase(BlockView world, BlockPos pos) {
-        if (CustomPortalsMod.isInstanceOfCustomPortal(world, pos)) {
-            Direction.Axis axis = world.getBlockState(pos).get(AXIS);
-
-            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, moveTowardsFrame(pos, axis, false)))
-                return world.getBlockState(moveTowardsFrame(pos, axis, false)).getBlock();
-            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, moveTowardsFrame(pos, axis, true)))
-                return world.getBlockState(moveTowardsFrame(pos, axis, true)).getBlock();
-
-            if (axis == Direction.Axis.Y) axis = Direction.Axis.Z;
-
-            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, 1)))
-                return world.getBlockState(pos.offset(axis, 1)).getBlock();
-            if (!CustomPortalsMod.isInstanceOfCustomPortal(world, pos.offset(axis, -1)))
-                return world.getBlockState(pos.offset(axis, -1)).getBlock();
-        }
-        if (pos.getY() < 0 || world.getBlockState(pos).isAir()) {
-            return null;
-        }
-        Direction.Axis axis = world.getBlockState(pos).get(AXIS);
-        return CustomPortalsMod.getPortalBase(world, moveTowardsFrame(pos, axis, false));
-    }
-
-    public BlockPos moveTowardsFrame(BlockPos pos, Direction.Axis portalAxis, boolean positiveMove) {
-        if (portalAxis.isHorizontal())
-            return pos.offset(positiveMove ? Direction.UP : Direction.DOWN);
-        return pos.offset(positiveMove ? Direction.EAST : Direction.WEST);
+        return CustomPortalsMod.defaultPortalBaseFinder(world, pos);
     }
 }

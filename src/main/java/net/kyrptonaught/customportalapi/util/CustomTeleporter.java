@@ -1,7 +1,6 @@
 package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.minecraft.block.Block;
@@ -40,7 +39,6 @@ public class CustomTeleporter {
             link.executePostTPEvent(entity);
         } else {
             //copied from entity.moveToWorld(destination);
-            System.out.println("Before TP: " + ((EntityInCustomPortal) entity).didTeleport());
             entity.detach();
             Entity newEntity = entity.getType().create(destination);
             newEntity.copyFrom(entity);
@@ -49,7 +47,6 @@ public class CustomTeleporter {
             destination.onDimensionChanged(newEntity);
             entity.remove(Entity.RemovalReason.CHANGED_DIMENSION);
             link.executePostTPEvent(newEntity);
-            System.out.println("After TP: " + ((EntityInCustomPortal) newEntity).didTeleport());
         }
     }
 
@@ -62,7 +59,7 @@ public class CustomTeleporter {
         double h = DimensionType.getCoordinateScaleFactor(entity.world.getDimension(), destination.getDimension());
         BlockPos blockPos3 = new BlockPos(MathHelper.clamp(entity.getX() * h, d, f), entity.getY(), MathHelper.clamp(entity.getZ() * h, e, g));
         BlockState blockState = entity.world.getBlockState(portalPos);
-        return PortalPlacer.findOrCreatePortal(destination, blockPos3, portalFrame, blockState.get(CustomPortalBlock.AXIS), true).map((arg) -> {
+        return PortalPlacer.findOrCreatePortal(destination, blockPos3, portalFrame, CustomPortalsMod.getAxisFrom(blockState), true).map((arg) -> {
             Direction.Axis axis2;
             Vec3d vec3d2;
             if (blockState.contains(Properties.HORIZONTAL_AXIS)) {

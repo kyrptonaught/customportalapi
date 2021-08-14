@@ -2,7 +2,6 @@ package net.kyrptonaught.customportalapi.portal.frame;
 
 import com.google.common.collect.Sets;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
@@ -107,7 +106,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     public void createPortal(Block frameBlock) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock);
-        BlockState blockState = (link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState()).with(CustomPortalBlock.AXIS, Direction.Axis.Y);
+        BlockState blockState = CustomPortalsMod.blockWithAxis(link != null ? link.getPortalBlock(!world.isClient()).getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), Direction.Axis.Y);
         BlockPos.iterate(this.lowerCorner, this.lowerCorner.offset(Direction.SOUTH, this.xSize - 1).offset(Direction.EAST, this.zSize - 1)).forEach((blockPos) -> {
             this.world.setBlockState(blockPos, blockState, 18);
         });
