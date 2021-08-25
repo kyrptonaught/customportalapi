@@ -46,32 +46,8 @@ public class PortalPlacer {
         return false;
     }
 
-    public static Optional<Rectangle> findOrCreatePortal(ServerWorld world, BlockPos blockPos, Block portalFrame, Direction.Axis axis, boolean destIsNether) {
-        Optional<Rectangle> found = findDestinationPortal(world, blockPos, portalFrame, destIsNether);
-        if (found.isPresent()) return found;
-        return createDestinationPortal(world, blockPos, portalFrame.getDefaultState(), axis);
-    }
-
-    private static Optional<Rectangle> findDestinationPortal(ServerWorld world, BlockPos blockPos, Block portalFrame, boolean destIsNether) {
-        PointOfInterestStorage pointOfInterestStorage = world.getPointOfInterestStorage();
-        int i = destIsNether ? 16 : 128;
-        pointOfInterestStorage.preloadChunks(world, blockPos, i);
-        Optional<PointOfInterest> optional = pointOfInterestStorage.getInSquare(CustomPortalApiRegistry::isCustomPortalPOI, blockPos, i, PointOfInterestStorage.OccupationStatus.ANY).filter(pointOfInterest -> {
-            if (CustomPortalsMod.isInstanceOfCustomPortal(world, pointOfInterest.getPos()))
-                return CustomPortalsMod.getPortalBase(world, pointOfInterest.getPos()).equals(portalFrame);
-            return false;
-        }).min(Comparator.comparingDouble((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getSquaredDistance(blockPos))
-                .thenComparingInt((pointOfInterest) -> ((PointOfInterest) pointOfInterest).getPos().getY()));
-        return optional.map((pointOfInterest) -> {
-            BlockPos blockPos2 = pointOfInterest.getPos();
-            world.getChunkManager().addTicket(ChunkTicketType.PORTAL, new ChunkPos(blockPos2), 3, blockPos2);
-            BlockState blockState = world.getBlockState(blockPos2);
-            return BlockLocating.getLargestRectangle(blockPos2, CustomPortalsMod.getAxisFrom(blockState), 21, Direction.Axis.Y, 21, (blockPosx) -> world.getBlockState(blockPosx) == blockState);
-        });
-    }
-
-    private static Optional<Rectangle> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
-        Direction direction = Direction.get(Direction.AxisDirection.POSITIVE, axis);
+    public static Optional<Rectangle> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
+        Direction direction = axis == Direction.Axis.X ? Direction.WEST : Direction.SOUTH;
         double d = -1.0D;
         BlockPos blockPos2 = null;
         double e = -1.0D;

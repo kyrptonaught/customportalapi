@@ -7,8 +7,9 @@
     "BucketMixin",
     "EntityMixin",
     "PlayerMixin",
-    "PotionEntityMixin"
-    "NetherPortalMixin"
+    "PotionEntityMixin",
+    "NetherPortalMixin",
+    "ServerPlayerMixin"
   ],
   "client": [
     "client.ClientPlayerMixin",

@@ -8,6 +8,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockLocating;
 import net.minecraft.world.WorldAccess;
 
 import java.util.HashMap;
@@ -116,5 +117,10 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     public boolean isRequestedSize(int attemptWidth, int attemptHeight) {
         return ((xSize == attemptWidth || attemptHeight == 0) && (zSize == attemptHeight) || attemptWidth == 0) ||
                 ((xSize == attemptHeight | attemptHeight == 0) && (zSize == attemptWidth || attemptWidth == 0));
+    }
+
+    @Override
+    public BlockLocating.Rectangle getRectangle() {
+        return null;
     }
 }

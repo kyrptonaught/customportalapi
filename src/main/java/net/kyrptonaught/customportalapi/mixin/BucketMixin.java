@@ -1,7 +1,5 @@
 package net.kyrptonaught.customportalapi.mixin;
 
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;

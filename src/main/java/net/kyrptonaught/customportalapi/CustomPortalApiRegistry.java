@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class CustomPortalApiRegistry {
     protected static ConcurrentHashMap<Block, PortalLink> portals = new ConcurrentHashMap<>();
-    private static final ConcurrentHashMap<Block, PointOfInterestType> PORTAL_POIs = new ConcurrentHashMap<>();
+
     private static final ConcurrentHashMap<Identifier, PortalFrameTester.PortalFrameTesterFactory> PortalFrameTesters = new ConcurrentHashMap<>();
 
     public static PortalLink getPortalLinkFromBase(Block baseBlock) {
@@ -36,9 +36,6 @@ public class CustomPortalApiRegistry {
         return ColorUtil.getColorFromRGB(r, g, b);
     }
 
-    public static boolean isCustomPortalPOI(PointOfInterestType poi) {
-        return CustomPortalApiRegistry.PORTAL_POIs.containsValue(poi) || (NetworkManager.isServerSideOnlyMode() && poi.equals(PointOfInterestType.NETHER_PORTAL));
-    }
 
     public static void registerPortalFrameTester(Identifier frameTesterID, PortalFrameTester.PortalFrameTesterFactory createPortalFrameTester) {
         PortalFrameTesters.put(frameTesterID, createPortalFrameTester);
@@ -63,11 +60,6 @@ public class CustomPortalApiRegistry {
             CustomPortalsMod.logError("A portal(or the nether portal) is already registered with a frame of: " + frameBlock);
         } else {
             portals.put(frameBlock, link);
-            if (link.getPortalBlock(true) != Blocks.NETHER_PORTAL) {
-                Identifier POI_ID = new Identifier(CustomPortalsMod.MOD_ID, Registry.BLOCK.getId(link.getPortalBlock(true)).getPath() + "poi");
-                if (Registry.POINT_OF_INTEREST_TYPE.getOrEmpty(POI_ID).isEmpty())//why tf is .containsID client only?
-                    PORTAL_POIs.putIfAbsent(link.getPortalBlock(true), PointOfInterestHelper.register(POI_ID, 0, 1, link.getPortalBlock(true)));
-            }
         }
     }
 

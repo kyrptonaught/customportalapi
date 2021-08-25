@@ -1,8 +1,11 @@
 package net.kyrptonaught.customportalapi.mixin;
 
+import net.kyrptonaught.customportalapi.util.CustomTeleportingEntity;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.TeleportTarget;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityInCustomPortal {
+public abstract class EntityMixin implements EntityInCustomPortal, CustomTeleportingEntity {
 
     @Unique
     boolean didTP = false;
@@ -51,6 +54,23 @@ public abstract class EntityMixin implements EntityInCustomPortal {
             if (coolDown <= 0)
                 didTP = false;
         }
+    }
+
+    private TeleportTarget customTPTarget;
+
+    @Override
+    public void setCustomTeleportTarget(TeleportTarget teleportTarget) {
+        this.customTPTarget = teleportTarget;
+    }
+
+    @Override
+    public TeleportTarget getCustomTeleportTarget() {
+        return customTPTarget;
+    }
+    @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
+    public void getCustomTPTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
+        if (this.didTeleport())
+            cir.setReturnValue(getCustomTeleportTarget());
     }
 
     @Inject(method = "readNbt", at = @At(value = "TAIL"))

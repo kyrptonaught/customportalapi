@@ -13,6 +13,7 @@ import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.BlockLocating;
 import net.minecraft.world.WorldAccess;
 
 import java.util.HashSet;
@@ -43,14 +44,20 @@ public class CustomAreaHelper extends PortalFrameTester {
             this.width = this.getWidth();
             if (this.width > 0) {
                 this.height = this.getHeight();
+                countExistingPortalBlocks();
             }
         }
         return this;
     }
 
+    @Override
+    public BlockLocating.Rectangle getRectangle() {
+        return new BlockLocating.Rectangle(lowerCorner, width, height);
+    }
+
     public Optional<PortalFrameTester> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
-        return getOrEmpty(worldAccess, blockPos, (CustomAreaHelper) -> {
-            return CustomAreaHelper.isValid() && CustomAreaHelper.foundPortalBlocks == 0;
+        return getOrEmpty(worldAccess, blockPos, (customAreaHelper) -> {
+            return customAreaHelper.isValid() && customAreaHelper.foundPortalBlocks == 0;
         }, axis, foundations);
     }
 
@@ -65,11 +72,20 @@ public class CustomAreaHelper extends PortalFrameTester {
     }
 
     private BlockPos getLowerCorner(BlockPos blockPos) {
-        for (int i = Math.max(this.world.getBottomY(), blockPos.getY() - 21); blockPos.getY() > i && validStateInsidePortal(this.world.getBlockState(blockPos.down()), VALID_FRAME); blockPos = blockPos.down())
-            ;
-        Direction direction = this.negativeDir.getOpposite();
-        int j = this.getWidth(blockPos, direction) - 1;
-        return j < 0 ? null : blockPos.offset(direction, j);
+        if (!validStateInsidePortal(world.getBlockState(blockPos), VALID_FRAME))
+            return null;
+        int offsetX = 1;
+        while (validStateInsidePortal(world.getBlockState(blockPos.offset(negativeDir.getOpposite(), offsetX)), VALID_FRAME)) {
+            offsetX++;
+            if (offsetX > 20) return null;
+        }
+        blockPos = blockPos.offset(negativeDir.getOpposite(), offsetX-1);
+        int offsetY = 1;
+        while (blockPos.getY() - offsetY > 0 && validStateInsidePortal(world.getBlockState(blockPos.down(offsetY)), VALID_FRAME)) {
+            offsetY++;
+            if (offsetY > 20) return null;
+        }
+        return blockPos.down(offsetY-1);
     }
 
     private int getWidth() {
@@ -79,9 +95,8 @@ public class CustomAreaHelper extends PortalFrameTester {
 
     private int getWidth(BlockPos blockPos, Direction direction) {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
-
-        for (int i = 0; i <= 21; ++i) {
-            mutable.set(blockPos).move(direction, i);
+        for (int i = 1; i <= 21; i++) {
+            mutable.set(blockPos).move(direction,i);
             BlockState blockState = this.world.getBlockState(mutable);
             if (!validStateInsidePortal(blockState, VALID_FRAME)) {
                 if (VALID_FRAME.contains(blockState.getBlock())) {
@@ -89,59 +104,35 @@ public class CustomAreaHelper extends PortalFrameTester {
                 }
                 break;
             }
-
-            BlockState blockState2 = this.world.getBlockState(mutable.move(Direction.DOWN));
-            if (!VALID_FRAME.contains(blockState2.getBlock())) {
-                break;
-            }
         }
-
         return 0;
     }
 
     private int getHeight() {
+        int i = this.getHeight(this.lowerCorner);
+        return i >= 3 && i <= 21 ? i : 0;
+    }
+
+    private int getHeight(BlockPos blockPos) {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
-        int i = this.method_30490(mutable);
-        return i >= 3 && i <= 21 && this.method_30491(mutable, i) ? i : 0;
-    }
-
-    private boolean method_30491(BlockPos.Mutable mutable, int i) {
-        for (int j = 0; j < this.width; ++j) {
-            BlockPos.Mutable mutable2 = mutable.set(this.lowerCorner).move(Direction.UP, i).move(this.negativeDir, j);
-            if (!VALID_FRAME.contains(this.world.getBlockState(mutable2).getBlock())) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private int method_30490(BlockPos.Mutable mutable) {
-        for (int i = 0; i < 21; ++i) {
-            mutable.set(this.lowerCorner).move(Direction.UP, i).move(this.negativeDir, -1);
-            if (!VALID_FRAME.contains(this.world.getBlockState(mutable).getBlock())) {
-                return i;
-            }
-
-            mutable.set(this.lowerCorner).move(Direction.UP, i).move(this.negativeDir, this.width);
-            if (!VALID_FRAME.contains(this.world.getBlockState(mutable).getBlock())) {
-                return i;
-            }
-
-            for (int j = 0; j < this.width; ++j) {
-                mutable.set(this.lowerCorner).move(Direction.UP, i).move(this.negativeDir, j);
-                BlockState blockState = this.world.getBlockState(mutable);
-                if (!validStateInsidePortal(blockState, VALID_FRAME)) {
+        for (int i = 1; i <= 21; i++) {
+            mutable.set(blockPos).move(Direction.UP,i);
+            BlockState blockState = this.world.getBlockState(mutable);
+            if (!validStateInsidePortal(blockState, VALID_FRAME)) {
+                if (VALID_FRAME.contains(blockState.getBlock())) {
                     return i;
                 }
-
-                if (blockState.getBlock() instanceof CustomPortalBlock) {
-                    ++this.foundPortalBlocks;
-                }
+                break;
             }
         }
+        return 0;
+    }
 
-        return 21;
+    private void countExistingPortalBlocks() {
+        for (int i = 0; i < width; i++)
+            for (int j = 0; j < height; j++)
+                if (CustomPortalsMod.isInstanceOfCustomPortal(world.getBlockState(this.lowerCorner.offset(negativeDir, i).up(j))))
+                    foundPortalBlocks++;
     }
 
     public static boolean validStateInsidePortal(BlockState blockState, HashSet<Block> foundations) {
@@ -153,7 +144,7 @@ public class CustomAreaHelper extends PortalFrameTester {
                 break;
             }
         }
-        if (blockState.isAir() || blockState.getBlock() instanceof CustomPortalBlock)
+        if (blockState.isAir() || CustomPortalsMod.isInstanceOfCustomPortal(blockState))
             return true;
         if (ignitionSource == PortalIgnitionSource.FIRE)
             return blockState.isIn(BlockTags.FIRE);
