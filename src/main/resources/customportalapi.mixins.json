@@ -3,11 +3,11 @@
   "package": "net.kyrptonaught.customportalapi.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "AbstractFireMixin",
-    "BucketMixin",
+    "portalLighters.AbstractFireMixin",
+    "portalLighters.FluidBlockPlacedMixin",
+    "portalLighters.PotionEntityMixin",
     "EntityMixin",
     "PlayerMixin",
-    "PotionEntityMixin",
     "NetherPortalMixin",
     "ServerPlayerMixin"
   ],

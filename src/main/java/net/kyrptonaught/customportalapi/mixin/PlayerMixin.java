@@ -1,7 +1,7 @@
 package net.kyrptonaught.customportalapi.mixin;
 
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
+import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;

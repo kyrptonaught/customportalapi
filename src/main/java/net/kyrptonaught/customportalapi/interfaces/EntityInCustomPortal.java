@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.util;
+package net.kyrptonaught.customportalapi.interfaces;
 
 public interface EntityInCustomPortal {
 

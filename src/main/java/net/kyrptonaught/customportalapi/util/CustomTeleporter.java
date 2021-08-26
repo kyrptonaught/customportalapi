@@ -2,17 +2,16 @@ package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.interfaces.CustomTeleportingEntity;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.portalLinking.DimensionalBlockPos;
-import net.kyrptonaught.customportalapi.portalLinking.PortalLinkingStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -23,7 +22,6 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
-import net.minecraft.world.dimension.AreaHelper;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Optional;
@@ -43,11 +41,13 @@ public class CustomTeleporter {
 
         ((CustomTeleportingEntity) entity).setCustomTeleportTarget(target);
         entity = entity.moveToWorld(destination);
-        entity.setYaw(target.yaw);
-        entity.setPitch(target.pitch);
-        if(entity instanceof ServerPlayerEntity)
-            entity.refreshPositionAfterTeleport(target.position);
-        link.executePostTPEvent(entity);
+        if(entity != null) {
+            entity.setYaw(target.yaw);
+            entity.setPitch(target.pitch);
+            if (entity instanceof ServerPlayerEntity)
+                entity.refreshPositionAfterTeleport(target.position);
+            link.executePostTPEvent(entity);
+        }
     }
 
 

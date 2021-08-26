@@ -1,7 +1,7 @@
 package net.kyrptonaught.customportalapi.mixin;
 
-import net.kyrptonaught.customportalapi.util.CustomTeleportingEntity;
-import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
+import net.kyrptonaught.customportalapi.interfaces.CustomTeleportingEntity;
+import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;

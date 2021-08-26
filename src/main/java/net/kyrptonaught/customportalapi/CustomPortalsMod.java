@@ -10,7 +10,6 @@ import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portalLinking.PortalLinkingStorage;
-import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -56,8 +55,6 @@ public class CustomPortalsMod implements ModInitializer {
                         BlockHitResult blockHit = (BlockHitResult) hit;
                         BlockPos usedBlockPos = blockHit.getBlockPos();
                         if (PortalPlacer.attemptPortalLight(world, usedBlockPos.offset(blockHit.getSide()), usedBlockPos, PortalIgnitionSource.ItemUseSource(item))) {
-                            if (item instanceof CustomPortalFluidProvider)
-                                player.setStackInHand(hand, ((CustomPortalFluidProvider) item).emptyContents(player.getStackInHand(hand), player));
                             return TypedActionResult.success(stack);
                         }
                     }
