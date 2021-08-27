@@ -31,6 +31,7 @@ public abstract class PortalFrameTester {
     public abstract boolean isRequestedSize(int attemptWidth, int attemptHeight);
 
     public abstract BlockLocating.Rectangle getRectangle();
+
     @FunctionalInterface
     public interface PortalFrameTesterFactory {
         PortalFrameTester createInstanceOfPortalFrameTester();

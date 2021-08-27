@@ -27,13 +27,6 @@ public abstract class PlayerMixin extends Entity implements EntityInCustomPortal
         this.inPortal = inPortal;
     }
 
-    @Unique
-    @Override
-    public void teleported() {
-        this.setDidTP(true);
-        inPortal = false;
-        timeInPortal = 0;
-    }
 
     @Unique
     @Override
@@ -42,7 +35,7 @@ public abstract class PlayerMixin extends Entity implements EntityInCustomPortal
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
-    public void inCustomPortal(CallbackInfo ci) {
+    public void CPAinCustomPortal(CallbackInfo ci) {
         if (inPortal) {
             if (!CustomPortalsMod.isInstanceOfCustomPortal(world, this.getBlockPos())) {
                 inPortal = false;

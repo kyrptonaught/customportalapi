@@ -3,18 +3,18 @@
   "package": "net.kyrptonaught.customportalapi.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "EntityMixin",
+    "NetherPortalMixin",
+    "PlayerMixin",
+    "ServerPlayerMixin",
     "portalLighters.AbstractFireMixin",
     "portalLighters.FluidBlockPlacedMixin",
-    "portalLighters.PotionEntityMixin",
-    "EntityMixin",
-    "PlayerMixin",
-    "NetherPortalMixin",
-    "ServerPlayerMixin"
+    "portalLighters.PotionEntityMixin"
   ],
   "client": [
     "client.ClientPlayerMixin",
-    "client.InGameHudMixin",
-    "client.ClientWorldMixin"
+    "client.ClientWorldMixin",
+    "client.InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

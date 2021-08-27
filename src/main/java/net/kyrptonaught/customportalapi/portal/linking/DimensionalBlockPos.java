@@ -1,11 +1,8 @@
-package net.kyrptonaught.customportalapi.portalLinking;
+package net.kyrptonaught.customportalapi.portal.linking;
 
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.RegistryKey;
-import net.minecraft.world.World;
 
 public class DimensionalBlockPos {
     public Identifier dimensionType;

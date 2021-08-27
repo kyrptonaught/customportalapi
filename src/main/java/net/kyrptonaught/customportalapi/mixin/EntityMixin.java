@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -30,12 +31,6 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
 
     @Unique
     @Override
-    public void teleported() {
-        setDidTP(true);
-    }
-
-    @Unique
-    @Override
     public void setDidTP(boolean didTP) {
         this.didTP = didTP;
         coolDown = maxCooldown;
@@ -48,7 +43,7 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
-    public void inCustomPortal(CallbackInfo ci) {
+    public void CPAinCustomPortal(CallbackInfo ci) {
         if (didTP) {
             coolDown--;
             if (coolDown <= 0)
@@ -67,20 +62,28 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
     public TeleportTarget getCustomTeleportTarget() {
         return customTPTarget;
     }
+
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
-    public void getCustomTPTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
+    public void CPAgetCustomTPTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
         if (this.didTeleport())
             cir.setReturnValue(getCustomTeleportTarget());
     }
 
+    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/world/ServerWorld;createEndSpawnPlatform(Lnet/minecraft/server/world/ServerWorld;)V"))
+    public void CPAcancelEndPlatformSpawn(ServerWorld world) {
+        if (this.didTeleport())
+            return;
+        ServerWorld.createEndSpawnPlatform(world);
+    }
+
     @Inject(method = "readNbt", at = @At(value = "TAIL"))
-    public void readCustomPortalFromTag(NbtCompound tag, CallbackInfo ci) {
+    public void CPAreadCustomPortalFromTag(NbtCompound tag, CallbackInfo ci) {
         this.didTP = tag.getBoolean("cpadidTP");
         this.coolDown = tag.getInt("cpacooldown");
     }
 
     @Inject(method = "writeNbt", at = @At(value = "RETURN"))
-    public void writeCustomPortalToTag(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir) {
+    public void CPAwriteCustomPortalToTag(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir) {
         cir.getReturnValue().putBoolean("cpadidTP", didTP);
         cir.getReturnValue().putInt("cpacooldown", coolDown);
     }

@@ -9,7 +9,7 @@ import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
-import net.kyrptonaught.customportalapi.portalLinking.PortalLinkingStorage;
+import net.kyrptonaught.customportalapi.portal.linking.PortalLinkingStorage;
 import net.minecraft.block.*;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -62,7 +62,7 @@ public class CustomPortalsMod implements ModInitializer {
             }
             return TypedActionResult.pass(stack);
         }));
-        //CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_end")).lightWithWater().tintColor(46, 5, 25).registerPortal();
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_end")).lightWithWater().tintColor(46, 5, 25).registerPortal();
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortal();
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
 

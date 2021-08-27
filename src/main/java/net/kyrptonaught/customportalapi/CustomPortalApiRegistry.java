@@ -1,7 +1,5 @@
 package net.kyrptonaught.customportalapi;
 
-import net.fabricmc.fabric.api.object.builder.v1.world.poi.PointOfInterestHelper;
-import net.kyrptonaught.customportalapi.networking.NetworkManager;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
@@ -11,7 +9,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.world.poi.PointOfInterestType;
 
 import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;

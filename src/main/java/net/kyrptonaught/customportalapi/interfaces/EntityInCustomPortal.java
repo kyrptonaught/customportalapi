@@ -2,11 +2,12 @@ package net.kyrptonaught.customportalapi.interfaces;
 
 public interface EntityInCustomPortal {
 
-    void setInPortal(boolean inPortal);
+    default void setInPortal(boolean inPortal) {
+    }
 
-    int getTimeInPortal();
-
-    void teleported();
+    default int getTimeInPortal() {
+        return 0;
+    }
 
     boolean didTeleport();
 

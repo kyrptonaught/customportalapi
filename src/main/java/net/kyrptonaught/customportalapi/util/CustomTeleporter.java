@@ -5,7 +5,7 @@ import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.interfaces.CustomTeleportingEntity;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
-import net.kyrptonaught.customportalapi.portalLinking.DimensionalBlockPos;
+import net.kyrptonaught.customportalapi.portal.linking.DimensionalBlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
@@ -41,7 +41,7 @@ public class CustomTeleporter {
 
         ((CustomTeleportingEntity) entity).setCustomTeleportTarget(target);
         entity = entity.moveToWorld(destination);
-        if(entity != null) {
+        if (entity != null) {
             entity.setYaw(target.yaw);
             entity.setPitch(target.pitch);
             if (entity instanceof ServerPlayerEntity)

@@ -2,7 +2,6 @@ package net.kyrptonaught.customportalapi.portal.frame;
 
 import com.google.common.collect.Sets;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.PortalLink;
@@ -79,13 +78,13 @@ public class CustomAreaHelper extends PortalFrameTester {
             offsetX++;
             if (offsetX > 20) return null;
         }
-        blockPos = blockPos.offset(negativeDir.getOpposite(), offsetX-1);
+        blockPos = blockPos.offset(negativeDir.getOpposite(), offsetX - 1);
         int offsetY = 1;
         while (blockPos.getY() - offsetY > 0 && validStateInsidePortal(world.getBlockState(blockPos.down(offsetY)), VALID_FRAME)) {
             offsetY++;
             if (offsetY > 20) return null;
         }
-        return blockPos.down(offsetY-1);
+        return blockPos.down(offsetY - 1);
     }
 
     private int getWidth() {
@@ -96,7 +95,7 @@ public class CustomAreaHelper extends PortalFrameTester {
     private int getWidth(BlockPos blockPos, Direction direction) {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         for (int i = 1; i <= 21; i++) {
-            mutable.set(blockPos).move(direction,i);
+            mutable.set(blockPos).move(direction, i);
             BlockState blockState = this.world.getBlockState(mutable);
             if (!validStateInsidePortal(blockState, VALID_FRAME)) {
                 if (VALID_FRAME.contains(blockState.getBlock())) {
@@ -116,7 +115,7 @@ public class CustomAreaHelper extends PortalFrameTester {
     private int getHeight(BlockPos blockPos) {
         BlockPos.Mutable mutable = new BlockPos.Mutable();
         for (int i = 1; i <= 21; i++) {
-            mutable.set(blockPos).move(Direction.UP,i);
+            mutable.set(blockPos).move(Direction.UP, i);
             BlockState blockState = this.world.getBlockState(mutable);
             if (!validStateInsidePortal(blockState, VALID_FRAME)) {
                 if (VALID_FRAME.contains(blockState.getBlock())) {
