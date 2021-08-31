@@ -3,16 +3,15 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
+import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
-import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.sound.SoundCategory;
@@ -100,21 +99,14 @@ public class CustomPortalBlock extends Block {
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
-        if (entity instanceof PlayerEntity) {
-            if (!entityInPortal.didTeleport()) {
-                entityInPortal.setInPortal(true);
-                if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
-                    entityInPortal.teleported();
-                    if (!world.isClient)
-                        CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
-                }
-            } else entityInPortal.increaseCooldown();
-        } else if (!world.isClient) {
-            if (!entityInPortal.didTeleport()) {
-                entityInPortal.teleported();
-                CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
-            } else entityInPortal.increaseCooldown();
-
+        entityInPortal.increaseCooldown();
+        if (!entityInPortal.didTeleport()) {
+            entityInPortal.setInPortal(true);
+            if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
+                entityInPortal.setDidTP(true);
+                if (!world.isClient)
+                    CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+            }
         }
     }
 

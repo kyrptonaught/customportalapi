@@ -1,4 +1,10 @@
 ## Changelog
+**0.0.1-beta 41**
+Redo the detection of fluid ignited portals, should be more reliable. 
+
+**0.0.1-beta 40**
+Completely redo portal linking. They should always link together now. All existing portals will not link properly
+
 **0.0.1-beta 33**
 Fix buckets placing the liquid when creating a portal
 

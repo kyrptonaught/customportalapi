@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.portalLinking;
+package net.kyrptonaught.customportalapi.portal.linking;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.Identifier;

@@ -1,6 +1,8 @@
 package net.kyrptonaught.customportalapi.mixin.client;
 
 import com.google.common.collect.Sets;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.networking.NetworkManager;
@@ -20,6 +22,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Set;
 
+@Environment(EnvType.CLIENT)
 @Mixin(World.class)
 public abstract class ClientWorldMixin implements WorldAccess {
     private static final Set<BlockPos> checkedPos = Sets.newConcurrentHashSet();

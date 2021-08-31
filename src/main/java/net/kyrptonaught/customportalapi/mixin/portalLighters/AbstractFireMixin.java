@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.mixin;
+package net.kyrptonaught.customportalapi.mixin.portalLighters;
 
 
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;

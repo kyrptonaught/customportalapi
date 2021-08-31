@@ -1,6 +1,5 @@
 package net.kyrptonaught.customportalapi.portal;
 
-import net.kyrptonaught.customportalapi.util.CustomPortalFluidProvider;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
@@ -33,8 +32,6 @@ public class PortalIgnitionSource {
 
     public static PortalIgnitionSource ItemUseSource(Item item) {
         USEITEMS.add(item);
-        if (item instanceof CustomPortalFluidProvider)
-            return new PortalIgnitionSource(SourceType.FLUID, Registry.FLUID.getId(((CustomPortalFluidProvider) item).getFluidContent()));
         return new PortalIgnitionSource(SourceType.USEITEM, Registry.ITEM.getId(item));
     }
 
@@ -61,6 +58,6 @@ public class PortalIgnitionSource {
     }
 
     public static boolean isRegisteredIgnitionSourceWith(Item item) {
-        return item instanceof CustomPortalFluidProvider || USEITEMS.contains(item);
+        return USEITEMS.contains(item);
     }
 }
