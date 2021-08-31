@@ -67,6 +67,7 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
     public TeleportTarget getCustomTeleportTarget() {
         return customTPTarget;
     }
+
     @Inject(method = "getTeleportTarget", at = @At("HEAD"), cancellable = true)
     public void getCustomTPTarget(ServerWorld destination, CallbackInfoReturnable<TeleportTarget> cir) {
         if (this.didTeleport())

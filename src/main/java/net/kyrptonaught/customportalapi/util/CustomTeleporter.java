@@ -5,14 +5,12 @@ import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.portalLinking.DimensionalBlockPos;
-import net.kyrptonaught.customportalapi.portalLinking.PortalLinkingStorage;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -23,7 +21,6 @@ import net.minecraft.world.Heightmap;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.border.WorldBorder;
-import net.minecraft.world.dimension.AreaHelper;
 import net.minecraft.world.dimension.DimensionType;
 
 import java.util.Optional;
@@ -45,7 +42,7 @@ public class CustomTeleporter {
         entity = entity.moveToWorld(destination);
         entity.setYaw(target.yaw);
         entity.setPitch(target.pitch);
-        if(entity instanceof ServerPlayerEntity)
+        if (entity instanceof ServerPlayerEntity)
             entity.refreshPositionAfterTeleport(target.position);
         link.executePostTPEvent(entity);
     }
@@ -58,8 +55,8 @@ public class CustomTeleporter {
 
         if (destinationPos != null && destinationPos.dimensionType.equals(destinationWorld.getRegistryKey().getValue())) {
             PortalFrameTester portalFrameTester = portalFrameTesterFactory.createInstanceOfPortalFrameTester().init(destinationWorld, destinationPos.pos, portalAxis, frameBlock);
-            if (portalFrameTester.isValid()) {
-                if (!portalFrameTester.wasAlreadyValid()) {
+            if (portalFrameTester.isValidFrame()) {
+                if (!portalFrameTester.isAlreadyLitPortalFrame()) {
                     portalFrameTester.createPortal(frameBlock);
                 }
                 return buildTPTargetInDestPortal(portalFrameTester.getRectangle(), portalAxis, getOffset(fromPortalRectangle, entity), entity);

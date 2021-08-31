@@ -57,9 +57,6 @@ public class PortalLink {
         return dim.equals(returnDimID) || dim.equals(dimID);
     }
 
-    public boolean isCorrectForcedSize(int attemptWidth, int attemptHeight) {
-        return ((forcedWidth == 0 || forcedWidth == attemptWidth) && (forcedHeight == 0 || forcedHeight == attemptHeight));
-    }
 
     public void beforeTPEvent(Function<Entity, SHOULDTP> execute) {
         beforeTPEvent = execute;

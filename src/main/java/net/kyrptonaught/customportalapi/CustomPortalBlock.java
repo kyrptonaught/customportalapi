@@ -3,7 +3,6 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
-import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.EntityInCustomPortal;
@@ -55,7 +54,7 @@ public class CustomPortalBlock extends Block {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
             PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, CustomPortalsMod.getAxisFrom(state), block);
-            if (portalFrameTester.wasAlreadyValid())
+            if (portalFrameTester.isAlreadyLitPortalFrame())
                 return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         }
         //todo handle unknown portallink

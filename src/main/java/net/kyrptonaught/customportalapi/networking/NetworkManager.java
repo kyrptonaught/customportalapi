@@ -15,9 +15,10 @@ public class NetworkManager implements DedicatedServerModInitializer {
         return ServerPlayNetworking.canSend(player, SYNC_PORTALS);
     }
 
-    public static void setServerSideOnlyMode(Boolean serverSideOnlyMode){
+    public static void setServerSideOnlyMode(Boolean serverSideOnlyMode) {
         NetworkManager.serverSideOnlyMode = serverSideOnlyMode;
     }
+
     public static boolean isServerSideOnlyMode() {
         return serverSideOnlyMode;
     }

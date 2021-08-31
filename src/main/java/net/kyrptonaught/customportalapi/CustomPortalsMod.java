@@ -3,7 +3,6 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
 import net.kyrptonaught.customportalapi.networking.NetworkManager;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
@@ -23,6 +22,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.world.BlockLocating;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
@@ -65,10 +65,41 @@ public class CustomPortalsMod implements ModInitializer {
             }
             return TypedActionResult.pass(stack);
         }));
+        /*
+        UseBlockCallback.EVENT.register((player, world, hand, hitResult) -> {
+            int solidY = Math.min(world.getTopY(), world.getBottomY() + world.getLogicalHeight()) - 5;
+            BlockPos pos = null;
+            while (solidY >= 3) {
+                if (world.getBlockState(new BlockPos(hitResult.getBlockPos().getX(), solidY, hitResult.getBlockPos().getZ())).getMaterial().isSolid()) {
+                    if (canHost(world, new BlockPos(hitResult.getBlockPos().getX(), solidY + 1, hitResult.getBlockPos().getZ()))) {
+                        pos = new BlockPos(hitResult.getBlockPos().getX(), solidY, hitResult.getBlockPos().getZ());
+                        break;
+                    }
+                }
+                solidY--;
+            }
+            if (pos != null) {
+                BlockLocating.Rectangle rect = BlockLocating.getLargestRectangle(pos.up(), Direction.Axis.X, 4, Direction.Axis.Y, 4, blockPos -> {
+                    return !world.getBlockState(blockPos).getMaterial().isSolid();
+                });
+                System.out.println(rect.lowerLeft + " " + rect.width + " " + rect.height);
+            }
+            return ActionResult.PASS;
+        });
+
+         */
+
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_end")).lightWithWater().tintColor(46, 5, 25).registerPortal();
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortal();
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
 
+    }
+
+    public static boolean canHost(World world, BlockPos pos) {
+        BlockLocating.Rectangle rect = BlockLocating.getLargestRectangle(pos.up(), Direction.Axis.X, 4, Direction.Axis.Y, 4, blockPos -> {
+            return !world.getBlockState(blockPos).getMaterial().isSolid();
+        });
+        return rect.width >= 4 && rect.height >= 4;
     }
 
     public static void logError(String message) {

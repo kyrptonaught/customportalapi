@@ -9,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockLocating;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import java.util.HashMap;
@@ -31,7 +32,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
 
     public Optional<PortalFrameTester> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
         return getOrEmpty(worldAccess, blockPos, (areaHelper) -> {
-            return areaHelper.isValid() && areaHelper.foundPortalBlocks == 0;
+            return areaHelper.isValidFrame() && areaHelper.foundPortalBlocks == 0;
         }, axis, foundations);
     }
 
@@ -97,11 +98,11 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         return CustomAreaHelper.validStateInsidePortal(state, VALID_FRAME) || VALID_FRAME.contains(state.getBlock());
     }
 
-    public boolean wasAlreadyValid() {
-        return this.isValid() && this.foundPortalBlocks == this.xSize * this.zSize;
+    public boolean isAlreadyLitPortalFrame() {
+        return this.isValidFrame() && this.foundPortalBlocks == this.xSize * this.zSize;
     }
 
-    public boolean isValid() {
+    public boolean isValidFrame() {
         return this.lowerCorner != null && Math.min(xSize, zSize) >= 2 && Math.max(xSize, zSize) < 10;
     }
 
@@ -122,5 +123,10 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     @Override
     public BlockLocating.Rectangle getRectangle() {
         return null;
+    }
+
+    @Override
+    public boolean doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
+        return false;
     }
 }

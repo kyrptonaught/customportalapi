@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockLocating;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import java.util.HashSet;
@@ -22,18 +23,20 @@ public abstract class PortalFrameTester {
 
     public abstract Optional<PortalFrameTester> getOrEmpty(WorldAccess worldAccess, BlockPos blockPos, Predicate<PortalFrameTester> predicate, Direction.Axis axis, Block... foundations);
 
-    public abstract boolean wasAlreadyValid();
+    public abstract boolean isAlreadyLitPortalFrame();
 
-    public abstract boolean isValid();
+    public abstract boolean isValidFrame();
 
     public abstract void createPortal(Block frameBlock);
 
     public abstract boolean isRequestedSize(int attemptWidth, int attemptHeight);
 
     public abstract BlockLocating.Rectangle getRectangle();
+
+    public abstract boolean doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis);
+
     @FunctionalInterface
     public interface PortalFrameTesterFactory {
         PortalFrameTester createInstanceOfPortalFrameTester();
     }
-
 }
