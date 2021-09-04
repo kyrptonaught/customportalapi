@@ -5,8 +5,11 @@ import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.TeleportTarget;
+import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -17,11 +20,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityInCustomPortal, CustomTeleportingEntity {
 
+    @Shadow
+    public World world;
+
     @Unique
     boolean didTP = false;
 
     @Unique
-    int coolDown = 0, maxCooldown = 10;
+    int timeInPortal = 0, maxTimeInPortal = 80, cooldown = 0;
+
+    @Unique
+    private BlockPos inPortalPos;
 
     @Unique
     @Override
@@ -33,21 +42,40 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
     @Override
     public void setDidTP(boolean didTP) {
         this.didTP = didTP;
-        coolDown = maxCooldown;
+        if (didTP) {
+            timeInPortal = maxTimeInPortal;
+            cooldown = 10;
+        } else {
+            timeInPortal = 0;
+            cooldown = 0;
+        }
+        inPortalPos = null;
+    }
+
+    public int getTimeInPortal() {
+        return timeInPortal;
     }
 
     @Unique
     @Override
-    public void increaseCooldown() {
-        coolDown = Math.min(coolDown + 1, maxCooldown);
+    public void tickInPortal(BlockPos portalPos) {
+        cooldown = 10;
+        inPortalPos = portalPos;
+    }
+
+    @Override
+    public BlockPos getInPortalPos() {
+        return inPortalPos;
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     public void CPAinCustomPortal(CallbackInfo ci) {
-        if (didTP) {
-            coolDown--;
-            if (coolDown <= 0)
-                didTP = false;
+        if (cooldown > 0) {
+            cooldown--;
+            timeInPortal = Math.min(timeInPortal + 1, maxTimeInPortal);
+            if (cooldown <= 0) {
+                setDidTP(false);
+            }
         }
     }
 
@@ -79,12 +107,12 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
     @Inject(method = "readNbt", at = @At(value = "TAIL"))
     public void CPAreadCustomPortalFromTag(NbtCompound tag, CallbackInfo ci) {
         this.didTP = tag.getBoolean("cpadidTP");
-        this.coolDown = tag.getInt("cpacooldown");
+        this.cooldown = tag.getInt("cpaCooldown");
     }
 
     @Inject(method = "writeNbt", at = @At(value = "RETURN"))
     public void CPAwriteCustomPortalToTag(NbtCompound tag, CallbackInfoReturnable<NbtCompound> cir) {
         cir.getReturnValue().putBoolean("cpadidTP", didTP);
-        cir.getReturnValue().putInt("cpacooldown", coolDown);
+        cir.getReturnValue().putInt("cpaCooldown", cooldown);
     }
 }

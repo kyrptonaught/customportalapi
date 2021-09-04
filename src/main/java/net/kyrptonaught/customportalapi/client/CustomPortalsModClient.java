@@ -12,7 +12,7 @@ import net.fabricmc.fabric.impl.client.rendering.ColorProviderRegistryImpl;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.PerWorldPortals;
-import net.kyrptonaught.customportalapi.networking.NetworkManager;
+import net.kyrptonaught.customportalapi.networking.ForcePlacePortalPacket;
 import net.kyrptonaught.customportalapi.networking.PortalRegistrySync;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
@@ -40,7 +40,7 @@ public class CustomPortalsModClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(CUSTOMPORTALPARTICLE, CustomPortalParticle.Factory::new);
 
         PortalRegistrySync.registerReceivePortalData();
-
+        ForcePlacePortalPacket.registerReceive();
         MinecraftClient.getInstance().getGame().setSessionEventListener(new SessionEventListener() {
             @Override
             public void onStartGameSession(GameSession session) {
@@ -48,7 +48,6 @@ public class CustomPortalsModClient implements ClientModInitializer {
 
             @Override
             public void onLeaveGameSession(GameSession session) {
-                NetworkManager.setServerSideOnlyMode(false);
                 PerWorldPortals.removeOldPortalsFromRegistry();
             }
         });

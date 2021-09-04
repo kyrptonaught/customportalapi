@@ -3,7 +3,7 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.kyrptonaught.customportalapi.networking.NetworkManager;
+import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.CustomAreaHelper;
@@ -86,10 +86,9 @@ public class CustomPortalsMod implements ModInitializer {
 
          */
 
-        //CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_end")).lightWithWater().tintColor(46, 5, 25).registerPortal();
-        //CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortal();
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_end")).lightWithWater().tintColor(46, 5, 25).registerPortal();
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.DIAMOND_BLOCK).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortal();
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
-
     }
 
     public static boolean canHost(World world, BlockPos pos) {
@@ -105,27 +104,18 @@ public class CustomPortalsMod implements ModInitializer {
 
 
     public static boolean isInstanceOfCustomPortal(BlockView world, BlockPos pos) {
-        return world.getBlockState(pos).getBlock() instanceof CustomPortalBlock || (NetworkManager.isServerSideOnlyMode() && world.getBlockState(pos).getBlock() instanceof NetherPortalBlock);
+        return world.getBlockState(pos).getBlock() instanceof CustomPortalBlock;
     }
 
     public static boolean isInstanceOfCustomPortal(BlockState state) {
-        return state.getBlock() instanceof CustomPortalBlock || (NetworkManager.isServerSideOnlyMode() && state.getBlock() instanceof NetherPortalBlock);
+        return state.getBlock() instanceof CustomPortalBlock;
     }
 
     public static Block getDefaultPortalBlock() {
-        return NetworkManager.isServerSideOnlyMode() ? Blocks.NETHER_PORTAL : portalBlock;
+        return portalBlock;
     }
 
     public static Block getPortalBase(BlockView world, BlockPos pos) {
-        if (isInstanceOfCustomPortal(world, pos))
-            if (NetworkManager.isServerSideOnlyMode())
-                return defaultPortalBaseFinder(world, pos);
-            else
-                return ((CustomPortalBlock) world.getBlockState(pos).getBlock()).getPortalBase(world, pos);
-        else return null;
-    }
-
-    public static Block defaultPortalBaseFinder(BlockView world, BlockPos pos) {
         if (CustomPortalsMod.isInstanceOfCustomPortal(world, pos)) {
             Direction.Axis axis = getAxisFrom(world.getBlockState(pos));
 
@@ -159,16 +149,12 @@ public class CustomPortalsMod implements ModInitializer {
             return state.get(CustomPortalBlock.AXIS);
         if (state.getBlock() instanceof NetherPortalBlock)
             return state.get(NetherPortalBlock.AXIS);
-        if (state.getBlock() instanceof EndPortalBlock)
-            return Direction.Axis.Y;
         return Direction.Axis.X;
     }
 
     public static BlockState blockWithAxis(BlockState state, Direction.Axis axis) {
         if (state.getBlock() instanceof CustomPortalBlock)
             return state.with(CustomPortalBlock.AXIS, axis);
-        if (state.getBlock() instanceof NetherPortalBlock)
-            return state.with(NetherPortalBlock.AXIS, axis);
         return state;
     }
 

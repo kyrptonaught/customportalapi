@@ -1,8 +1,9 @@
 package net.kyrptonaught.customportalapi.networking;
 
 import io.netty.buffer.Unpooled;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.PerWorldPortals;
@@ -11,16 +12,9 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.Identifier;
 
 public class PortalRegistrySync {
-
-    @Deprecated
-    public static void enableSyncOnPlayerJoin() {
-
-    }
-
     public static void registerSyncOnPlayerJoin() {
         ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
             if (NetworkManager.doesPlayerHaveMod(serverPlayNetworkHandler.player)) {
-                sendSyncSettings(packetSender);
                 for (PortalLink link : CustomPortalApiRegistry.getAllPortalLinks()) {
                     PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                     buf.writeIdentifier(link.block);
@@ -38,12 +32,8 @@ public class PortalRegistrySync {
         });
     }
 
-    public static void sendSyncSettings(PacketSender packetSender) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
-        buf.writeBoolean(NetworkManager.isServerSideOnlyMode());
-        packetSender.sendPacket(NetworkManager.SYNC_SETTINGS, buf);
-    }
 
+    @Environment(EnvType.CLIENT)
     public static void registerReceivePortalData() {
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.SYNC_PORTALS, (client, handler, packet, sender) -> {
             Identifier frameBlock = packet.readIdentifier();
@@ -56,9 +46,6 @@ public class PortalRegistrySync {
             //int forcedWidth = packet.readInt();
             //int forcedHeight = packet.readInt();
             PerWorldPortals.registerWorldPortal(new PortalLink(frameBlock, dimID, colorId));
-        });
-        ClientPlayNetworking.registerGlobalReceiver(NetworkManager.SYNC_SETTINGS, (client, handler, packet, sender) -> {
-            NetworkManager.setServerSideOnlyMode(packet.readBoolean());
         });
     }
 }

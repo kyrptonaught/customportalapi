@@ -89,7 +89,7 @@ public class PortalPlacer {
                             }
                         }
                         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-                        BlockState blockState2 = CustomPortalsMod.blockWithAxis(link != null ? link.getPortalBlock(!world.isClient).getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
+                        BlockState blockState2 = CustomPortalsMod.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
 
                         for (o = 0; o < 2; ++o) {
                             for (p = 0; p < 3; ++p) {

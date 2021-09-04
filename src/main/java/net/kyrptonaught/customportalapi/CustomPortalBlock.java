@@ -99,9 +99,8 @@ public class CustomPortalBlock extends Block {
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
-        entityInPortal.increaseCooldown();
+        entityInPortal.tickInPortal(pos.toImmutable());
         if (!entityInPortal.didTeleport()) {
-            entityInPortal.setInPortal(true);
             if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
                 entityInPortal.setDidTP(true);
                 if (!world.isClient)
@@ -111,6 +110,6 @@ public class CustomPortalBlock extends Block {
     }
 
     public Block getPortalBase(BlockView world, BlockPos pos) {
-        return CustomPortalsMod.defaultPortalBaseFinder(world, pos);
+        return CustomPortalsMod.getPortalBase(world, pos);
     }
 }

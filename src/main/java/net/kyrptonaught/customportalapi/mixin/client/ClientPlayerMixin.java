@@ -16,6 +16,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,11 +24,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerMixin extends LivingEntity implements ClientPlayerInColoredPortal {
+public abstract class ClientPlayerMixin extends LivingEntity implements EntityInCustomPortal, ClientPlayerInColoredPortal {
 
     @Shadow
     public float lastNauseaStrength;
@@ -64,9 +66,10 @@ public abstract class ClientPlayerMixin extends LivingEntity implements ClientPl
     public void injectCustomNausea(CallbackInfo ci) {
         if (this.inNetherPortal) {
             setLastUsedPortalColor(-1);
-        } else if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
-            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(CustomPortalsMod.getPortalBase(this.world, this.getBlockPos()));
-            setLastUsedPortalColor(link != null ? link.colorID : 1908001);
+        } else if (this.getTimeInPortal() > 0) {
+            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(CustomPortalsMod.getPortalBase(this.world, this.getInPortalPos()));
+            if (link != null)
+                setLastUsedPortalColor(link.colorID);
             updateCustomNausea();
             ci.cancel();
         }
@@ -75,7 +78,7 @@ public abstract class ClientPlayerMixin extends LivingEntity implements ClientPl
     @Unique
     private void updateCustomNausea() {
         this.lastNauseaStrength = this.nextNauseaStrength;
-        if (((EntityInCustomPortal) this).getTimeInPortal() > 0) {
+        if (this.getTimeInPortal() > 0) {
             if (this.client.currentScreen != null && !this.client.currentScreen.isPauseScreen()) {
                 if (this.client.currentScreen instanceof HandledScreen) {
                     this.closeHandledScreen();

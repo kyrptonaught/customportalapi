@@ -1,17 +1,17 @@
 package net.kyrptonaught.customportalapi.interfaces;
 
+import net.minecraft.util.math.BlockPos;
+
 public interface EntityInCustomPortal {
 
-    default void setInPortal(boolean inPortal) {
-    }
-
-    default int getTimeInPortal() {
-        return 0;
-    }
+    int getTimeInPortal();
 
     boolean didTeleport();
 
     void setDidTP(boolean didTP);
 
-    void increaseCooldown();
+    void tickInPortal(BlockPos portalPos);
+
+    BlockPos getInPortalPos();
+
 }
