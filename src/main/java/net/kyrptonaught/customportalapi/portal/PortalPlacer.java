@@ -23,6 +23,9 @@ import java.util.Iterator;
 import java.util.Optional;
 
 public class PortalPlacer {
+    public static boolean attemptPortalLight(World world, BlockPos portalPos, PortalIgnitionSource ignitionSource) {
+        return attemptPortalLight(world, portalPos,CustomPortalHelper.getClosestFrameBlock(world,portalPos), ignitionSource);
+    }
     public static boolean attemptPortalLight(World world, BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource) {
         Block foundationBlock = world.getBlockState(framePos).getBlock();
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(foundationBlock);

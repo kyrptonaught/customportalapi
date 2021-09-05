@@ -2,6 +2,7 @@ package net.kyrptonaught.customportalapi.mixin.portalLighters;
 
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.util.math.BlockPos;
@@ -18,6 +19,6 @@ public abstract class FluidBlockPlacedMixin {
     @Inject(method = "onBlockAdded", at = @At("HEAD"))
     public void fluidPlacedAttemptPortalLight(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify, CallbackInfo ci) {
         if (state.getFluidState().isStill())
-            PortalPlacer.attemptPortalLight(world, pos, pos.down(), PortalIgnitionSource.FluidSource(state.getFluidState().getFluid()));
+            PortalPlacer.attemptPortalLight(world, pos, PortalIgnitionSource.FluidSource(state.getFluidState().getFluid()));
     }
 }

@@ -1,6 +1,8 @@
 package net.kyrptonaught.customportalapi.util;
 
+import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
@@ -40,6 +42,21 @@ public class CustomPortalHelper {
         return getPortalBase(world, moveTowardsFrame(pos, axis, false));
     }
 
+    public static BlockPos getClosestFrameBlock(BlockView world, BlockPos pos) {
+        if (CustomPortalApiRegistry.getPortalLinkFromBase(world.getBlockState(pos.down()).getBlock()) != null)
+            return pos.down();
+        if (CustomPortalApiRegistry.getPortalLinkFromBase(world.getBlockState(pos.east()).getBlock()) != null)
+            return pos.east();
+        if (CustomPortalApiRegistry.getPortalLinkFromBase(world.getBlockState(pos.west()).getBlock()) != null)
+            return pos.west();
+        if (CustomPortalApiRegistry.getPortalLinkFromBase(world.getBlockState(pos.north()).getBlock()) != null)
+            return pos.north();
+        if (CustomPortalApiRegistry.getPortalLinkFromBase(world.getBlockState(pos.south()).getBlock()) != null)
+            return pos.south();
+        if (CustomPortalApiRegistry.getPortalLinkFromBase(world.getBlockState(pos.up()).getBlock()) != null)
+            return pos.up();
+        return pos;
+    }
     private static BlockPos moveTowardsFrame(BlockPos pos, Direction.Axis portalAxis, boolean positiveMove) {
         if (portalAxis.isHorizontal())
             return pos.offset(positiveMove ? Direction.UP : Direction.DOWN);
