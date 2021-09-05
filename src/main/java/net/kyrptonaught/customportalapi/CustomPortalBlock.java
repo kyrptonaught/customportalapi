@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
 import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
@@ -52,7 +53,7 @@ public class CustomPortalBlock extends Block {
         Block block = getPortalBase(world, pos);
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
-            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, CustomPortalsMod.getAxisFrom(state), block);
+            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, CustomPortalHelper.getAxisFrom(state), block);
             if (portalFrameTester.isAlreadyLitPortalFrame())
                 return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
         }
@@ -110,6 +111,6 @@ public class CustomPortalBlock extends Block {
     }
 
     public Block getPortalBase(BlockView world, BlockPos pos) {
-        return CustomPortalsMod.getPortalBase(world, pos);
+        return CustomPortalHelper.getPortalBase(world, pos);
     }
 }

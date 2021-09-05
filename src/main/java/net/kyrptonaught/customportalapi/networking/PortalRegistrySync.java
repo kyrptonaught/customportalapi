@@ -18,14 +18,8 @@ public class PortalRegistrySync {
                 for (PortalLink link : CustomPortalApiRegistry.getAllPortalLinks()) {
                     PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
                     buf.writeIdentifier(link.block);
-                    //buf.writeInt(link.portalIgnitionSource.sourceType.ordinal());
-                    //buf.writeIdentifier(link.portalIgnitionSource.ignitionSourceID);
-                    //buf.writeIdentifier(Registry.BLOCK.getId(link.getPortalBlock()));
                     buf.writeIdentifier(link.dimID);
-                    //buf.writeIdentifier(link.returnDimID);
                     buf.writeInt(link.colorID);
-                    //buf.writeInt(link.forcedWidth);
-                    //buf.writeInt(link.forcedHeight);
                     packetSender.sendPacket(NetworkManager.SYNC_PORTALS, buf);
                 }
             }
@@ -37,14 +31,8 @@ public class PortalRegistrySync {
     public static void registerReceivePortalData() {
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.SYNC_PORTALS, (client, handler, packet, sender) -> {
             Identifier frameBlock = packet.readIdentifier();
-            //int ignitionSourceType = packet.readInt();
-            //Identifier ignitionSourceID = packet.readIdentifier();
-            //Identifier portalBlock = packet.readIdentifier();
             Identifier dimID = packet.readIdentifier();
-            //Identifier returnDimID = packet.readIdentifier();
             int colorId = packet.readInt();
-            //int forcedWidth = packet.readInt();
-            //int forcedHeight = packet.readInt();
             PerWorldPortals.registerWorldPortal(new PortalLink(frameBlock, dimID, colorId));
         });
     }

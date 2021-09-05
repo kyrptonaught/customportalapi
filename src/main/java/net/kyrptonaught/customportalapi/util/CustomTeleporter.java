@@ -52,7 +52,7 @@ public class CustomTeleporter {
 
 
     public static TeleportTarget customTPTarget(ServerWorld destinationWorld, Entity entity, BlockPos enteredPortalPos, Block frameBlock, PortalFrameTester.PortalFrameTesterFactory portalFrameTesterFactory) {
-        Direction.Axis portalAxis = CustomPortalsMod.getAxisFrom(entity.getEntityWorld().getBlockState(enteredPortalPos));
+        Direction.Axis portalAxis = CustomPortalHelper.getAxisFrom(entity.getEntityWorld().getBlockState(enteredPortalPos));
         BlockLocating.Rectangle fromPortalRectangle = portalFrameTesterFactory.createInstanceOfPortalFrameTester().init(entity.getEntityWorld(), enteredPortalPos, portalAxis, frameBlock).getRectangle();
         DimensionalBlockPos destinationPos = CustomPortalsMod.portalLinkingStorage.getDestination(fromPortalRectangle.lowerLeft, entity.getEntityWorld().getRegistryKey());
 
@@ -60,9 +60,9 @@ public class CustomTeleporter {
             PortalFrameTester portalFrameTester = portalFrameTesterFactory.createInstanceOfPortalFrameTester().init(destinationWorld, destinationPos.pos, portalAxis, frameBlock);
             if (portalFrameTester.isValidFrame()) {
                 if (!portalFrameTester.isAlreadyLitPortalFrame()) {
-                    portalFrameTester.createPortal(frameBlock);
+                    portalFrameTester.lightPortal(frameBlock);
                 }
-                return buildTPTargetInDestPortal(portalFrameTester.getRectangle(), portalAxis, getOffset(fromPortalRectangle, entity), entity);
+                return portalFrameTester.getTPTargetInPortal(portalFrameTester.getRectangle(), portalAxis, portalFrameTester.getEntityOffsetInPortal(fromPortalRectangle, entity, portalAxis), entity);
             }
         }
         return createDestinationPortal(destinationWorld, entity, portalAxis, fromPortalRectangle, frameBlock.getDefaultState());
@@ -78,37 +78,14 @@ public class CustomTeleporter {
         BlockPos blockPos3 = new BlockPos(MathHelper.clamp(entity.getX() * h, d, f), entity.getY(), MathHelper.clamp(entity.getZ() * h, e, g));
         Optional<BlockLocating.Rectangle> portal = PortalPlacer.createDestinationPortal(destination, blockPos3, frameBlock, axis);
         if (portal.isPresent()) {
+            PortalFrameTester portalFrameTester = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock()).getFrameTester().createInstanceOfPortalFrameTester();
+
             CustomPortalsMod.portalLinkingStorage.createLink(portalFramePos.lowerLeft, entity.world.getRegistryKey(), portal.get().lowerLeft, destination.getRegistryKey());
-            return buildTPTargetInDestPortal(portal.get(), axis, getOffset(portalFramePos, entity), entity);
+            return portalFrameTester.getTPTargetInPortal(portal.get(), axis, portalFrameTester.getEntityOffsetInPortal(portalFramePos, entity, axis), entity);
         }
         return idkWhereToPutYou(destination, entity, blockPos3);
     }
 
-    protected static Vec3d getOffset(BlockLocating.Rectangle arg, Entity entity) {
-        EntityDimensions entityDimensions = entity.getDimensions(entity.getPose());
-        double width = arg.width - entityDimensions.width;
-        double height = arg.height - entityDimensions.height;
-
-        double deltaX = MathHelper.getLerpProgress(entity.getX(), arg.lowerLeft.getX(), arg.lowerLeft.getX() + width);
-        double deltaY = MathHelper.getLerpProgress(entity.getY(), arg.lowerLeft.getY(), arg.lowerLeft.getY() + height);
-        double deltaZ = MathHelper.getLerpProgress(entity.getZ(), arg.lowerLeft.getZ(), arg.lowerLeft.getZ() + width);
-        return new Vec3d(deltaX, deltaY, deltaZ);
-    }
-
-    public static TeleportTarget buildTPTargetInDestPortal(BlockLocating.Rectangle portalRect, Direction.Axis portalAxis, Vec3d offset, Entity entity) {
-        EntityDimensions entityDimensions = entity.getDimensions(entity.getPose());
-        double width = portalRect.width - entityDimensions.width;
-        double height = portalRect.height - entityDimensions.height;
-        double x = MathHelper.lerp(offset.x, portalRect.lowerLeft.getX(), portalRect.lowerLeft.getX() + width);
-        double y = MathHelper.lerp(offset.y, portalRect.lowerLeft.getY(), portalRect.lowerLeft.getY() + height);
-        double z = MathHelper.lerp(offset.z, portalRect.lowerLeft.getZ(), portalRect.lowerLeft.getZ() + width);
-        if (portalAxis == Direction.Axis.X)
-            z = portalRect.lowerLeft.getZ() + 0.5D;
-        else if (portalAxis == Direction.Axis.Z)
-            x = portalRect.lowerLeft.getX() + .5D;
-
-        return new TeleportTarget(new Vec3d(x, y, z), entity.getVelocity(), entity.getYaw(), entity.getPitch());
-    }
 
     protected static TeleportTarget idkWhereToPutYou(ServerWorld world, Entity entity, BlockPos pos) {
         CustomPortalsMod.logError("Unable to find find tp location, forced to place on top of world");

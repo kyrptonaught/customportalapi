@@ -21,7 +21,7 @@ public class PortalLink {
     public boolean onlyIgnitableInReturnDim = false;
     public int colorID;
     public int forcedWidth, forcedHeight;
-    public Identifier portalFrameTester = CustomPortalsMod.VANILLA_NETHERPORTAL_FRAMETESTER;
+    public Identifier portalFrameTester = CustomPortalsMod.VANILLAPORTAL_FRAMETESTER;
 
     public PortalLink() {
 

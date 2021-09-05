@@ -14,7 +14,6 @@ public class NetworkManager implements DedicatedServerModInitializer {
         return ServerPlayNetworking.canSend(player, SYNC_PORTALS);
     }
 
-
     @Override
     public void onInitializeServer() {
         PortalRegistrySync.registerSyncOnPlayerJoin();

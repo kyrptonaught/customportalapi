@@ -89,11 +89,6 @@ public class CustomPortalBuilder {
         return this;
     }
 
-    public CustomPortalBuilder ignitionSource(PortalIgnitionSource ignitionSource) {
-        portalLink.portalIgnitionSource = ignitionSource;
-        return this;
-    }
-
     /**
      * This portal will be ignited by water
      */
@@ -122,8 +117,19 @@ public class CustomPortalBuilder {
         return this;
     }
 
+    /**
+     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition yourself.
+     */
     public CustomPortalBuilder customIgnitionSource(Identifier customSourceID) {
         portalLink.portalIgnitionSource = PortalIgnitionSource.CustomSource(customSourceID);
+        return this;
+    }
+
+    /**
+     * Specify a Custom Ignition Source to be used to ignite the portal. You must manually trigger the ignition yourself.
+     */
+    public CustomPortalBuilder customIgnitionSource(PortalIgnitionSource ignitionSource) {
+        portalLink.portalIgnitionSource = ignitionSource;
         return this;
     }
 
@@ -133,7 +139,6 @@ public class CustomPortalBuilder {
      *
      * @param width  Forced width of portal
      * @param height Forced height of portal
-     * @return
      */
     public CustomPortalBuilder forcedSize(int width, int height) {
         portalLink.forcedWidth = width;
@@ -141,6 +146,9 @@ public class CustomPortalBuilder {
         return this;
     }
 
+    /**
+     * Specify a custom block to be used as the portal block. Block must extend CustomPortalBlock
+     */
     public CustomPortalBuilder customPortalBlock(CustomPortalBlock portalBlock) {
         portalLink.setPortalBlock(portalBlock);
         return this;
@@ -169,20 +177,24 @@ public class CustomPortalBuilder {
 
     /**
      * Specify that this is a flat portal (end portal style)
-     *
-     * @return
      */
-    @Deprecated
     public CustomPortalBuilder flatPortal() {
         portalLink.portalFrameTester = CustomPortalsMod.FLATPORTAL_FRAMETESTER;
         return this;
     }
 
+    /**
+     * Register an event to be called immediately before the specified entity is teleported.
+     * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP
+     */
     public CustomPortalBuilder registerBeforeTPEvent(Function<Entity, SHOULDTP> event) {
         portalLink.beforeTPEvent(event);
         return this;
     }
 
+    /**
+     * Register an event to be called after the specified entity is teleported.
+     */
     public CustomPortalBuilder registerPostTPEvent(Consumer<Entity> event) {
         portalLink.setPostTPEvent(event);
         return this;

@@ -6,6 +6,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -23,11 +24,9 @@ public class ForcePlacePortalPacket {
     public static void registerReceive() {
         ClientPlayNetworking.registerGlobalReceiver(NetworkManager.PLACE_PORTAL, (client, handler, packet, sender) -> {
             BlockPos blockPos = packet.readBlockPos();
-            System.out.println("1 " + blockPos);
             client.execute(() -> {
                 BlockState oldState = client.world.getBlockState(blockPos);
-                System.out.println("2 "+blockPos);
-                client.world.setBlockState(blockPos, CustomPortalsMod.blockWithAxis(CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), CustomPortalsMod.getAxisFrom(oldState)));
+                client.world.setBlockState(blockPos, CustomPortalHelper.blockWithAxis(CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), CustomPortalHelper.getAxisFrom(oldState)));
             });
         });
     }
