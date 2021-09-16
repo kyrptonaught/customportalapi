@@ -3,27 +3,23 @@ package net.kyrptonaught.customportalapi.portal.frame;
 import com.google.common.collect.Sets;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.BlockLocating;
 import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -98,11 +94,23 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
-    public BlockLocating.Rectangle doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
-        BlockLocating.Rectangle rect = BlockLocating.getLargestRectangle(attemptPos.up(), Direction.Axis.X, 4, Direction.Axis.Y, 4, blockPos -> {
-            return !world.getBlockState(blockPos).getMaterial().isSolid() && !world.getBlockState(blockPos).getMaterial().isLiquid();
-        });
-        return rect.width >= 4 && rect.height >= 4 ? rect : null;
+    public BlockPos doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
+        if (isEmptySpace(world.getBlockState(attemptPos)) && isEmptySpace(world.getBlockState(attemptPos.offset(axis, 1))) &&
+                isEmptySpace(world.getBlockState(attemptPos.up())) && isEmptySpace(world.getBlockState(attemptPos.offset(axis, 1).up())) &&
+                isEmptySpace(world.getBlockState(attemptPos.up(2))) && isEmptySpace(world.getBlockState(attemptPos.offset(axis, 1).up(2))) &&
+                canHoldPortal(world, attemptPos.down()) && canHoldPortal(world, attemptPos.offset(axis, 1).down()))
+            return attemptPos;
+
+        return null;
+    }
+
+    private boolean isEmptySpace(BlockState blockState) {
+        return blockState.getMaterial().isReplaceable() && !blockState.getMaterial().isLiquid();
+    }
+
+    private boolean canHoldPortal(World world, BlockPos pos) {
+        BlockState blockState = world.getBlockState(pos);
+        return blockState.getMaterial().isSolid() && blockState.isSolidBlock(world, pos) && !blockState.getMaterial().isLiquid() && !blockState.getMaterial().equals(Material.LEAVES);
     }
 
     @Override
@@ -146,40 +154,52 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
     public void createPortal(World world, BlockPos pos, BlockState frameBlock, Direction.Axis axis) {
         Direction.Axis rotatedAxis = axis == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X;
         for (int i = -1; i < 4; i++) {
-            world.setBlockState(pos.up(i).offset(axis, -1), frameBlock, 3);
-            world.setBlockState(pos.up(i).offset(axis, 2), frameBlock, 3);
+            world.setBlockState(pos.up(i).offset(axis, -1), frameBlock);
+            world.setBlockState(pos.up(i).offset(axis, 2), frameBlock);
             if (i >= 0) {
-                world.setBlockState(pos.up(i).offset(axis, -1).offset(rotatedAxis, 1), Blocks.AIR.getDefaultState(), 3);
-                world.setBlockState(pos.up(i).offset(axis, 2).offset(rotatedAxis, 1), Blocks.AIR.getDefaultState(), 3);
-                world.setBlockState(pos.up(i).offset(axis, -1).offset(rotatedAxis, -1), Blocks.AIR.getDefaultState(), 3);
-                world.setBlockState(pos.up(i).offset(axis, 2).offset(rotatedAxis, -1), Blocks.AIR.getDefaultState(), 3);
+                fillAirAroundPortal(world, pos.up(i).offset(axis, -1).offset(rotatedAxis, 1));
+                fillAirAroundPortal(world, pos.up(i).offset(axis, 2).offset(rotatedAxis, 1));
+                fillAirAroundPortal(world, pos.up(i).offset(axis, -1).offset(rotatedAxis, -1));
+                fillAirAroundPortal(world, pos.up(i).offset(axis, 2).offset(rotatedAxis, -1));
             }
         }
         for (int i = -1; i < 3; i++) {
-            world.setBlockState(pos.up(-1).offset(axis, i), frameBlock, 3);
-            world.setBlockState(pos.up(3).offset(axis, i), frameBlock, 3);
+            world.setBlockState(pos.up(-1).offset(axis, i), frameBlock);
+            world.setBlockState(pos.up(3).offset(axis, i), frameBlock);
 
-            world.setBlockState(pos.up(3).offset(axis, i).offset(rotatedAxis, 1), Blocks.AIR.getDefaultState(), 3);
-            world.setBlockState(pos.up(3).offset(axis, i).offset(rotatedAxis, -1), Blocks.AIR.getDefaultState(), 3);
+            fillAirAroundPortal(world, pos.up(3).offset(axis, i).offset(rotatedAxis, 1));
+            fillAirAroundPortal(world, pos.up(3).offset(axis, i).offset(rotatedAxis, -1));
         }
         placeLandingPad(world, pos.down().offset(rotatedAxis, 1), frameBlock);
         placeLandingPad(world, pos.down().offset(rotatedAxis, -1), frameBlock);
         placeLandingPad(world, pos.down().offset(axis, 1).offset(rotatedAxis, 1), frameBlock);
         placeLandingPad(world, pos.down().offset(axis, 1).offset(rotatedAxis, -1), frameBlock);
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-        BlockState blockState2 = CustomPortalHelper.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
+        BlockState portalBlockState = CustomPortalHelper.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                world.setBlockState(pos.offset(axis, i).up(j), blockState2, 18);
-                world.setBlockState(pos.offset(axis, i).up(j).offset(rotatedAxis, 1), Blocks.AIR.getDefaultState(), 3);
-                world.setBlockState(pos.offset(axis, i).up(j).offset(rotatedAxis, -1), Blocks.AIR.getDefaultState(), 3);
+                world.setBlockState(pos.offset(axis, i).up(j), portalBlockState, Block.FORCE_STATE);
+                fillAirAroundPortal(world, pos.offset(axis, i).up(j).offset(rotatedAxis, 1));
+                fillAirAroundPortal(world, pos.offset(axis, i).up(j).offset(rotatedAxis, -1));
             }
         }
+        //inits this instance based off of the newly created portal;
+        this.lowerCorner = pos;
+        this.width = 2;
+        this.height = 3;
+        this.axis = axis;
+        this.world = world;
+        this.foundPortalBlocks = 6;
+    }
+
+    private void fillAirAroundPortal(World world, BlockPos pos) {
+        if (world.getBlockState(pos).getMaterial().isSolid() || world.getBlockState(pos).isSolidBlock(world, pos))
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
     }
 
     private void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
         if (!world.getBlockState(pos).getMaterial().isSolid())
-            world.setBlockState(pos, frameBlock, 3);
+            world.setBlockState(pos, frameBlock);
     }
 }

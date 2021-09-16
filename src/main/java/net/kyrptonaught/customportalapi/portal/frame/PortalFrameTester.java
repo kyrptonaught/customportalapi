@@ -40,13 +40,13 @@ public abstract class PortalFrameTester {
 
     public abstract void lightPortal(Block frameBlock);
 
-    public abstract void createPortal(World world,BlockPos pos, BlockState frameBlock, Direction.Axis axis);
+    public abstract void createPortal(World world, BlockPos pos, BlockState frameBlock, Direction.Axis axis);
 
     public abstract boolean isRequestedSize(int attemptWidth, int attemptHeight);
 
     public abstract BlockLocating.Rectangle getRectangle();
 
-    public abstract BlockLocating.Rectangle doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis);
+    public abstract BlockPos doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis);
 
     public abstract Vec3d getEntityOffsetInPortal(BlockLocating.Rectangle arg, Entity entity, Direction.Axis portalAxis);
 

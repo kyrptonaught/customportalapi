@@ -14,11 +14,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.*;
-import net.minecraft.world.dimension.AreaHelper;
+import net.minecraft.world.BlockLocating;
+import net.minecraft.world.TeleportTarget;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -82,24 +82,34 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     @Override
     public void createPortal(World world, BlockPos pos, BlockState frameBlock, Direction.Axis axis) {
         for (int i = -1; i < 3; i++) {
-            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, -1), frameBlock, 3);
-            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 2), frameBlock, 3);
+            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, -1), frameBlock);
+            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 2), frameBlock);
 
-            world.setBlockState(pos.offset(Direction.Axis.Z, i).offset(Direction.Axis.X, -1), frameBlock, 3);
-            world.setBlockState(pos.offset(Direction.Axis.Z, i).offset(Direction.Axis.X, 2), frameBlock, 3);
+            world.setBlockState(pos.offset(Direction.Axis.Z, i).offset(Direction.Axis.X, -1), frameBlock);
+            world.setBlockState(pos.offset(Direction.Axis.Z, i).offset(Direction.Axis.X, 2), frameBlock);
         }
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
         BlockState blockState2 = CustomPortalHelper.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
 
         for (int i = 0; i < 2; i++) {
-            world.setBlockState(pos.offset(Direction.Axis.X, i), blockState2, 18);
-            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1), blockState2, 18);
+            world.setBlockState(pos.offset(Direction.Axis.X, i), blockState2);
+            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1), blockState2);
 
-            world.setBlockState(pos.offset(Direction.Axis.X, i).up(), Blocks.AIR.getDefaultState(), 3);
-            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1).up(), Blocks.AIR.getDefaultState(), 3);
-            world.setBlockState(pos.offset(Direction.Axis.X, i).up(2), Blocks.AIR.getDefaultState(), 3);
-            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1).up(2), Blocks.AIR.getDefaultState(), 3);
+            fillAirAroundPortal(world, pos.offset(Direction.Axis.X, i).up());
+            fillAirAroundPortal(world, pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1).up());
+            fillAirAroundPortal(world, pos.offset(Direction.Axis.X, i).up(2));
+            fillAirAroundPortal(world, pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1).up(2));
         }
+        //inits this instance based off of the newly created portal;
+        this.lowerCorner = pos;
+        this.xSize = zSize = 2;
+        this.world = world;
+        this.foundPortalBlocks = 4;
+    }
+
+    private void fillAirAroundPortal(World world, BlockPos pos) {
+        if (world.getBlockState(pos).getMaterial().isSolid())
+            world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
     }
 
     @Override
@@ -114,13 +124,13 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
-    public BlockLocating.Rectangle doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
+    public BlockPos doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
         BlockLocating.Rectangle rect = BlockLocating.getLargestRectangle(attemptPos.up(), Direction.Axis.X, 4, Direction.Axis.Z, 4, blockPos -> {
             return world.getBlockState(blockPos).getMaterial().isSolid() &&
                     !world.getBlockState(blockPos.up()).getMaterial().isSolid() && !world.getBlockState(blockPos.up()).getMaterial().isLiquid() &&
                     !world.getBlockState(blockPos.up(2)).getMaterial().isSolid() && !world.getBlockState(blockPos.up(2)).getMaterial().isLiquid();
         });
-        return rect.width >= 4 && rect.height >= 4 ? rect : null;
+        return rect.width >= 4 && rect.height >= 4 ? rect.lowerLeft : null;
     }
 
     @Override

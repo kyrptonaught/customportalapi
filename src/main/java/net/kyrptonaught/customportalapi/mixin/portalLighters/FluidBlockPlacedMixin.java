@@ -2,7 +2,6 @@ package net.kyrptonaught.customportalapi.mixin.portalLighters;
 
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
-import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.FluidBlock;
 import net.minecraft.util.math.BlockPos;

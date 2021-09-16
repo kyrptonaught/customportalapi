@@ -2,7 +2,6 @@ package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.NetherPortalBlock;
@@ -57,6 +56,7 @@ public class CustomPortalHelper {
             return pos.up();
         return pos;
     }
+
     private static BlockPos moveTowardsFrame(BlockPos pos, Direction.Axis portalAxis, boolean positiveMove) {
         if (portalAxis.isHorizontal())
             return pos.offset(positiveMove ? Direction.UP : Direction.DOWN);
