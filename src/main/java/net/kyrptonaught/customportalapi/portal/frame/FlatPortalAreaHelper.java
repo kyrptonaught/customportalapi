@@ -68,7 +68,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     public boolean isValidFrame() {
-        return this.lowerCorner != null && xSize < maxXSize && zSize < maxZSize;
+        return this.lowerCorner != null && xSize >= 2 && zSize >= 2 && xSize < maxXSize && zSize < maxZSize;
     }
 
     public void lightPortal(Block frameBlock) {
@@ -88,12 +88,9 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
             world.setBlockState(pos.offset(Direction.Axis.Z, i).offset(Direction.Axis.X, -1), frameBlock);
             world.setBlockState(pos.offset(Direction.Axis.Z, i).offset(Direction.Axis.X, 2), frameBlock);
         }
-        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-        BlockState blockState2 = CustomPortalHelper.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
-
         for (int i = 0; i < 2; i++) {
-            world.setBlockState(pos.offset(Direction.Axis.X, i), blockState2);
-            world.setBlockState(pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1), blockState2);
+            placeLandingPad(world, pos.offset(Direction.Axis.X, i).down(), frameBlock);
+            placeLandingPad(world, pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1).down(), frameBlock);
 
             fillAirAroundPortal(world, pos.offset(Direction.Axis.X, i).up());
             fillAirAroundPortal(world, pos.offset(Direction.Axis.X, i).offset(Direction.Axis.Z, 1).up());
@@ -105,6 +102,7 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         this.xSize = zSize = 2;
         this.world = world;
         this.foundPortalBlocks = 4;
+        lightPortal(frameBlock.getBlock());
     }
 
     private void fillAirAroundPortal(World world, BlockPos pos) {
@@ -112,10 +110,15 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
     }
 
+    private void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
+        if (!world.getBlockState(pos).getMaterial().isSolid())
+            world.setBlockState(pos, frameBlock);
+    }
+
     @Override
     public boolean isRequestedSize(int attemptWidth, int attemptHeight) {
         return ((xSize == attemptWidth || attemptHeight == 0) && (zSize == attemptHeight) || attemptWidth == 0) ||
-                ((xSize == attemptHeight | attemptHeight == 0) && (zSize == attemptWidth || attemptWidth == 0));
+                ((xSize == attemptHeight || attemptHeight == 0) && (zSize == attemptWidth || attemptWidth == 0));
     }
 
     @Override

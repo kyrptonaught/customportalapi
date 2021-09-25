@@ -3,6 +3,7 @@ package net.kyrptonaught.customportalapi;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
 
@@ -18,6 +19,10 @@ public class CustomPortalApiRegistry {
         if (baseBlock == null) return null;
         if (portals.containsKey(baseBlock)) return portals.get(baseBlock);
         return null;
+    }
+
+    public static boolean isRegisteredFrameBlock(BlockState blockState) {
+        return portals.containsKey(blockState.getBlock());
     }
 
     public static Collection<PortalLink> getAllPortalLinks() {

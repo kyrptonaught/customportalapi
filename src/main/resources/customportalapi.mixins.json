@@ -10,6 +10,7 @@
     "portalLighters.PotionEntityMixin"
   ],
   "client": [
+    "client.ChunkRendererRegionAccessor",
     "client.ClientPlayerMixin",
     "client.InGameHudMixin"
   ],

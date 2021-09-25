@@ -174,12 +174,9 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
         placeLandingPad(world, pos.down().offset(rotatedAxis, -1), frameBlock);
         placeLandingPad(world, pos.down().offset(axis, 1).offset(rotatedAxis, 1), frameBlock);
         placeLandingPad(world, pos.down().offset(axis, 1).offset(rotatedAxis, -1), frameBlock);
-        PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
-        BlockState portalBlockState = CustomPortalHelper.blockWithAxis(link != null ? link.getPortalBlock().getDefaultState() : CustomPortalsMod.getDefaultPortalBlock().getDefaultState(), axis);
 
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 3; j++) {
-                world.setBlockState(pos.offset(axis, i).up(j), portalBlockState, Block.FORCE_STATE);
                 fillAirAroundPortal(world, pos.offset(axis, i).up(j).offset(rotatedAxis, 1));
                 fillAirAroundPortal(world, pos.offset(axis, i).up(j).offset(rotatedAxis, -1));
             }
@@ -191,6 +188,8 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
         this.axis = axis;
         this.world = world;
         this.foundPortalBlocks = 6;
+
+        lightPortal(frameBlock.getBlock());
     }
 
     private void fillAirAroundPortal(World world, BlockPos pos) {
