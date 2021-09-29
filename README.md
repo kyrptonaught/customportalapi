@@ -10,12 +10,12 @@ Library mod allowing developers to easily create portals to their custom dimensi
 |     ![p](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-11-15_17.06.44.png)                       |![p](https://raw.githubusercontent.com/kyrptonaught/customportalapi/main/images/2020-11-15_17.07.38.png)  |
 
 # Usage: 
-
+## Latest Version:  ![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fs3.us-east-2.amazonaws.com%2Fmaven.kyrptonaught.dev%2Fnet%2Fkyrptonaught%2Fcustomportalapi%2Fmaven-metadata.xml&style=for-the-badge)
 Add the repository to your build.gradle.
 ```java
 maven {url = "https://maven.kyrptonaught.dev"}
   ```
-Add the dependency
+Add the dependency. 
 ```java
   modImplementation 'net.kyrptonaught:customportalapi:<version>'
   include 'net.kyrptonaught:customportalapi:<version>'
