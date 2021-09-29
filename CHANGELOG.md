@@ -1,4 +1,16 @@
 ## Changelog
+**0.0.1-beta 45**
+Flat Portals are now fully functional.
+
+**0.0.1-beta 44**
+Implement fully custom Portal Placing logic for the destination portal, no longer uses modified vanilla nether portal code.
+
+**0.0.1-beta 43**
+Improve the lighting of portals.
+
+**0.0.1-beta 42**
+Begin rework of server side only component.
+
 **0.0.1-beta 41**
 Redo the detection of fluid ignited portals, should be more reliable. 
 
