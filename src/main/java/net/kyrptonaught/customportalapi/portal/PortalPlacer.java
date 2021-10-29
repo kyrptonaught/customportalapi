@@ -10,7 +10,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockLocating.Rectangle;
 import net.minecraft.world.World;
-import net.minecraft.world.border.WorldBorder;
 
 import java.util.Optional;
 
@@ -40,13 +39,12 @@ public class PortalPlacer {
     }
 
     public static Optional<Rectangle> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
-        WorldBorder worldBorder = world.getWorldBorder();
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
         PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
         for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(blockPos, 16, Direction.WEST, Direction.SOUTH)) {
             BlockPos testingPos = mutable.toImmutable();
 
-            int solidY = Math.min(world.getTopY(), world.getBottomY() + world.getLogicalHeight()) - 5;
+            int solidY = Math.min(world.getTopY(), world.getBottomY() + world.getTopY()) - 5;
             BlockPos pos = null;
             while (solidY >= 3) {
                 if (canHoldPortal(world.getBlockState(testingPos.withY(solidY)))) {
