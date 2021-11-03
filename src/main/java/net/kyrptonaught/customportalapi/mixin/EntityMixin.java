@@ -49,7 +49,7 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
             timeInPortal = 0;
             cooldown = 0;
         }
-        inPortalPos = null;
+        //inPortalPos = null;
     }
 
     public int getTimeInPortal() {

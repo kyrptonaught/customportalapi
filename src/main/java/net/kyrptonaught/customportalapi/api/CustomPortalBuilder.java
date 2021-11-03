@@ -4,15 +4,19 @@ import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.util.CPASoundEventData;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.kyrptonaught.customportalapi.util.SHOULDTP;
 import net.minecraft.block.Block;
+import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.World;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -188,7 +192,17 @@ public class CustomPortalBuilder {
      * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP
      */
     public CustomPortalBuilder registerBeforeTPEvent(Function<Entity, SHOULDTP> event) {
-        portalLink.beforeTPEvent(event);
+        portalLink.getBeforeTPEvent().register(event);
+        return this;
+    }
+
+    public CustomPortalBuilder registerInPortalAmbienceSound(Function<PlayerEntity, CPASoundEventData> event) {
+        portalLink.getInPortalAmbienceEvent().register(event);
+        return this;
+    }
+
+    public CustomPortalBuilder registerPostTPPortalAmbience(Function<PlayerEntity, CPASoundEventData> event) {
+        portalLink.getPostTpPortalAmbienceEvent().register(event);
         return this;
     }
 

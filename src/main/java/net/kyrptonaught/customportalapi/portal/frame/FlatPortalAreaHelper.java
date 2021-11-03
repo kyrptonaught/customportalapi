@@ -127,6 +127,16 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
+    public Direction.Axis getAxis1() {
+        return Direction.Axis.X;
+    }
+
+    @Override
+    public Direction.Axis getAxis2() {
+        return Direction.Axis.Z;
+    }
+
+    @Override
     public BlockPos doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
         BlockLocating.Rectangle rect = BlockLocating.getLargestRectangle(attemptPos.up(), Direction.Axis.X, 4, Direction.Axis.Z, 4, blockPos -> {
             return world.getBlockState(blockPos).getMaterial().isSolid() &&

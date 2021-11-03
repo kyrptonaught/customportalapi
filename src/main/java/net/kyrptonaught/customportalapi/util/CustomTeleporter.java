@@ -30,7 +30,7 @@ public class CustomTeleporter {
     public static void TPToDim(World world, Entity entity, Block portalBase, BlockPos portalPos) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
         if (link == null) return;
-        if (link.executeBeforeTPEvent(entity) == SHOULDTP.CANCEL_TP)
+        if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP)
             return;
         RegistryKey<World> destKey = world.getRegistryKey() == CustomPortalsMod.dims.get(link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);

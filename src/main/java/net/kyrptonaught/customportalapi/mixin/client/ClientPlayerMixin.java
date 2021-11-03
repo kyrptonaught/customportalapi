@@ -1,9 +1,11 @@
 package net.kyrptonaught.customportalapi.mixin.client;
 
 
+import com.mojang.authlib.GameProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
+import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.interfaces.ClientPlayerInColoredPortal;
 import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
@@ -15,7 +17,9 @@ import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)
-public abstract class ClientPlayerMixin extends LivingEntity implements EntityInCustomPortal, ClientPlayerInColoredPortal {
+public abstract class ClientPlayerMixin extends PlayerEntity implements EntityInCustomPortal, ClientPlayerInColoredPortal {
 
     @Shadow
     public float lastNauseaStrength;
@@ -39,8 +43,8 @@ public abstract class ClientPlayerMixin extends LivingEntity implements EntityIn
     @Final
     protected MinecraftClient client;
 
-    protected ClientPlayerMixin(EntityType<? extends LivingEntity> entityType, World world) {
-        super(entityType, world);
+    public ClientPlayerMixin(World world, BlockPos pos, float yaw, GameProfile profile) {
+        super(world, pos, yaw, profile);
     }
 
     @Shadow
@@ -85,7 +89,11 @@ public abstract class ClientPlayerMixin extends LivingEntity implements EntityIn
             }
 
             if (this.nextNauseaStrength == 0.0F) {
-                this.client.getSoundManager().play(PositionedSoundInstance.ambient(SoundEvents.BLOCK_PORTAL_TRIGGER, this.random.nextFloat() * 0.4F + 0.8F, 0.25F));
+                PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(CustomPortalHelper.getPortalBase(world, getInPortalPos()));
+                if (link != null && link.getInPortalAmbienceEvent().hasEvent()) {
+                    this.client.getSoundManager().play(link.getInPortalAmbienceEvent().execute(this).getInstance());
+                } else
+                    this.client.getSoundManager().play(PositionedSoundInstance.ambient(SoundEvents.BLOCK_PORTAL_TRIGGER, this.random.nextFloat() * 0.4F + 0.8F, 0.25F));
             }
 
             this.nextNauseaStrength += 0.0125F;

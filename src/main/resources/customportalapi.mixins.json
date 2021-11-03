@@ -12,7 +12,8 @@
   "client": [
     "client.ChunkRendererRegionAccessor",
     "client.ClientPlayerMixin",
-    "client.InGameHudMixin"
+    "client.InGameHudMixin",
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
