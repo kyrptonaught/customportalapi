@@ -2,7 +2,7 @@ package net.kyrptonaught.customportalapi.util;
 
 import java.util.function.Function;
 
-public class CPAEvent<I,O> {
+public class CPAEvent<I, O> {
     private Function<I, O> event;
     private O defaultOutput;
 

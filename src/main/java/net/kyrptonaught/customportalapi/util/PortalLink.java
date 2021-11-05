@@ -1,22 +1,16 @@
 package net.kyrptonaught.customportalapi.util;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.block.Block;
-import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class PortalLink {
     public Identifier block;
@@ -33,9 +27,11 @@ public class PortalLink {
     private final CPAEvent<Entity, SHOULDTP> beforeTPEvent = new CPAEvent<>(SHOULDTP.CONTINUE_TP);
     private final CPAEvent<PlayerEntity, CPASoundEventData> inPortalAmbienceEvent = new CPAEvent<>();
     private final CPAEvent<PlayerEntity, CPASoundEventData> postTpPortalAmbienceEvent = new CPAEvent<>();
-    public PortalLink(){
+
+    public PortalLink() {
 
     }
+
     public PortalLink(Identifier blockID, Identifier dimID, int colorID) {
         this.block = blockID;
         this.dimID = dimID;
@@ -63,10 +59,14 @@ public class PortalLink {
     public CPAEvent<Entity, SHOULDTP> getBeforeTPEvent() {
         return beforeTPEvent;
     }
+
     public CPAEvent<PlayerEntity, CPASoundEventData> getInPortalAmbienceEvent() {
         return inPortalAmbienceEvent;
     }
-    public CPAEvent<PlayerEntity, CPASoundEventData> getPostTpPortalAmbienceEvent() {return postTpPortalAmbienceEvent;}
+
+    public CPAEvent<PlayerEntity, CPASoundEventData> getPostTpPortalAmbienceEvent() {
+        return postTpPortalAmbienceEvent;
+    }
 
     public void setPostTPEvent(Consumer<Entity> event) {
         postTPEvent = event;

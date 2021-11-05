@@ -12,6 +12,7 @@
   "client": [
     "client.ChunkRendererRegionAccessor",
     "client.ClientPlayerMixin",
+    "client.ClientPlayNetworkHandlerMixin",
     "client.InGameHudMixin",
     "client.WorldRendererMixin"
   ],

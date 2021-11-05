@@ -5,7 +5,6 @@ import com.mojang.authlib.GameProfile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
-import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.interfaces.ClientPlayerInColoredPortal;
 import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
@@ -14,8 +13,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundEvents;
@@ -69,16 +66,17 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements EntityIn
         if (this.inNetherPortal) {
             setLastUsedPortalColor(-1);
         } else if (this.getTimeInPortal() > 0) {
+            int previousColor = getLastUsedPortalColor();
             PortalLink link = this.getInPortalPos() != null ? CustomPortalApiRegistry.getPortalLinkFromBase(CustomPortalHelper.getPortalBase(this.world, this.getInPortalPos())) : null;
             if (link != null)
                 setLastUsedPortalColor(link.colorID);
-            updateCustomNausea();
+            updateCustomNausea(previousColor);
             ci.cancel();
         }
     }
 
     @Unique
-    private void updateCustomNausea() {
+    private void updateCustomNausea(int previousColor) {
         this.lastNauseaStrength = this.nextNauseaStrength;
         if (this.getTimeInPortal() > 0) {
             if (this.client.currentScreen != null && !this.client.currentScreen.isPauseScreen()) {
@@ -88,7 +86,7 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements EntityIn
                 this.client.setScreen(null);
             }
 
-            if (this.nextNauseaStrength == 0.0F) {
+            if (this.nextNauseaStrength == 0.0F && previousColor != -999) { //previous color prevents this from playing after a teleport. A tp sets the previousColor to -999
                 PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(CustomPortalHelper.getPortalBase(world, getInPortalPos()));
                 if (link != null && link.getInPortalAmbienceEvent().hasEvent()) {
                     this.client.getSoundManager().play(link.getInPortalAmbienceEvent().execute(this).getInstance());

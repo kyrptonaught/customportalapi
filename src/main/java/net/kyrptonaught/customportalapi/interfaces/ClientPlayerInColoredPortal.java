@@ -10,4 +10,5 @@ public interface ClientPlayerInColoredPortal {
     void setLastUsedPortalColor(int color);
 
     int getLastUsedPortalColor();
+
 }

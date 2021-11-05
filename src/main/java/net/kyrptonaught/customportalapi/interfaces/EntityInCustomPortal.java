@@ -13,5 +13,4 @@ public interface EntityInCustomPortal {
     void tickInPortal(BlockPos portalPos);
 
     BlockPos getInPortalPos();
-
 }

@@ -34,7 +34,7 @@ public class CustomPortalHelper {
         return Blocks.AIR;
     }
 
-    public static Block getPortalBaseDefault(World world, BlockPos pos){
+    public static Block getPortalBaseDefault(World world, BlockPos pos) {
         if (isInstanceOfCustomPortal(world, pos)) {
             Direction.Axis axis = getAxisFrom(world.getBlockState(pos));
 
