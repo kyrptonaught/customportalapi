@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 46**
+Added the ability to set custom inPortal sounds and afterTP sounds. Also fixed portal ending up outside the worldBorder
+
 **0.0.1-beta 45**
 Flat Portals are now fully functional.
 
