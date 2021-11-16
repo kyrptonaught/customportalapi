@@ -111,6 +111,6 @@ public class CustomPortalBlock extends Block {
     }
 
     public Block getPortalBase(World world, BlockPos pos) {
-        return CustomPortalHelper.getPortalBase(world, pos);
+        return CustomPortalHelper.getPortalBaseDefault(world, pos);
     }
 }

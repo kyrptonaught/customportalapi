@@ -4,11 +4,13 @@ import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
+import net.kyrptonaught.customportalapi.util.CPASoundEventData;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.kyrptonaught.customportalapi.util.SHOULDTP;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
@@ -188,7 +190,25 @@ public class CustomPortalBuilder {
      * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP
      */
     public CustomPortalBuilder registerBeforeTPEvent(Function<Entity, SHOULDTP> event) {
-        portalLink.beforeTPEvent(event);
+        portalLink.getBeforeTPEvent().register(event);
+        return this;
+    }
+
+    /**
+     * Register a sound to be played when the player in standing in the portal
+     * CPASoundEventData is just a stub for PositionSoundAmbience as it does not exist serverside
+     */
+    public CustomPortalBuilder registerInPortalAmbienceSound(Function<PlayerEntity, CPASoundEventData> event) {
+        portalLink.getInPortalAmbienceEvent().register(event);
+        return this;
+    }
+
+    /**
+     * Register a sound to be played when the player teleports
+     * CPASoundEventData is just a stub for PositionSoundAmbience as it does not exist serverside
+     */
+    public CustomPortalBuilder registerPostTPPortalAmbience(Function<PlayerEntity, CPASoundEventData> event) {
+        portalLink.getPostTpPortalAmbienceEvent().register(event);
         return this;
     }
 

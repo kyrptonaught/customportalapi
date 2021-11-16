@@ -49,9 +49,11 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
             timeInPortal = 0;
             cooldown = 0;
         }
-        inPortalPos = null;
+        //inPortalPos = null;
     }
 
+    @Unique
+    @Override
     public int getTimeInPortal() {
         return timeInPortal;
     }
@@ -63,6 +65,7 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
         inPortalPos = portalPos;
     }
 
+    @Unique
     @Override
     public BlockPos getInPortalPos() {
         return inPortalPos;
@@ -81,11 +84,13 @@ public abstract class EntityMixin implements EntityInCustomPortal, CustomTelepor
 
     private TeleportTarget customTPTarget;
 
+    @Unique
     @Override
     public void setCustomTeleportTarget(TeleportTarget teleportTarget) {
         this.customTPTarget = teleportTarget;
     }
 
+    @Unique
     @Override
     public TeleportTarget getCustomTeleportTarget() {
         return customTPTarget;

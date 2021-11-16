@@ -27,6 +27,15 @@ public class CustomPortalHelper {
 
     public static Block getPortalBase(World world, BlockPos pos) {
         if (isInstanceOfCustomPortal(world, pos)) {
+            return ((CustomPortalBlock) world.getBlockState(pos).getBlock()).getPortalBase(world, pos);
+        } else if (isInstanceOfPortalFrame(world, pos))
+            return world.getBlockState(pos).getBlock();
+
+        return Blocks.AIR;
+    }
+
+    public static Block getPortalBaseDefault(World world, BlockPos pos) {
+        if (isInstanceOfCustomPortal(world, pos)) {
             Direction.Axis axis = getAxisFrom(world.getBlockState(pos));
 
             if (axis != Direction.Axis.Y) {
@@ -41,7 +50,7 @@ public class CustomPortalHelper {
             if (isInstanceOfPortalFrame(world, pos.offset(axis, 1)))
                 return world.getBlockState(pos.offset(axis, 1)).getBlock();
 
-            return getPortalBase(world, pos.offset(axis, -1));
+            return getPortalBaseDefault(world, pos.offset(axis, -1));
         } else if (isInstanceOfPortalFrame(world, pos))
             return world.getBlockState(pos).getBlock();
 

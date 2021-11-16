@@ -30,7 +30,7 @@ public class CustomTeleporter {
     public static void TPToDim(World world, Entity entity, Block portalBase, BlockPos portalPos) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
         if (link == null) return;
-        if (link.executeBeforeTPEvent(entity) == SHOULDTP.CANCEL_TP)
+        if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP)
             return;
         RegistryKey<World> destKey = world.getRegistryKey() == CustomPortalsMod.dims.get(link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
@@ -69,12 +69,12 @@ public class CustomTeleporter {
 
     public static TeleportTarget createDestinationPortal(ServerWorld destination, Entity entity, Direction.Axis axis, BlockLocating.Rectangle portalFramePos, BlockState frameBlock) {
         WorldBorder worldBorder = destination.getWorldBorder();
-        double d = Math.max(-2.9999872E7D, worldBorder.getBoundWest() + 16.0D);
-        double e = Math.max(-2.9999872E7D, worldBorder.getBoundNorth() + 16.0D);
-        double f = Math.min(2.9999872E7D, worldBorder.getBoundEast() - 16.0D);
-        double g = Math.min(2.9999872E7D, worldBorder.getBoundSouth() - 16.0D);
-        double h = DimensionType.getCoordinateScaleFactor(entity.world.getDimension(), destination.getDimension());
-        BlockPos blockPos3 = new BlockPos(MathHelper.clamp(entity.getX() * h, d, f), entity.getY(), MathHelper.clamp(entity.getZ() * h, e, g));
+        double xMin = Math.max(-2.9999872E7D, worldBorder.getBoundWest() + 16.0D);
+        double zMin = Math.max(-2.9999872E7D, worldBorder.getBoundNorth() + 16.0D);
+        double xMax = Math.min(2.9999872E7D, worldBorder.getBoundEast() - 16.0D);
+        double zMax = Math.min(2.9999872E7D, worldBorder.getBoundSouth() - 16.0D);
+        double scaleFactor = DimensionType.getCoordinateScaleFactor(entity.world.getDimension(), destination.getDimension());
+        BlockPos blockPos3 = new BlockPos(MathHelper.clamp(entity.getX() * scaleFactor, xMin, xMax), entity.getY(), MathHelper.clamp(entity.getZ() * scaleFactor, zMin, zMax));
         Optional<BlockLocating.Rectangle> portal = PortalPlacer.createDestinationPortal(destination, blockPos3, frameBlock, axis);
         if (portal.isPresent()) {
             PortalFrameTester portalFrameTester = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock()).getFrameTester().createInstanceOfPortalFrameTester();
@@ -87,7 +87,7 @@ public class CustomTeleporter {
 
 
     protected static TeleportTarget idkWhereToPutYou(ServerWorld world, Entity entity, BlockPos pos) {
-        CustomPortalsMod.logError("Unable to find find tp location, forced to place on top of world");
+        CustomPortalsMod.logError("Unable to find tp location, forced to place on top of world");
         BlockPos destinationPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos);
         return new TeleportTarget(new Vec3d(destinationPos.getX() + .5, destinationPos.getY(), destinationPos.getZ() + .5), entity.getVelocity(), entity.getYaw(), entity.getPitch());
     }

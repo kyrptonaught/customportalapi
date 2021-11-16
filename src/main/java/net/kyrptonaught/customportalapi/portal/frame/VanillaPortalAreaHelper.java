@@ -64,6 +64,16 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
         return new BlockLocating.Rectangle(lowerCorner, width, height);
     }
 
+    @Override
+    public Direction.Axis getAxis1() {
+        return axis;
+    }
+
+    @Override
+    public Direction.Axis getAxis2() {
+        return Direction.Axis.Y;
+    }
+
     public Optional<PortalFrameTester> getNewPortal(WorldAccess worldAccess, BlockPos blockPos, Direction.Axis axis, Block... foundations) {
         return getOrEmpty(worldAccess, blockPos, (customAreaHelper) -> {
             return customAreaHelper.isValidFrame() && customAreaHelper.foundPortalBlocks == 0;

@@ -12,7 +12,9 @@
   "client": [
     "client.ChunkRendererRegionAccessor",
     "client.ClientPlayerMixin",
-    "client.InGameHudMixin"
+    "client.ClientPlayNetworkHandlerMixin",
+    "client.InGameHudMixin",
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -7,10 +7,10 @@ import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class PortalLink {
     public Identifier block;
@@ -23,12 +23,14 @@ public class PortalLink {
     public int forcedWidth, forcedHeight;
     public Identifier portalFrameTester = CustomPortalsMod.VANILLAPORTAL_FRAMETESTER;
 
+    private Consumer<Entity> postTPEvent;
+    private final CPAEvent<Entity, SHOULDTP> beforeTPEvent = new CPAEvent<>(SHOULDTP.CONTINUE_TP);
+    private final CPAEvent<PlayerEntity, CPASoundEventData> inPortalAmbienceEvent = new CPAEvent<>();
+    private final CPAEvent<PlayerEntity, CPASoundEventData> postTpPortalAmbienceEvent = new CPAEvent<>();
+
     public PortalLink() {
 
     }
-
-    private Function<Entity, SHOULDTP> beforeTPEvent;
-    private Consumer<Entity> postTPEvent;
 
     public PortalLink(Identifier blockID, Identifier dimID, int colorID) {
         this.block = blockID;
@@ -54,18 +56,20 @@ public class PortalLink {
     }
 
 
-    public void beforeTPEvent(Function<Entity, SHOULDTP> execute) {
-        beforeTPEvent = execute;
+    public CPAEvent<Entity, SHOULDTP> getBeforeTPEvent() {
+        return beforeTPEvent;
     }
 
-    public SHOULDTP executeBeforeTPEvent(Entity entity) {
-        if (beforeTPEvent != null)
-            return beforeTPEvent.apply(entity);
-        return SHOULDTP.CONTINUE_TP;
+    public CPAEvent<PlayerEntity, CPASoundEventData> getInPortalAmbienceEvent() {
+        return inPortalAmbienceEvent;
     }
 
-    public void setPostTPEvent(Consumer<Entity> execute) {
-        postTPEvent = execute;
+    public CPAEvent<PlayerEntity, CPASoundEventData> getPostTpPortalAmbienceEvent() {
+        return postTpPortalAmbienceEvent;
+    }
+
+    public void setPostTPEvent(Consumer<Entity> event) {
+        postTPEvent = event;
     }
 
     public void executePostTPEvent(Entity entity) {
