@@ -45,7 +45,7 @@ public class PortalPlacer {
         PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
         for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(blockPos, 16, Direction.WEST, Direction.SOUTH)) {
             BlockPos testingPos = mutable.toImmutable();
-             if (!worldBorder.contains(testingPos)) continue;
+            if (!worldBorder.contains(testingPos)) continue;
 
             int solidY = Math.min(world.getTopY(), world.getBottomY() + world.getDimension().getLogicalHeight()) - 5;
             BlockPos pos = null;

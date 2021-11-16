@@ -19,7 +19,7 @@ public abstract class PotionEntityMixin extends ThrownItemEntity {
         super(entityType, world);
     }
 
-    @Inject(method = "extinguishFire", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "extinguishFire", at = @At("HEAD"))
     public void attemptPortalLight(BlockPos pos, CallbackInfo ci) {
         PortalPlacer.attemptPortalLight(this.world, pos, PortalIgnitionSource.WATER);
     }
