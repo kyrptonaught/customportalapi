@@ -59,18 +59,20 @@ public abstract class PortalFrameTester {
     protected BlockPos getLowerCorner(BlockPos blockPos, Direction.Axis axis1, Direction.Axis axis2) {
         if (!validStateInsidePortal(world.getBlockState(blockPos), VALID_FRAME))
             return null;
-        int offsetX = 1;
-        while (validStateInsidePortal(world.getBlockState(blockPos.offset(axis1, -offsetX)), VALID_FRAME)) {
-            offsetX++;
-            if (offsetX > 20) return null;
+        return getLimitForAxis(getLimitForAxis(blockPos, axis1), axis2);
+    }
+
+    protected BlockPos getLimitForAxis(BlockPos blockPos, Direction.Axis axis) {
+        if (blockPos == null || axis == null) return null;
+        int offset = 1;
+        while (validStateInsidePortal(world.getBlockState(blockPos.offset(axis, -offset)), VALID_FRAME)) {
+            offset++;
+            if (offset > 20) return null;
+            if ((axis.equals(Direction.Axis.Y) && blockPos.getY() - offset < world.getBottomY()) ||
+                    (!axis.equals(Direction.Axis.Y) && !world.getWorldBorder().contains(blockPos.offset(axis, -offset))))
+                return null;
         }
-        blockPos = blockPos.offset(axis1, -(offsetX - 1));
-        int offsetY = 1;
-        while (blockPos.getY() - offsetY > 0 && validStateInsidePortal(world.getBlockState(blockPos.offset(axis2, -offsetY)), VALID_FRAME)) {
-            offsetY++;
-            if (offsetY > 20) return null;
-        }
-        return blockPos.offset(axis2, -(offsetY - 1));
+        return blockPos.offset(axis, -(offset - 1));
     }
 
     protected int getSize(Direction.Axis axis, int minSize, int maxSize) {
