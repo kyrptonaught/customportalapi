@@ -23,8 +23,8 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class FlatPortalAreaHelper extends PortalFrameTester {
-    private int xSize = -1, zSize = -1;
-    private final int maxXSize = 21, maxZSize = 21;
+    protected int xSize = -1, zSize = -1;
+    protected final int maxXSize = 21, maxZSize = 21;
 
     public FlatPortalAreaHelper() {
     }
@@ -105,12 +105,12 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         lightPortal(frameBlock.getBlock());
     }
 
-    private void fillAirAroundPortal(World world, BlockPos pos) {
+    protected void fillAirAroundPortal(World world, BlockPos pos) {
         if (world.getBlockState(pos).getMaterial().isSolid())
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
     }
 
-    private void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
+    protected void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
         if (!world.getBlockState(pos).getMaterial().isSolid())
             world.setBlockState(pos, frameBlock);
     }

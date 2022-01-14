@@ -24,12 +24,12 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class VanillaPortalAreaHelper extends PortalFrameTester {
-    private Direction.Axis axis;
-    private int height;
-    private int width;
+    protected Direction.Axis axis;
+    protected int height;
+    protected int width;
 
-    private final int maxWidth = 21;
-    private final int maxHeight = 21;
+    protected final int maxWidth = 21;
+    protected final int maxHeight = 21;
 
     public VanillaPortalAreaHelper() {
 
@@ -56,6 +56,8 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
                 }
             }
         }
+
+        if (!isValidFrame()) return null;
         return this;
     }
 
@@ -114,11 +116,11 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
         return null;
     }
 
-    private boolean isEmptySpace(BlockState blockState) {
+    protected boolean isEmptySpace(BlockState blockState) {
         return blockState.getMaterial().isReplaceable() && !blockState.getMaterial().isLiquid();
     }
 
-    private boolean canHoldPortal(World world, BlockPos pos) {
+    protected boolean canHoldPortal(World world, BlockPos pos) {
         BlockState blockState = world.getBlockState(pos);
         return blockState.getMaterial().isSolid() && blockState.isSolidBlock(world, pos) && !blockState.getMaterial().isLiquid() && !blockState.getMaterial().equals(Material.LEAVES);
     }
@@ -202,12 +204,12 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
         lightPortal(frameBlock.getBlock());
     }
 
-    private void fillAirAroundPortal(World world, BlockPos pos) {
+    protected void fillAirAroundPortal(World world, BlockPos pos) {
         if (world.getBlockState(pos).getMaterial().isSolid() || world.getBlockState(pos).isSolidBlock(world, pos))
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
     }
 
-    private void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
+    protected void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
         if (!world.getBlockState(pos).getMaterial().isSolid())
             world.setBlockState(pos, frameBlock);
     }

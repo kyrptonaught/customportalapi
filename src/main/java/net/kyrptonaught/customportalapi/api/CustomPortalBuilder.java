@@ -186,6 +186,13 @@ public class CustomPortalBuilder {
     }
 
     /**
+     * Specify a custom portal frame tester to be used.
+     */
+    public CustomPortalBuilder customFrameTester(Identifier frameTester) {
+        portalLink.portalFrameTester = frameTester;
+        return this;
+    }
+    /**
      * Register an event to be called immediately before the specified entity is teleported.
      * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP
      */
