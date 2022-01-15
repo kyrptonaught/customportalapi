@@ -56,8 +56,6 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
                 }
             }
         }
-
-        if (!isValidFrame()) return null;
         return this;
     }
 
