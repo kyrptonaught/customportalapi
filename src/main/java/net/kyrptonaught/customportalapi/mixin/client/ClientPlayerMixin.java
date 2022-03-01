@@ -79,7 +79,7 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements EntityIn
     private void updateCustomNausea(int previousColor) {
         this.lastNauseaStrength = this.nextNauseaStrength;
         if (this.getTimeInPortal() > 0) {
-            if (this.client.currentScreen != null && !this.client.currentScreen.isPauseScreen()) {
+            if (this.client.currentScreen != null && !this.client.isPaused()) {
                 if (this.client.currentScreen instanceof HandledScreen) {
                     this.closeHandledScreen();
                 }

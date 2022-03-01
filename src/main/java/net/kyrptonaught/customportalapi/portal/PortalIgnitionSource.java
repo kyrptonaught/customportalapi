@@ -50,11 +50,11 @@ public class PortalIgnitionSource {
     }
 
     public boolean isWater() {
-        return FluidTags.WATER.contains(Registry.FLUID.get(ignitionSourceID));
+        return Registry.FLUID.get(ignitionSourceID).isIn(FluidTags.WATER);
     }
 
     public boolean isLava() {
-        return FluidTags.LAVA.contains(Registry.FLUID.get(ignitionSourceID));
+        return Registry.FLUID.get(ignitionSourceID).isIn(FluidTags.LAVA);
     }
 
     public static boolean isRegisteredIgnitionSourceWith(Item item) {
