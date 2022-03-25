@@ -47,7 +47,7 @@ public class PortalPlacer {
             BlockPos testingPos = mutable.toImmutable();
             if (!worldBorder.contains(testingPos)) continue;
 
-            int solidY = Math.min(world.getTopY(), world.getBottomY() + world.getDimension().getLogicalHeight()) - 5;
+            int solidY = Math.min(world.getTopY(), world.getBottomY() + world.getDimension().logicalHeight()) - 5;
             BlockPos pos = null;
             while (solidY >= 3) {
                 if (canHoldPortal(world.getBlockState(testingPos.withY(solidY)))) {
