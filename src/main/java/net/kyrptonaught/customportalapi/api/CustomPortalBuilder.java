@@ -44,6 +44,15 @@ public class CustomPortalBuilder {
     }
 
     /**
+     * Forcefully register a portal.
+     * This bypasses any checks, only use this if you know what you are doing.
+     */
+    @Deprecated
+    public void registerPortalForced() {
+        CustomPortalApiRegistry.forceAddPortal(Registry.BLOCK.get(portalLink.block), portalLink);
+    }
+
+    /**
      * Specify the Block Identifier to be used as the Frame
      *
      * @param blockID Block identifier of the portal's frame block
@@ -192,6 +201,7 @@ public class CustomPortalBuilder {
         portalLink.portalFrameTester = frameTester;
         return this;
     }
+
     /**
      * Register an event to be called immediately before the specified entity is teleported.
      * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP
