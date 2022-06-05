@@ -1,7 +1,3 @@
-
-
-
-
 # Custom Portal Api
 Library mod allowing developers to easily create portals to their custom dimensions. These custom portals will function exactly like nether portals except being fully customizable. You can control the frame block, portal block or tinting of the default, ignition source, and destination and more!
 
@@ -12,6 +8,7 @@ Library mod allowing developers to easily create portals to their custom dimensi
 # Usage: 
 ## Versions: 
 | **1.16** |![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fs3.us-east-2.amazonaws.com%2Fmaven.kyrptonaught.dev%2Fnet%2Fkyrptonaught%2Fcustomportalapi%2Fmaven-metadata.xml&style=for-the-badge&versionSuffix=1.16)|
+|--|--|
 | **1.17** |![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fs3.us-east-2.amazonaws.com%2Fmaven.kyrptonaught.dev%2Fnet%2Fkyrptonaught%2Fcustomportalapi%2Fmaven-metadata.xml&style=for-the-badge&versionSuffix=1.17)|
 | **1.18** |![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fs3.us-east-2.amazonaws.com%2Fmaven.kyrptonaught.dev%2Fnet%2Fkyrptonaught%2Fcustomportalapi%2Fmaven-metadata.xml&style=for-the-badge&versionSuffix=-1.18)|
 | **1.19** |![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fs3.us-east-2.amazonaws.com%2Fmaven.kyrptonaught.dev%2Fnet%2Fkyrptonaught%2Fcustomportalapi%2Fmaven-metadata.xml&style=for-the-badge&versionSuffix=-1.19snapshot)|
