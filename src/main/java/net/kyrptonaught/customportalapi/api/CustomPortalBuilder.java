@@ -44,6 +44,15 @@ public class CustomPortalBuilder {
     }
 
     /**
+     * Forcefully register a portal.
+     * This bypasses any checks, only use this if you know what you are doing.
+     */
+    @Deprecated
+    public void registerPortalForced() {
+        CustomPortalApiRegistry.forceAddPortal(Registry.BLOCK.get(portalLink.block), portalLink);
+    }
+
+    /**
      * Specify the Block Identifier to be used as the Frame
      *
      * @param blockID Block identifier of the portal's frame block
@@ -110,7 +119,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * This portal will be ignited by a fluid
+     * This portal will be ignited by a fluid.
      *
      * @param fluid Fluid to be used to ignite the portal
      */
@@ -136,7 +145,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify the forced size of the portal
+     * Specify the forced size of the portal.
      * Portal will only be ignitable for these exact dimensions
      *
      * @param width  Forced width of portal
@@ -149,7 +158,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify a custom block to be used as the portal block. Block must extend CustomPortalBlock
+     * Specify a custom block to be used as the portal block. Block must extend CustomPortalBlock.
      */
     public CustomPortalBuilder customPortalBlock(CustomPortalBlock portalBlock) {
         portalLink.setPortalBlock(portalBlock);
@@ -157,7 +166,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify the dimension this portal will return you to
+     * Specify the dimension this portal will return you to.
      *
      * @param returnDimID              Identifer of the dimmension the portal will return you to when leaving destination
      * @param onlyIgnitableInReturnDim Should this portal only be ignitable in returnDimID
@@ -169,8 +178,8 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify that this portal can only be ignited in the Overworld
-     * Attempting to light it in other dimensions will fail
+     * Specify that this portal can only be ignited in the Overworld.
+     * Attempting to light it in other dimensions will fail.
      */
     public CustomPortalBuilder onlyLightInOverworld() {
         portalLink.onlyIgnitableInReturnDim = true;
@@ -178,7 +187,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Specify that this is a flat portal (end portal style)
+     * Specify that this is a flat portal (end portal style).
      */
     public CustomPortalBuilder flatPortal() {
         portalLink.portalFrameTester = CustomPortalsMod.FLATPORTAL_FRAMETESTER;
@@ -192,6 +201,7 @@ public class CustomPortalBuilder {
         portalLink.portalFrameTester = frameTester;
         return this;
     }
+
     /**
      * Register an event to be called immediately before the specified entity is teleported.
      * The teleportation can be cancelled by returning SHOULDTP.CANCEL_TP
@@ -202,7 +212,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register a sound to be played when the player in standing in the portal
+     * Register a sound to be played when the player in standing in the portal.
      * CPASoundEventData is just a stub for PositionSoundAmbience as it does not exist serverside
      */
     public CustomPortalBuilder registerInPortalAmbienceSound(Function<PlayerEntity, CPASoundEventData> event) {
@@ -211,7 +221,7 @@ public class CustomPortalBuilder {
     }
 
     /**
-     * Register a sound to be played when the player teleports
+     * Register a sound to be played when the player teleports.
      * CPASoundEventData is just a stub for PositionSoundAmbience as it does not exist serverside
      */
     public CustomPortalBuilder registerPostTPPortalAmbience(Function<PlayerEntity, CPASoundEventData> event) {
