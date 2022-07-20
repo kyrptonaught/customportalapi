@@ -53,7 +53,7 @@ public class CustomPortalsMod implements ModInitializer {
                     if (hit.getType() == HitResult.Type.BLOCK) {
                         BlockHitResult blockHit = (BlockHitResult) hit;
                         BlockPos usedBlockPos = blockHit.getBlockPos();
-                        if (PortalPlacer.attemptPortalLight(world, usedBlockPos.offset(blockHit.getSide()), PortalIgnitionSource.ItemUseSource(item))) {
+                        if (PortalPlacer.attemptPortalLight(world, usedBlockPos.offset(blockHit.getSide()), PortalIgnitionSource.ItemUseSource(item).withPlayer(player))) {
                             return TypedActionResult.success(stack);
                         }
                     }

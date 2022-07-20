@@ -25,15 +25,17 @@ public class PortalPlacer {
 
         if (link == null || !link.doesIgnitionMatch(ignitionSource) || !link.canLightInDim(world.getRegistryKey().getValue()))
             return false;
-        return createPortal(link, world, portalPos, foundationBlock);
+        return createPortal(link, foundationBlock, world, portalPos, framePos, ignitionSource);
     }
 
-    private static boolean createPortal(PortalLink link, World world, BlockPos pos, Block foundationBlock) {
-        Optional<PortalFrameTester> optional = link.getFrameTester().createInstanceOfPortalFrameTester().getNewPortal(world, pos, Direction.Axis.X, foundationBlock);
+    private static boolean createPortal(PortalLink link, Block foundationBlock, World world,BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource) {
+        Optional<PortalFrameTester> optional = link.getFrameTester().createInstanceOfPortalFrameTester().getNewPortal(world, portalPos, Direction.Axis.X, foundationBlock);
         //is valid frame, and is correct size(if applicable)
         if (optional.isPresent()) {
-            if (optional.get().isRequestedSize(link.forcedWidth, link.forcedHeight))
+            if (optional.get().isRequestedSize(link.forcedWidth, link.forcedHeight) && link.getPortalPreIgniteEvent().attemptLight(ignitionSource.player, world, portalPos, framePos, ignitionSource)) {
                 optional.get().lightPortal(foundationBlock);
+                link.getPortalIgniteEvent().afterLight(ignitionSource.player, world, portalPos, framePos, ignitionSource);
+            }
             return true;
         }
         return false;

@@ -1,6 +1,7 @@
 package net.kyrptonaught.customportalapi.portal;
 
 import net.minecraft.block.Blocks;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
@@ -24,12 +25,17 @@ public class PortalIgnitionSource {
     private static final HashSet<Item> USEITEMS = new HashSet<>();
     public SourceType sourceType;
     public Identifier ignitionSourceID;
+    public PlayerEntity player;
 
     private PortalIgnitionSource(SourceType sourceType, Identifier ignitionSourceID) {
         this.sourceType = sourceType;
         this.ignitionSourceID = ignitionSourceID;
     }
 
+    public PortalIgnitionSource withPlayer(PlayerEntity player){
+        this.player = player;
+        return this;
+    }
     public static PortalIgnitionSource ItemUseSource(Item item) {
         USEITEMS.add(item);
         return new PortalIgnitionSource(SourceType.USEITEM, Registry.ITEM.getId(item));

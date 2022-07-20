@@ -3,12 +3,18 @@ package net.kyrptonaught.customportalapi.util;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.event.CPAEvent;
+import net.kyrptonaught.customportalapi.event.CPASoundEventData;
+import net.kyrptonaught.customportalapi.event.PortalIgniteEvent;
+import net.kyrptonaught.customportalapi.event.PortalPreIgniteEvent;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import java.util.function.Consumer;
 
@@ -27,6 +33,10 @@ public class PortalLink {
     private final CPAEvent<Entity, SHOULDTP> beforeTPEvent = new CPAEvent<>(SHOULDTP.CONTINUE_TP);
     private final CPAEvent<PlayerEntity, CPASoundEventData> inPortalAmbienceEvent = new CPAEvent<>();
     private final CPAEvent<PlayerEntity, CPASoundEventData> postTpPortalAmbienceEvent = new CPAEvent<>();
+
+    private PortalIgniteEvent portalIgniteEvent = (player, world, portalPos, framePos, portalIgnitionSource) -> {
+    };
+    private PortalPreIgniteEvent portalPreIgniteEvent = (player, world, portalPos, framePos, portalIgnitionSource) -> true;
 
     public PortalLink() {
 
@@ -75,6 +85,22 @@ public class PortalLink {
     public void executePostTPEvent(Entity entity) {
         if (postTPEvent != null)
             postTPEvent.accept(entity);
+    }
+
+    public PortalIgniteEvent getPortalIgniteEvent() {
+        return portalIgniteEvent;
+    }
+
+    public void setPortalIgniteEvent(PortalIgniteEvent portalIgniteEvent) {
+        this.portalIgniteEvent = portalIgniteEvent;
+    }
+
+    public PortalPreIgniteEvent getPortalPreIgniteEvent() {
+        return portalPreIgniteEvent;
+    }
+
+    public void setPortalPreIgniteEvent(PortalPreIgniteEvent portalPreIgniteEvent) {
+        this.portalPreIgniteEvent = portalPreIgniteEvent;
     }
 
     public PortalFrameTester.PortalFrameTesterFactory getFrameTester() {

@@ -10,11 +10,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.*;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.BlockLocating;
 import net.minecraft.world.Heightmap;
@@ -36,8 +34,8 @@ public class CustomTeleporter {
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
         if (destination == null) return;
 
+        destination.getChunkManager().addTicket(ChunkTicketType.PORTAL,new ChunkPos(new BlockPos(portalPos.getX()/destination.getDimension().coordinateScale(),portalPos.getY()/destination.getDimension().coordinateScale(),portalPos.getZ()/destination.getDimension().coordinateScale())), 3, new BlockPos(portalPos.getX()/destination.getDimension().coordinateScale(),portalPos.getY()/destination.getDimension().coordinateScale(),portalPos.getZ()/destination.getDimension().coordinateScale()));
         TeleportTarget target = customTPTarget(destination, entity, portalPos, portalBase, link.getFrameTester());
-
         ((CustomTeleportingEntity) entity).setCustomTeleportTarget(target);
         entity = entity.moveToWorld(destination);
         if (entity != null) {

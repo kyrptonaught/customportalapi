@@ -1,4 +1,4 @@
-package net.kyrptonaught.customportalapi.util;
+package net.kyrptonaught.customportalapi.event;
 
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.sound.SoundEvent;
