@@ -3,10 +3,10 @@ package net.kyrptonaught.customportalapi.api;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
+import net.kyrptonaught.customportalapi.event.CPASoundEventData;
 import net.kyrptonaught.customportalapi.event.PortalIgniteEvent;
 import net.kyrptonaught.customportalapi.event.PortalPreIgniteEvent;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
-import net.kyrptonaught.customportalapi.event.CPASoundEventData;
 import net.kyrptonaught.customportalapi.util.ColorUtil;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.kyrptonaught.customportalapi.util.SHOULDTP;
@@ -24,8 +24,8 @@ import java.util.function.Function;
 public class CustomPortalBuilder {
     private final PortalLink portalLink;
 
-    private CustomPortalBuilder() {
-        portalLink = new PortalLink();
+    private CustomPortalBuilder(PortalLink portalLink) {
+        this.portalLink = portalLink;
     }
 
     /**
@@ -34,24 +34,39 @@ public class CustomPortalBuilder {
      * @return an instance of CustomPortalBuilder to begin configuring the portal
      */
     public static CustomPortalBuilder beginPortal() {
-        return new CustomPortalBuilder();
+        return beginPortal(new PortalLink());
+    }
+
+    /**
+     * Begin the creation of a new Portal, with a custom PortalLink Implementation
+     *
+     * @return an instance of CustomPortalBuilder to begin configuring the portal
+     */
+    public static CustomPortalBuilder beginPortal(PortalLink portalLink) {
+        return new CustomPortalBuilder(portalLink);
     }
 
     /**
      * Register the portal when completed.
      * This should be called last, only when you are finished configuring the portal
+     *
+     * @return the raw PortalLink created from this builder.
      */
-    public void registerPortal() {
+    public PortalLink registerPortal() {
         CustomPortalApiRegistry.addPortal(Registry.BLOCK.get(portalLink.block), portalLink);
+        return portalLink;
     }
 
     /**
      * Forcefully register a portal.
      * This bypasses any checks, only use this if you know what you are doing.
+     *
+     * @return the raw PortalLink created from this builder.
      */
     @Deprecated
-    public void registerPortalForced() {
+    public PortalLink registerPortalForced() {
         CustomPortalApiRegistry.forceAddPortal(Registry.BLOCK.get(portalLink.block), portalLink);
+        return portalLink;
     }
 
     /**
