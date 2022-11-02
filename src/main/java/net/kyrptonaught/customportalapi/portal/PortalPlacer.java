@@ -28,7 +28,7 @@ public class PortalPlacer {
         return createPortal(link, foundationBlock, world, portalPos, framePos, ignitionSource);
     }
 
-    private static boolean createPortal(PortalLink link, Block foundationBlock, World world,BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource) {
+    private static boolean createPortal(PortalLink link, Block foundationBlock, World world, BlockPos portalPos, BlockPos framePos, PortalIgnitionSource ignitionSource) {
         Optional<PortalFrameTester> optional = link.getFrameTester().createInstanceOfPortalFrameTester().getNewPortal(world, portalPos, Direction.Axis.X, foundationBlock);
         //is valid frame, and is correct size(if applicable)
         if (optional.isPresent()) {

@@ -33,9 +33,9 @@ public class CustomTeleporter {
         RegistryKey<World> destKey = world.getRegistryKey() == CustomPortalsMod.dims.get(link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
         if (destination == null) return;
-        if(!entity.canUsePortals())return;
+        if (!entity.canUsePortals()) return;
 
-        destination.getChunkManager().addTicket(ChunkTicketType.PORTAL,new ChunkPos(new BlockPos(portalPos.getX()/destination.getDimension().coordinateScale(),portalPos.getY()/destination.getDimension().coordinateScale(),portalPos.getZ()/destination.getDimension().coordinateScale())), 3, new BlockPos(portalPos.getX()/destination.getDimension().coordinateScale(),portalPos.getY()/destination.getDimension().coordinateScale(),portalPos.getZ()/destination.getDimension().coordinateScale()));
+        destination.getChunkManager().addTicket(ChunkTicketType.PORTAL, new ChunkPos(new BlockPos(portalPos.getX() / destination.getDimension().coordinateScale(), portalPos.getY() / destination.getDimension().coordinateScale(), portalPos.getZ() / destination.getDimension().coordinateScale())), 3, new BlockPos(portalPos.getX() / destination.getDimension().coordinateScale(), portalPos.getY() / destination.getDimension().coordinateScale(), portalPos.getZ() / destination.getDimension().coordinateScale()));
         TeleportTarget target = customTPTarget(destination, entity, portalPos, portalBase, link.getFrameTester());
         ((CustomTeleportingEntity) entity).setCustomTeleportTarget(target);
         entity = entity.moveToWorld(destination);

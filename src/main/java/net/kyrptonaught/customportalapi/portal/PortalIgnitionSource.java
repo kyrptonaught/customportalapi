@@ -32,10 +32,11 @@ public class PortalIgnitionSource {
         this.ignitionSourceID = ignitionSourceID;
     }
 
-    public PortalIgnitionSource withPlayer(PlayerEntity player){
+    public PortalIgnitionSource withPlayer(PlayerEntity player) {
         this.player = player;
         return this;
     }
+
     public static PortalIgnitionSource ItemUseSource(Item item) {
         USEITEMS.add(item);
         return new PortalIgnitionSource(SourceType.USEITEM, Registry.ITEM.getId(item));
