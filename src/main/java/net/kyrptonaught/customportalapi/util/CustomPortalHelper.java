@@ -2,10 +2,7 @@ package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.NetherPortalBlock;
+import net.minecraft.block.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -78,6 +75,8 @@ public class CustomPortalHelper {
             return state.get(CustomPortalBlock.AXIS);
         if (state.getBlock() instanceof NetherPortalBlock)
             return state.get(NetherPortalBlock.AXIS);
+        if (state.getBlock() instanceof EndPortalBlock)
+            return Direction.Axis.Y;
         return Direction.Axis.X;
     }
 
