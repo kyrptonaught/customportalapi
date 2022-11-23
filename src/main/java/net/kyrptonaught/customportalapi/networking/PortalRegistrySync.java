@@ -18,11 +18,9 @@ import net.minecraft.util.Identifier;
 public class PortalRegistrySync {
     public static void registerSyncOnPlayerJoin() {
         ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
-            if (NetworkManager.doesPlayerHaveMod(serverPlayNetworkHandler.player)) {
                 for (PortalLink link : CustomPortalApiRegistry.getAllPortalLinks()) {
                     packetSender.sendPacket(createPacket(link));
                 }
-            }
         });
     }
 
@@ -33,7 +31,6 @@ public class PortalRegistrySync {
     }
 
     public static void syncLinkToPlayer(PortalLink link, ServerPlayerEntity player) {
-        if (NetworkManager.doesPlayerHaveMod(player))
             player.networkHandler.sendPacket(createPacket(link));
     }
 
