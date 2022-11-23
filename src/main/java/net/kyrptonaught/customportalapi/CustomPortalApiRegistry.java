@@ -42,8 +42,8 @@ public class CustomPortalApiRegistry {
         if (link.getPortalBlock() == null) CustomPortalsMod.logError("Portal block is null");
         if (link.portalIgnitionSource == null) CustomPortalsMod.logError("Portal ignition source is null");
         if (link.dimID == null) CustomPortalsMod.logError("Dimension is null");
-        if (CustomPortalsMod.dims.size() > 0 && !CustomPortalsMod.dims.containsKey(link.dimID))
-            CustomPortalsMod.logError("Dimension not found");
+        //if (CustomPortalsMod.dims.size() > 0 && !CustomPortalsMod.dims.containsKey(link.dimID))
+        //    CustomPortalsMod.logError("Dimension not found");
         if (CustomPortalsMod.getDefaultPortalBlock() == null)
             CustomPortalsMod.logError("Built in CustomPortalBlock is null");
 

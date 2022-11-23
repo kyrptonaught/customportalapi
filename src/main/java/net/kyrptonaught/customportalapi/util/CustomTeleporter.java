@@ -12,7 +12,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.BlockLocating;
 import net.minecraft.world.Heightmap;
@@ -30,7 +32,11 @@ public class CustomTeleporter {
         if (link == null) return;
         if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP)
             return;
-        RegistryKey<World> destKey = world.getRegistryKey() == CustomPortalsMod.dims.get(link.dimID) ? CustomPortalsMod.dims.get(link.returnDimID) : CustomPortalsMod.dims.get(link.dimID);
+
+        RegistryKey<World> destKey = wrapRegistryKey(link.dimID);
+        if(world.getRegistryKey().getValue().equals(destKey.getValue()))//if already in destination
+            destKey = wrapRegistryKey(link.returnDimID);
+
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
         if (destination == null) return;
         if (!entity.canUsePortals()) return;
@@ -48,6 +54,9 @@ public class CustomTeleporter {
         }
     }
 
+    public static RegistryKey<World> wrapRegistryKey(Identifier dimID) {
+        return RegistryKey.of(Registry.WORLD_KEY, dimID);
+    }
 
     public static TeleportTarget customTPTarget(ServerWorld destinationWorld, Entity entity, BlockPos enteredPortalPos, Block frameBlock, PortalFrameTester.PortalFrameTesterFactory portalFrameTesterFactory) {
         Direction.Axis portalAxis = CustomPortalHelper.getAxisFrom(entity.getEntityWorld().getBlockState(enteredPortalPos));

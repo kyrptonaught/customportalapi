@@ -19,15 +19,12 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.World;
 
-import java.util.HashMap;
 
 public class CustomPortalsMod implements ModInitializer {
     public static final String MOD_ID = "customportalapi";
     public static CustomPortalBlock portalBlock;
-    public static HashMap<Identifier, RegistryKey<World>> dims = new HashMap<>();
     public static Identifier VANILLAPORTAL_FRAMETESTER = new Identifier(MOD_ID, "vanillanether");
     public static Identifier FLATPORTAL_FRAMETESTER = new Identifier(MOD_ID, "flat");
     public static PortalLinkingStorage portalLinkingStorage;
@@ -35,9 +32,6 @@ public class CustomPortalsMod implements ModInitializer {
     @Override
     public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            for (RegistryKey<World> registryKey : server.getWorldRegistryKeys()) {
-                dims.put(registryKey.getValue(), registryKey);
-            }
             portalLinkingStorage = (PortalLinkingStorage) server.getWorld(World.OVERWORLD).getPersistentStateManager().getOrCreate(PortalLinkingStorage::fromNbt, PortalLinkingStorage::new, MOD_ID);
         });
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
@@ -62,7 +56,7 @@ public class CustomPortalsMod implements ModInitializer {
 
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(new Identifier("the_nether")).lightWithWater().tintColor(46, 5, 25).registerPortal();
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.OBSIDIAN).destDimID(new Identifier("the_end")).tintColor(66, 135, 245).registerPortalForced();
-        // CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
+        //CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(new Identifier("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
         //CustomPortalBuilder.beginPortal().frameBlock(Blocks.EMERALD_BLOCK).lightWithWater().destDimID(new Identifier("the_end")).tintColor(25, 76, 156).flatPortal().registerPortal();
     }
 
