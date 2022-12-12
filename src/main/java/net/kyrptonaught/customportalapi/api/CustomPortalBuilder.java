@@ -15,8 +15,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -53,7 +53,7 @@ public class CustomPortalBuilder {
      * @return the raw PortalLink created from this builder.
      */
     public PortalLink registerPortal() {
-        CustomPortalApiRegistry.addPortal(Registry.BLOCK.get(portalLink.block), portalLink);
+        CustomPortalApiRegistry.addPortal(Registries.BLOCK.get(portalLink.block), portalLink);
         return portalLink;
     }
 
@@ -65,7 +65,7 @@ public class CustomPortalBuilder {
      */
     @Deprecated
     public PortalLink registerPortalForced() {
-        CustomPortalApiRegistry.forceAddPortal(Registry.BLOCK.get(portalLink.block), portalLink);
+        CustomPortalApiRegistry.forceAddPortal(Registries.BLOCK.get(portalLink.block), portalLink);
         return portalLink;
     }
 
@@ -85,7 +85,7 @@ public class CustomPortalBuilder {
      * @param block The Block to be used as the portal's frame block
      */
     public CustomPortalBuilder frameBlock(Block block) {
-        portalLink.block = Registry.BLOCK.getId(block);
+        portalLink.block = Registries.BLOCK.getId(block);
         return this;
     }
 

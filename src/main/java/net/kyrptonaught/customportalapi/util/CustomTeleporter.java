@@ -9,13 +9,14 @@ import net.kyrptonaught.customportalapi.portal.linking.DimensionalBlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.BlockLocating;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.TeleportTarget;
@@ -55,7 +56,7 @@ public class CustomTeleporter {
     }
 
     public static RegistryKey<World> wrapRegistryKey(Identifier dimID) {
-        return RegistryKey.of(Registry.WORLD_KEY, dimID);
+        return RegistryKey.of(RegistryKeys.WORLD, dimID);
     }
 
     public static TeleportTarget customTPTarget(ServerWorld destinationWorld, Entity entity, BlockPos enteredPortalPos, Block frameBlock, PortalFrameTester.PortalFrameTesterFactory portalFrameTesterFactory) {

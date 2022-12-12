@@ -23,11 +23,12 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.chunk.ChunkRendererRegion;
 import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleType;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 
 @Environment(EnvType.CLIENT)
 public class CustomPortalsModClient implements ClientModInitializer {
-    public static final ParticleType<BlockStateParticleEffect> CUSTOMPORTALPARTICLE = Registry.register(Registry.PARTICLE_TYPE, CustomPortalsMod.MOD_ID + ":customportalparticle", FabricParticleTypes.complex(BlockStateParticleEffect.PARAMETERS_FACTORY));
+    public static final ParticleType<BlockStateParticleEffect> CUSTOMPORTALPARTICLE = Registry.register(Registries.PARTICLE_TYPE, CustomPortalsMod.MOD_ID + ":customportalparticle", FabricParticleTypes.complex(BlockStateParticleEffect.PARAMETERS_FACTORY));
 
     @Override
     public void onInitializeClient() {
