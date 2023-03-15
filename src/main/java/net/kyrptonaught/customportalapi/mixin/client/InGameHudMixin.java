@@ -26,7 +26,7 @@ public class InGameHudMixin {
     @Final
     private MinecraftClient client;
 
-    @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V"))
+    @Redirect(method = "renderPortalOverlay", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderColor(FFFF)V", ordinal = 0))
     public void changeColor(float red, float green, float blue, float alpha) {
         int color = ((ClientPlayerInColoredPortal) client.player).getLastUsedPortalColor();
         if (color >= 0) {

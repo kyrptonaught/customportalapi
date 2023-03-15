@@ -4,10 +4,9 @@ import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.minecraft.block.Block;
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.WorldEventS2CPacket;
 import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
@@ -41,7 +40,7 @@ public abstract class ServerPlayerMixin implements EntityInCustomPortal {
         if (this.didTeleport()) ci.cancel();
     }
 
-    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/Packet;)V"))
+    @Redirect(method = "moveToWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"))
     public void CPAmodifyWorldEventPacket(ServerPlayNetworkHandler instance, Packet<?> packet) {
         if (packet instanceof WorldEventS2CPacket && portalFrameBlockID != 0) {
             instance.sendPacket(new WorldEventS2CPacket(1032, BlockPos.ORIGIN, portalFrameBlockID, false));

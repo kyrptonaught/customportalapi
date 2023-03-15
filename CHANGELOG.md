@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 60**
+Updated for 1.19.4
+
 **0.0.1-beta 46**
 Added the ability to set custom inPortal sounds and afterTP sounds. Also fixed portal ending up outside the worldBorder
 
