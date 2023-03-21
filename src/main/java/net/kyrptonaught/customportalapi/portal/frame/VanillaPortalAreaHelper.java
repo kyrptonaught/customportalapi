@@ -115,7 +115,7 @@ public class VanillaPortalAreaHelper extends PortalFrameTester {
     }
 
     protected boolean isEmptySpace(BlockState blockState) {
-        return blockState.getMaterial().isReplaceable() && !blockState.getMaterial().isLiquid();
+        return blockState.isReplaceable() && blockState.getFluidState().isEmpty();
     }
 
     protected boolean canHoldPortal(World world, BlockPos pos) {

@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 61**
+Fix for portals not searching for a proper location below y 0
+
 **0.0.1-beta 60**
 Updated for 1.19.4
 

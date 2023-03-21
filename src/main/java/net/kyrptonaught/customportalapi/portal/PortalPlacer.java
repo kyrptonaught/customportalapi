@@ -6,6 +6,7 @@ import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockLocating.Rectangle;
@@ -41,30 +42,25 @@ public class PortalPlacer {
         return false;
     }
 
-    public static Optional<Rectangle> createDestinationPortal(World world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
+    public static Optional<Rectangle> createDestinationPortal(ServerWorld world, BlockPos blockPos, BlockState frameBlock, Direction.Axis axis) {
         WorldBorder worldBorder = world.getWorldBorder();
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock());
         PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
-        for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(blockPos, 16, Direction.WEST, Direction.SOUTH)) {
+
+        int topY = Math.min(world.getTopY(), world.getBottomY() + world.getLogicalHeight()) - 5;
+
+        for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(blockPos, 32, Direction.WEST, Direction.SOUTH)) {
             BlockPos testingPos = mutable.toImmutable();
             if (!worldBorder.contains(testingPos)) continue;
 
-            int solidY = Math.min(world.getTopY(), world.getBottomY() + world.getDimension().logicalHeight()) - 5;
-            BlockPos pos = null;
-            while (solidY >= 3) {
-                if (canHoldPortal(world.getBlockState(testingPos.withY(solidY)))) {
-                    BlockPos testRect = portalFrameTester.doesPortalFitAt(world, testingPos.withY(solidY + 1), axis);
+            for (int y = topY; y >= world.getBottomY() + 5; y--) {
+                if (canHoldPortal(world.getBlockState(testingPos.withY(y)))) {
+                    BlockPos testRect = portalFrameTester.doesPortalFitAt(world, testingPos.withY(y + 1), axis);
                     if (testRect != null) {
-                        pos = testRect;
-                        break;
+                        portalFrameTester.createPortal(world, testRect, frameBlock, axis);
+                        return Optional.of(portalFrameTester.getRectangle());
                     }
                 }
-                solidY--;
-            }
-
-            if (pos != null) {
-                portalFrameTester.createPortal(world, pos, frameBlock, axis);
-                return Optional.of(portalFrameTester.getRectangle());
             }
         }
         portalFrameTester.createPortal(world, blockPos, frameBlock, axis);
