@@ -1,6 +1,6 @@
 ## Changelog
 **0.0.1-beta 62**
-Add a new method to CustomPortalBuilder: setPortalSearchYRange. This lets you specify the top and bottom Y to use when searching for a suitable location to create the destination portal
+Add two new methods to CustomPortalBuilder: setPortalSearchYRange and setReturnPortalSearchYRange. This lets you specify the top and bottom Y to use when searching for a suitable location to create the destination and return portal
 
 **0.0.1-beta 61**
 Fix for portals not searching for a proper location below y 0

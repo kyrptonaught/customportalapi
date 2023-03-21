@@ -50,10 +50,17 @@ public class PortalPlacer {
         int topY = Math.min(world.getTopY(), world.getBottomY() + world.getLogicalHeight()) - 5;
         int bottomY = world.getBottomY() + 5;
 
-        if (link.portalSearchYTop != null)
-            topY = link.portalSearchYTop;
-        if (link.portalSearchYBottom != null)
-            bottomY = link.portalSearchYBottom;
+        if (world.getRegistryKey().getValue().equals(link.dimID)) {
+            if (link.portalSearchYTop != null)
+                topY = link.portalSearchYTop;
+            if (link.portalSearchYBottom != null)
+                bottomY = link.portalSearchYBottom;
+        } else {
+            if (link.returnPortalSearchYTop != null)
+                topY = link.returnPortalSearchYTop;
+            if (link.returnPortalSearchYBottom != null)
+                bottomY = link.returnPortalSearchYBottom;
+        }
 
         for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(blockPos, 32, Direction.WEST, Direction.SOUTH)) {
             BlockPos testingPos = mutable.toImmutable();

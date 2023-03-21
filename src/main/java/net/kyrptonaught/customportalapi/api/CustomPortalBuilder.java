@@ -274,10 +274,28 @@ public class CustomPortalBuilder {
     /**
      * Sets the Y level range that should be used when searching for a valid location to create a destination portal.
      * By default, this is set to the bottom and top of the world.
+     *
+     * @param bottomY the lowest Y level to create a portal.
+     * @param topY    the highest Y level to create a portal.
+     * @see net.kyrptonaught.customportalapi.api.CustomPortalBuilder#setReturnPortalSearchYRange(int, int)
      */
     public CustomPortalBuilder setPortalSearchYRange(int bottomY, int topY) {
         portalLink.portalSearchYBottom = bottomY;
         portalLink.portalSearchYTop = topY;
+        return this;
+    }
+
+    /**
+     * Sets the Y level range that should be used when searching for a valid location to create a return portal.
+     * By default, this is set to the bottom and top of the world.
+     *
+     * @param bottomY the lowest Y level to create a portal.
+     * @param topY    the highest Y level to create a portal.
+     * @see net.kyrptonaught.customportalapi.api.CustomPortalBuilder#setPortalSearchYRange(int, int)
+     */
+    public CustomPortalBuilder setReturnPortalSearchYRange(int bottomY, int topY) {
+        portalLink.returnPortalSearchYBottom = bottomY;
+        portalLink.returnPortalSearchYTop = topY;
         return this;
     }
 }
