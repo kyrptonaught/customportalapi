@@ -270,4 +270,14 @@ public class CustomPortalBuilder {
         portalLink.setPortalIgniteEvent(event);
         return this;
     }
+
+    /**
+     * Sets the Y level range that should be used when searching for a valid location to create a destination portal.
+     * By default, this is set to the bottom and top of the world.
+     */
+    public CustomPortalBuilder setPortalSearchYRange(int bottomY, int topY) {
+        portalLink.portalSearchYBottom = bottomY;
+        portalLink.portalSearchYTop = topY;
+        return this;
+    }
 }

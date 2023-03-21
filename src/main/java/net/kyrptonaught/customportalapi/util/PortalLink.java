@@ -25,6 +25,7 @@ public class PortalLink {
     public boolean onlyIgnitableInReturnDim = false;
     public int colorID;
     public int forcedWidth, forcedHeight;
+    public Integer portalSearchYBottom, portalSearchYTop;
     public Identifier portalFrameTester = CustomPortalsMod.VANILLAPORTAL_FRAMETESTER;
 
     private Consumer<Entity> postTPEvent;

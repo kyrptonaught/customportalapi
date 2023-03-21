@@ -48,12 +48,18 @@ public class PortalPlacer {
         PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester();
 
         int topY = Math.min(world.getTopY(), world.getBottomY() + world.getLogicalHeight()) - 5;
+        int bottomY = world.getBottomY() + 5;
+
+        if (link.portalSearchYTop != null)
+            topY = link.portalSearchYTop;
+        if (link.portalSearchYBottom != null)
+            bottomY = link.portalSearchYBottom;
 
         for (BlockPos.Mutable mutable : BlockPos.iterateInSquare(blockPos, 32, Direction.WEST, Direction.SOUTH)) {
             BlockPos testingPos = mutable.toImmutable();
             if (!worldBorder.contains(testingPos)) continue;
 
-            for (int y = topY; y >= world.getBottomY() + 5; y--) {
+            for (int y = topY; y >= bottomY; y--) {
                 if (canHoldPortal(world.getBlockState(testingPos.withY(y)))) {
                     BlockPos testRect = portalFrameTester.doesPortalFitAt(world, testingPos.withY(y + 1), axis);
                     if (testRect != null) {
