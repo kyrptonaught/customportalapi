@@ -45,11 +45,10 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements EntityIn
     @Final
     protected MinecraftClient client;
 
-    public ClientPlayerMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile) {
-        super(world, pos, yaw, gameProfile);
+    public ClientPlayerMixin(World world, BlockPos pos, float yaw, GameProfile gameProfile, @Nullable PlayerPublicKey publicKey) {
+        super(world, pos, yaw, gameProfile, publicKey);
     }
-
-
+    
     @Shadow
     public abstract void closeHandledScreen();
 
