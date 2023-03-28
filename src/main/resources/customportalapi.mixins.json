@@ -11,11 +11,11 @@
     "portalLighters.PotionEntityMixin"
   ],
   "client": [
-    "client.ChunkRendererRegionAccessor",
     "client.ClientPlayerMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.InGameHudMixin",
-    "client.WorldRendererMixin"
+    "client.WorldRendererMixin",
+    "client.SodiumBlendingFix"
   ],
   "injectors": {
     "defaultRequire": 1
