@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 63**
+Re-Release old 1.19 versions. Fix compat with sodium
+
 **0.0.1-beta 62**
 Add two new methods to CustomPortalBuilder: setPortalSearchYRange and setReturnPortalSearchYRange. This lets you specify the top and bottom Y to use when searching for a suitable location to create the destination and return portal
 
