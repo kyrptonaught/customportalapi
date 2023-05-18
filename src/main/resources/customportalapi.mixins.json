@@ -3,6 +3,7 @@
   "minVersion": "0.8",
   "package": "net.kyrptonaught.customportalapi.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "net.kyrptonaught.customportalapi.mixin.CustomPortalApiMixinPlugin",
   "mixins": [
     "EntityMixin",
     "ServerPlayerMixin",
