@@ -106,12 +106,12 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     protected void fillAirAroundPortal(World world, BlockPos pos) {
-        if (world.getBlockState(pos).getMaterial().isSolid())
+        if (world.getBlockState(pos).isSolid())
             world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.FORCE_STATE);
     }
 
     protected void placeLandingPad(World world, BlockPos pos, BlockState frameBlock) {
-        if (!world.getBlockState(pos).getMaterial().isSolid())
+        if (!world.getBlockState(pos).isSolid())
             world.setBlockState(pos, frameBlock);
     }
 
@@ -139,9 +139,9 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     @Override
     public BlockPos doesPortalFitAt(World world, BlockPos attemptPos, Direction.Axis axis) {
         BlockLocating.Rectangle rect = BlockLocating.getLargestRectangle(attemptPos.up(), Direction.Axis.X, 4, Direction.Axis.Z, 4, blockPos -> {
-            return world.getBlockState(blockPos).getMaterial().isSolid() &&
-                    !world.getBlockState(blockPos.up()).getMaterial().isSolid() && !world.getBlockState(blockPos.up()).getMaterial().isLiquid() &&
-                    !world.getBlockState(blockPos.up(2)).getMaterial().isSolid() && !world.getBlockState(blockPos.up(2)).getMaterial().isLiquid();
+            return world.getBlockState(blockPos).isSolid() &&
+                    !world.getBlockState(blockPos.up()).isSolid() && !world.getBlockState(blockPos.up()).isLiquid() &&
+                    !world.getBlockState(blockPos.up(2)).isSolid() && !world.getBlockState(blockPos.up(2)).isLiquid();
         });
         return rect.width >= 4 && rect.height >= 4 ? rect.lowerLeft : null;
     }
@@ -153,10 +153,9 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         double zSize = arg.height - entityDimensions.width;
 
         double deltaX = MathHelper.getLerpProgress(entity.getX(), arg.lowerLeft.getX(), arg.lowerLeft.getX() + xSize);
-        double deltaY = MathHelper.getLerpProgress(entity.getY(), arg.lowerLeft.getY() - 1, arg.lowerLeft.getY() + 1);
         double deltaZ = MathHelper.getLerpProgress(entity.getZ(), arg.lowerLeft.getZ(), arg.lowerLeft.getZ() + zSize);
 
-        return new Vec3d(deltaX, deltaY, deltaZ);
+        return new Vec3d(deltaX, arg.lowerLeft.getY(), deltaZ);
     }
 
     @Override
@@ -169,7 +168,6 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
         double y = MathHelper.lerp(prevOffset.y, portalRect.lowerLeft.getY() - 1, portalRect.lowerLeft.getY() + 1);
         double z = MathHelper.lerp(prevOffset.z, portalRect.lowerLeft.getZ(), portalRect.lowerLeft.getZ() + zSize);
 
-        y = Math.max(y, portalRect.lowerLeft.getY());
-        return new TeleportTarget(new Vec3d(x, y, z), entity.getVelocity(), entity.getYaw(), entity.getPitch());
+        return new TeleportTarget(new Vec3d(x, portalRect.lowerLeft.getY() + 1, z), entity.getVelocity(), entity.getYaw(), entity.getPitch());
     }
 }

@@ -82,13 +82,13 @@ public class CustomTeleporter {
         double zMin = Math.max(-2.9999872E7D, worldBorder.getBoundNorth() + 16.0D);
         double xMax = Math.min(2.9999872E7D, worldBorder.getBoundEast() - 16.0D);
         double zMax = Math.min(2.9999872E7D, worldBorder.getBoundSouth() - 16.0D);
-        double scaleFactor = DimensionType.getCoordinateScaleFactor(entity.world.getDimension(), destination.getDimension());
+        double scaleFactor = DimensionType.getCoordinateScaleFactor(entity.getWorld().getDimension(), destination.getDimension());
         BlockPos blockPos3 = BlockPos.ofFloored(MathHelper.clamp(entity.getX() * scaleFactor, xMin, xMax), entity.getY(), MathHelper.clamp(entity.getZ() * scaleFactor, zMin, zMax));
         Optional<BlockLocating.Rectangle> portal = PortalPlacer.createDestinationPortal(destination, blockPos3, frameBlock, axis);
         if (portal.isPresent()) {
             PortalFrameTester portalFrameTester = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock()).getFrameTester().createInstanceOfPortalFrameTester();
 
-            CustomPortalsMod.portalLinkingStorage.createLink(portalFramePos.lowerLeft, entity.world.getRegistryKey(), portal.get().lowerLeft, destination.getRegistryKey());
+            CustomPortalsMod.portalLinkingStorage.createLink(portalFramePos.lowerLeft, entity.getWorld().getRegistryKey(), portal.get().lowerLeft, destination.getRegistryKey());
             return portalFrameTester.getTPTargetInPortal(portal.get(), axis, portalFrameTester.getEntityOffsetInPortal(portalFramePos, entity, axis), entity);
         }
         return idkWhereToPutYou(destination, entity, blockPos3);
