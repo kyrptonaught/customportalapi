@@ -21,8 +21,19 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	//modImplementation('maven.modrinth:sodium:mc1.20-0.4.10') { exclude group: "net.fabricmc.fabric-api" }
+	optionalDependency("maven.modrinth:sodium:mc1.20-0.4.10")
 }
+
+def optionalDependency(String dep) {
+	def exclude = {
+		exclude group: "net.fabricmc.fabric-api"
+		exclude group: "net.fabricmc"
+	}
+
+	dependencies.modCompileOnly(dep, exclude)
+	//dependencies.modRuntimeOnly(dep, exclude)
+}
+
 processResources {
 	inputs.property "version", project.version
 
