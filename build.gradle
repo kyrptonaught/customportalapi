@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.1-SNAPSHOT'
+	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -21,7 +21,7 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	//modImplementation('maven.modrinth:sodium:mc1.19.4-0.4.10') { exclude group: "net.fabricmc.fabric-api" }
+	//modImplementation('maven.modrinth:sodium:mc1.20-0.4.10') { exclude group: "net.fabricmc.fabric-api" }
 }
 processResources {
 	inputs.property "version", project.version

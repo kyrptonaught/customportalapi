@@ -1,13 +1,23 @@
 package net.kyrptonaught.customportalapi.mixin.client;
 
+import me.jellysquid.mods.sodium.client.model.quad.ModelQuadView;
+import me.jellysquid.mods.sodium.client.model.quad.blender.ColorSampler;
+import me.jellysquid.mods.sodium.client.util.color.ColorARGB;
+import net.kyrptonaught.customportalapi.CustomPortalBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockRenderView;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Pseudo
 @Mixin(targets = "me.jellysquid.mods.sodium.client.model.quad.blender.LinearColorBlender")
 public abstract class SodiumBlendingFix {
 
-    /*
     @Shadow(remap = false)
     protected abstract <T> int getBlockColor(BlockRenderView world, T state, ColorSampler<T> sampler, int x, int y, int z, int colorIdx);
 
@@ -19,6 +29,4 @@ public abstract class SodiumBlendingFix {
             info.setReturnValue(ColorARGB.toABGR(color));
         }
     }
-
-     */
 }
