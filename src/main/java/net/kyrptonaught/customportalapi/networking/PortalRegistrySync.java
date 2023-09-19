@@ -5,12 +5,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.impl.networking.payload.PacketByteBufPayload;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.PerWorldPortals;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.network.packet.s2c.common.CustomPayloadS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -39,7 +40,7 @@ public class PortalRegistrySync {
         buf.writeIdentifier(link.block);
         buf.writeIdentifier(link.dimID);
         buf.writeInt(link.colorID);
-        return new CustomPayloadS2CPacket(NetworkManager.SYNC_PORTALS, buf);
+        return new CustomPayloadS2CPacket(new PacketByteBufPayload(NetworkManager.SYNC_PORTALS, buf));
     }
 
     @Environment(EnvType.CLIENT)

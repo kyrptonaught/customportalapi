@@ -6,6 +6,7 @@
   "mixins": [
     "EntityMixin",
     "ServerPlayerMixin",
+    "PersistentStateManagerMixin",
     "portalLighters.AbstractFireMixin",
     "portalLighters.FluidBlockPlacedMixin",
     "portalLighters.PotionEntityMixin"
