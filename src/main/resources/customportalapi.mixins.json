@@ -6,7 +6,6 @@
   "mixins": [
     "EntityMixin",
     "ServerPlayerMixin",
-    "PersistentStateManagerMixin",
     "portalLighters.AbstractFireMixin",
     "portalLighters.FluidBlockPlacedMixin",
     "portalLighters.PotionEntityMixin"
@@ -15,8 +14,7 @@
     "client.ClientPlayerMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.InGameHudMixin",
-    "client.WorldRendererMixin",
-    "client.SodiumBlendingFix"
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

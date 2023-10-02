@@ -1,10 +1,12 @@
 package net.kyrptonaught.customportalapi.portal.linking;
 
+import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ChunkUpdateState;
 import net.minecraft.world.PersistentState;
 import net.minecraft.world.World;
 
@@ -18,7 +20,11 @@ public class PortalLinkingStorage extends PersistentState {
         super();
     }
 
-    public static PersistentState fromNbt(NbtCompound tag) {
+    public static PersistentState.Type<PortalLinkingStorage> getPersistentStateType() {
+        return new PersistentState.Type<>(PortalLinkingStorage::new, PortalLinkingStorage::fromNbt, DataFixTypes.LEVEL);
+    }
+
+    public static PortalLinkingStorage fromNbt(NbtCompound tag) {
         PortalLinkingStorage cman = new PortalLinkingStorage();
         NbtList links = (NbtList) tag.get("portalLinks");
 

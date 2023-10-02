@@ -3,20 +3,16 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
-import net.kyrptonaught.customportalapi.api.CustomPortalBuilder;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.FlatPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portal.frame.VanillaPortalAreaHelper;
 import net.kyrptonaught.customportalapi.portal.linking.PortalLinkingStorage;
-import net.kyrptonaught.customportalapi.util.OldPersistentStateManagerInterface;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
 import net.minecraft.block.piston.PistonBehavior;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.BlockSoundGroup;
@@ -25,7 +21,6 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.PersistentState;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
 
@@ -40,8 +35,8 @@ public class CustomPortalsMod implements ModInitializer {
     @Override
     public void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTED.register(server -> {
-            OldPersistentStateManagerInterface persistentStateManager = (OldPersistentStateManagerInterface) server.getWorld(World.OVERWORLD).getPersistentStateManager();
-            portalLinkingStorage = (PortalLinkingStorage) persistentStateManager.computeIfAbsent(PortalLinkingStorage::fromNbt, PortalLinkingStorage::new, MOD_ID);
+            PersistentStateManager persistentStateManager = server.getWorld(World.OVERWORLD).getPersistentStateManager();
+            portalLinkingStorage = persistentStateManager.getOrCreate(PortalLinkingStorage.getPersistentStateType(), MOD_ID);
         });
         CustomPortalApiRegistry.registerPortalFrameTester(VANILLAPORTAL_FRAMETESTER, VanillaPortalAreaHelper::new);
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
