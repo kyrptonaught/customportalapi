@@ -14,7 +14,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.*;
+import net.minecraft.world.BlockLocating;
+import net.minecraft.world.TeleportTarget;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 
 import java.util.Optional;
 import java.util.function.Predicate;

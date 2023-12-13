@@ -1,9 +1,7 @@
 package net.kyrptonaught.customportalapi.networking;
 
 import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 
 public class NetworkManager implements DedicatedServerModInitializer {

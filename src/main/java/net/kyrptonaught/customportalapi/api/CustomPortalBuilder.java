@@ -277,7 +277,7 @@ public class CustomPortalBuilder {
      *
      * @param bottomY the lowest Y level to create a portal.
      * @param topY    the highest Y level to create a portal.
-     * @see net.kyrptonaught.customportalapi.api.CustomPortalBuilder#setReturnPortalSearchYRange(int, int)
+     * @see CustomPortalBuilder#setReturnPortalSearchYRange(int, int)
      */
     public CustomPortalBuilder setPortalSearchYRange(int bottomY, int topY) {
         portalLink.portalSearchYBottom = bottomY;
@@ -291,7 +291,7 @@ public class CustomPortalBuilder {
      *
      * @param bottomY the lowest Y level to create a portal.
      * @param topY    the highest Y level to create a portal.
-     * @see net.kyrptonaught.customportalapi.api.CustomPortalBuilder#setPortalSearchYRange(int, int)
+     * @see CustomPortalBuilder#setPortalSearchYRange(int, int)
      */
     public CustomPortalBuilder setReturnPortalSearchYRange(int bottomY, int topY) {
         portalLink.returnPortalSearchYBottom = bottomY;

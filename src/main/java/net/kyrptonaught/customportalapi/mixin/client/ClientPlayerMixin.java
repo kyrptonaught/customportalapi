@@ -12,17 +12,14 @@ import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.DeathScreen;
 import net.minecraft.client.gui.screen.DownloadingTerrainScreen;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.encryption.PlayerPublicKey;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPlayerEntity.class)
 public abstract class ClientPlayerMixin extends PlayerEntity implements EntityInCustomPortal, ClientPlayerInColoredPortal {
-    
+
     @Shadow
     @Final
     protected MinecraftClient client;
@@ -47,8 +44,10 @@ public abstract class ClientPlayerMixin extends PlayerEntity implements EntityIn
     @Shadow
     public abstract void closeHandledScreen();
 
-    @Shadow public float prevNauseaIntensity;
-    @Shadow public float nauseaIntensity;
+    @Shadow
+    public float prevNauseaIntensity;
+    @Shadow
+    public float nauseaIntensity;
     int portalColor;
 
     @Override

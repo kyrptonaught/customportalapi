@@ -1,17 +1,16 @@
 package net.kyrptonaught.customportalapi.networking;
 
-import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.impl.networking.payload.PacketByteBufPayload;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.PerWorldPortals;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.common.CustomPayloadS2CPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
@@ -19,9 +18,9 @@ import net.minecraft.util.Identifier;
 public class PortalRegistrySync {
     public static void registerSyncOnPlayerJoin() {
         ServerPlayConnectionEvents.JOIN.register((serverPlayNetworkHandler, packetSender, minecraftServer) -> {
-                for (PortalLink link : CustomPortalApiRegistry.getAllPortalLinks()) {
-                    packetSender.sendPacket(createPacket(link));
-                }
+            for (PortalLink link : CustomPortalApiRegistry.getAllPortalLinks()) {
+                packetSender.sendPacket(createPacket(link));
+            }
         });
     }
 
@@ -32,15 +31,15 @@ public class PortalRegistrySync {
     }
 
     public static void syncLinkToPlayer(PortalLink link, ServerPlayerEntity player) {
-            player.networkHandler.sendPacket(createPacket(link));
+        player.networkHandler.sendPacket(createPacket(link));
     }
 
     public static Packet<?> createPacket(PortalLink link) {
-        PacketByteBuf buf = new PacketByteBuf(Unpooled.buffer());
+        PacketByteBuf buf = PacketByteBufs.create();
         buf.writeIdentifier(link.block);
         buf.writeIdentifier(link.dimID);
         buf.writeInt(link.colorID);
-        return new CustomPayloadS2CPacket(new PacketByteBufPayload(NetworkManager.SYNC_PORTALS, buf));
+        return ServerPlayNetworking.createS2CPacket(NetworkManager.SYNC_PORTALS, buf);
     }
 
     @Environment(EnvType.CLIENT)
