@@ -22,16 +22,6 @@ dependencies {
 
 }
 
-def optionalDependency(String dep) {
-	def exclude = {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude group: "net.fabricmc"
-	}
-
-	dependencies.modCompileOnly(dep, exclude)
-	//dependencies.modRuntimeOnly(dep, exclude)
-}
-
 processResources {
 	inputs.property "version", project.version
 
