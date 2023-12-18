@@ -27,6 +27,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 
 public class CustomPortalBlock extends Block {
     public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
@@ -48,6 +49,7 @@ public class CustomPortalBlock extends Block {
         };
     }
 
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
         Block block = getPortalBase((World) world, pos);
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
@@ -61,12 +63,14 @@ public class CustomPortalBlock extends Block {
         return Blocks.AIR.getDefaultState();
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
     }
 
+    @Override
     @Environment(EnvType.CLIENT)
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
         return ItemStack.EMPTY;
     }
 

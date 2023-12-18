@@ -51,8 +51,9 @@ public class PortalLinkingStorage extends PersistentState {
     }
 
     public DimensionalBlockPos getDestination(BlockPos portalFramePos, RegistryKey<World> dimID) {
-        if (portalLinks.containsKey(dimID.getValue()))
+        if (dimID != null && portalFramePos != null && portalLinks.containsKey(dimID.getValue()))
             return portalLinks.get(dimID.getValue()).get(portalFramePos);
+
         return null;
     }
 
