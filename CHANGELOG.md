@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 64.5**
+Update to newer version of Fapi
+
 **0.0.1-beta 63**
 Re-Release old 1.19 versions. Fix compat with sodium
 
