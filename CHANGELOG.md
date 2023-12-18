@@ -1,4 +1,7 @@
 ## Changelog
+**0.0.1-beta 65**
+Fix crash when attempting to teleport through an incomplete portal.
+
 **0.0.1-beta 63**
 Re-Release old 1.19 versions. Fix compat with sodium
 
