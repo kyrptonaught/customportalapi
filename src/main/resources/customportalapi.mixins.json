@@ -3,12 +3,15 @@
   "minVersion": "0.8",
   "package": "net.kyrptonaught.customportalapi.mixin",
   "compatibilityLevel": "JAVA_16",
+  "plugin": "net.kyrptonaught.customportalapi.compat.create.CreateMixinPlugin",
   "mixins": [
+    "DCEntityMixin",
     "EntityMixin",
     "ServerPlayerMixin",
     "portalLighters.AbstractFireMixin",
     "portalLighters.FluidBlockPlacedMixin",
-    "portalLighters.PotionEntityMixin"
+    "portalLighters.PotionEntityMixin",
+    "TrackBlockMixin"
   ],
   "client": [
     "client.ChunkRendererRegionAccessor",

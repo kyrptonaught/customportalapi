@@ -99,13 +99,15 @@ public class CustomPortalBlock extends Block {
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
-        entityInPortal.tickInPortal(pos.toImmutable());
-        if (!entityInPortal.didTeleport()) {
-            if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
-                entityInPortal.setDidTP(true);
-                if (!world.isClient)
-                    CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+        if (!entity.hasVehicle() && !entity.hasPassengers()) {
+            EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
+            entityInPortal.tickInPortal(pos.toImmutable());
+            if (!entityInPortal.didTeleport()) {
+                if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
+                    entityInPortal.setDidTP(true);
+                    if (!world.isClient)
+                        CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
+                }
             }
         }
     }
