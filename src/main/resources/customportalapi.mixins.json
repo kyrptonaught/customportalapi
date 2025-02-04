@@ -2,20 +2,17 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.kyrptonaught.customportalapi.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "EntityMixin",
-    "ServerPlayerMixin",
     "portalLighters.AbstractFireMixin",
     "portalLighters.FluidBlockPlacedMixin",
     "portalLighters.PotionEntityMixin"
   ],
   "client": [
-    "client.ClientPlayerMixin",
-    "client.ClientPlayNetworkHandlerMixin",
+    "client.ClientPlayerEntityMixin",
     "client.InGameHudMixin",
-    "client.WorldRendererMixin",
-    "client.SodiumBlendingFix"
+    "client.PortalManagerAccessor",
+    "client.WorldRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

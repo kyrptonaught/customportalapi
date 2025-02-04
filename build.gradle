@@ -1,17 +1,16 @@
 plugins {
-	id 'fabric-loom' version '1.2-SNAPSHOT'
+	id 'fabric-loom' version '1.9-SNAPSHOT'
 	id 'maven-publish'
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
+sourceCompatibility = JavaVersion.VERSION_21
+targetCompatibility = JavaVersion.VERSION_21
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
 repositories {
-	maven { url "https://api.modrinth.com/maven" }
 }
 
 dependencies {
@@ -21,17 +20,6 @@ dependencies {
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-	optionalDependency("maven.modrinth:sodium:mc1.20-0.4.10")
-}
-
-def optionalDependency(String dep) {
-	def exclude = {
-		exclude group: "net.fabricmc.fabric-api"
-		exclude group: "net.fabricmc"
-	}
-
-	dependencies.modCompileOnly(dep, exclude)
-	//dependencies.modRuntimeOnly(dep, exclude)
 }
 
 processResources {
@@ -43,7 +31,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 21
 }
 
 java {

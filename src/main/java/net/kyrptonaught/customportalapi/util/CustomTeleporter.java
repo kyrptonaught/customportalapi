@@ -2,13 +2,13 @@ package net.kyrptonaught.customportalapi.util;
 
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
-import net.kyrptonaught.customportalapi.interfaces.CustomTeleportingEntity;
 import net.kyrptonaught.customportalapi.portal.PortalPlacer;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.portal.linking.DimensionalBlockPos;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.network.packet.s2c.play.WorldEventS2CPacket;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -17,10 +17,7 @@ import net.minecraft.server.world.ChunkTicketType;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
-import net.minecraft.world.BlockLocating;
-import net.minecraft.world.Heightmap;
-import net.minecraft.world.TeleportTarget;
-import net.minecraft.world.World;
+import net.minecraft.world.*;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraft.world.dimension.DimensionType;
 
@@ -28,40 +25,35 @@ import java.util.Optional;
 
 public class CustomTeleporter {
 
-    public static void TPToDim(World world, Entity entity, Block portalBase, BlockPos portalPos) {
+    public static TeleportTarget createTeleportTarget(World world, Entity entity, Block portalBase, BlockPos portalPos) {
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(portalBase);
-        if (link == null) return;
+        if (link == null) return null;
         if (link.getBeforeTPEvent().execute(entity) == SHOULDTP.CANCEL_TP)
-            return;
+            return null;
 
         RegistryKey<World> destKey = wrapRegistryKey(link.dimID);
         if (world.getRegistryKey().getValue().equals(destKey.getValue()))//if already in destination
             destKey = wrapRegistryKey(link.returnDimID);
 
         ServerWorld destination = ((ServerWorld) world).getServer().getWorld(destKey);
-        if (destination == null) return;
-        if (!entity.canUsePortals()) return;
+        if (destination == null) return null;
+        if (!entity.canUsePortals(false)) return null;
 
         destination.getChunkManager().addTicket(ChunkTicketType.PORTAL, new ChunkPos(BlockPos.ofFloored(portalPos.getX() / destination.getDimension().coordinateScale(), portalPos.getY() / destination.getDimension().coordinateScale(), portalPos.getZ() / destination.getDimension().coordinateScale())), 3, BlockPos.ofFloored(portalPos.getX() / destination.getDimension().coordinateScale(), portalPos.getY() / destination.getDimension().coordinateScale(), portalPos.getZ() / destination.getDimension().coordinateScale()));
-        TeleportTarget target = customTPTarget(destination, entity, portalPos, portalBase, link.getFrameTester());
-        ((CustomTeleportingEntity) entity).setCustomTeleportTarget(target);
-        entity = entity.moveToWorld(destination);
-        if (entity != null) {
-            entity.setYaw(target.yaw);
-            entity.setPitch(target.pitch);
-            if (entity instanceof ServerPlayerEntity)
-                entity.refreshPositionAfterTeleport(target.position);
-            link.executePostTPEvent(entity);
-        }
+        return customTPTarget(destination, entity, portalPos, portalBase, link.getFrameTester());
     }
 
     public static RegistryKey<World> wrapRegistryKey(Identifier dimID) {
         return RegistryKey.of(RegistryKeys.WORLD, dimID);
     }
 
-    public static TeleportTarget customTPTarget(ServerWorld destinationWorld, Entity entity, BlockPos enteredPortalPos, Block frameBlock, PortalFrameTester.PortalFrameTesterFactory portalFrameTesterFactory) {
+    private static TeleportTarget customTPTarget(ServerWorld destinationWorld, Entity entity, BlockPos enteredPortalPos, Block frameBlock, PortalFrameTester.PortalFrameTesterFactory portalFrameTesterFactory) {
         Direction.Axis portalAxis = CustomPortalHelper.getAxisFrom(entity.getEntityWorld().getBlockState(enteredPortalPos));
         BlockLocating.Rectangle fromPortalRectangle = portalFrameTesterFactory.createInstanceOfPortalFrameTester().init(entity.getEntityWorld(), enteredPortalPos, portalAxis, frameBlock).getRectangle();
+
+        if (fromPortalRectangle.lowerLeft == null)
+            return null;
+
         DimensionalBlockPos destinationPos = CustomPortalsMod.portalLinkingStorage.getDestination(fromPortalRectangle.lowerLeft, entity.getEntityWorld().getRegistryKey());
 
         if (destinationPos != null && destinationPos.dimensionType.equals(destinationWorld.getRegistryKey().getValue())) {
@@ -70,7 +62,7 @@ public class CustomTeleporter {
                 if (!portalFrameTester.isAlreadyLitPortalFrame()) {
                     portalFrameTester.lightPortal(frameBlock);
                 }
-                return portalFrameTester.getTPTargetInPortal(portalFrameTester.getRectangle(), portalAxis, portalFrameTester.getEntityOffsetInPortal(fromPortalRectangle, entity, portalAxis), entity);
+                return portalFrameTester.getTPTargetInPortal(destinationWorld, frameBlock, portalFrameTester.getRectangle(), portalAxis, portalFrameTester.getEntityOffsetInPortal(fromPortalRectangle, entity, portalAxis), entity);
             }
         }
         return createDestinationPortal(destinationWorld, entity, portalAxis, fromPortalRectangle, frameBlock.getDefaultState());
@@ -89,15 +81,24 @@ public class CustomTeleporter {
             PortalFrameTester portalFrameTester = CustomPortalApiRegistry.getPortalLinkFromBase(frameBlock.getBlock()).getFrameTester().createInstanceOfPortalFrameTester();
 
             CustomPortalsMod.portalLinkingStorage.createLink(portalFramePos.lowerLeft, entity.getWorld().getRegistryKey(), portal.get().lowerLeft, destination.getRegistryKey());
-            return portalFrameTester.getTPTargetInPortal(portal.get(), axis, portalFrameTester.getEntityOffsetInPortal(portalFramePos, entity, axis), entity);
+            return portalFrameTester.getTPTargetInPortal(destination, frameBlock.getBlock(), portal.get(), axis, portalFrameTester.getEntityOffsetInPortal(portalFramePos, entity, axis), entity);
         }
         return idkWhereToPutYou(destination, entity, blockPos3);
     }
 
-
     protected static TeleportTarget idkWhereToPutYou(ServerWorld world, Entity entity, BlockPos pos) {
         CustomPortalsMod.logError("Unable to find tp location, forced to place on top of world");
         BlockPos destinationPos = world.getTopPosition(Heightmap.Type.WORLD_SURFACE, pos);
-        return new TeleportTarget(new Vec3d(destinationPos.getX() + .5, destinationPos.getY(), destinationPos.getZ() + .5), entity.getVelocity(), entity.getYaw(), entity.getPitch());
+        return new TeleportTarget(world, new Vec3d(destinationPos.getX() + .5, destinationPos.getY(), destinationPos.getZ() + .5), entity.getVelocity(), entity.getYaw(), entity.getPitch(), TeleportTarget.NO_OP);
+    }
+
+
+    public static TeleportTarget.PostDimensionTransition sendTravelThroughPortalPacket(Block portalFrame) {
+        int portalFrameBlockID = Registries.BLOCK.getRawId(portalFrame);
+        return entity -> {
+            if (entity instanceof ServerPlayerEntity serverPlayerEntity) {
+                serverPlayerEntity.networkHandler.sendPacket(new WorldEventS2CPacket(WorldEvents.TRAVEL_THROUGH_PORTAL, BlockPos.ORIGIN, portalFrameBlockID, false));
+            }
+        };
     }
 }
