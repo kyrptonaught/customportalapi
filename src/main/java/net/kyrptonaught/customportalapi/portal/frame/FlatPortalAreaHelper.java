@@ -4,12 +4,14 @@ import com.google.common.collect.Sets;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalsMod;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
+import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
@@ -149,8 +151,8 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     @Override
     public Vec3d getEntityOffsetInPortal(BlockLocating.Rectangle arg, Entity entity, Direction.Axis portalAxis) {
         EntityDimensions entityDimensions = entity.getDimensions(entity.getPose());
-        double xSize = arg.width - entityDimensions.width;
-        double zSize = arg.height - entityDimensions.width;
+        double xSize = arg.width - entityDimensions.width();
+        double zSize = arg.height - entityDimensions.width();
 
         double deltaX = MathHelper.getLerpProgress(entity.getX(), arg.lowerLeft.getX(), arg.lowerLeft.getX() + xSize);
         double deltaZ = MathHelper.getLerpProgress(entity.getZ(), arg.lowerLeft.getZ(), arg.lowerLeft.getZ() + zSize);
@@ -159,15 +161,16 @@ public class FlatPortalAreaHelper extends PortalFrameTester {
     }
 
     @Override
-    public TeleportTarget getTPTargetInPortal(BlockLocating.Rectangle portalRect, Direction.Axis portalAxis, Vec3d prevOffset, Entity entity) {
+    public TeleportTarget getTPTargetInPortal(ServerWorld world, Block frameBlock, BlockLocating.Rectangle portalRect, Direction.Axis portalAxis, Vec3d prevOffset, Entity entity) {
         EntityDimensions entityDimensions = entity.getDimensions(entity.getPose());
-        double xSize = portalRect.width - entityDimensions.width;
-        double zSize = portalRect.height - entityDimensions.width;
+        double xSize = portalRect.width - entityDimensions.width();
+        double zSize = portalRect.height - entityDimensions.width();
 
         double x = MathHelper.lerp(prevOffset.x, portalRect.lowerLeft.getX(), portalRect.lowerLeft.getX() + xSize);
         double y = MathHelper.lerp(prevOffset.y, portalRect.lowerLeft.getY() - 1, portalRect.lowerLeft.getY() + 1);
         double z = MathHelper.lerp(prevOffset.z, portalRect.lowerLeft.getZ(), portalRect.lowerLeft.getZ() + zSize);
 
-        return new TeleportTarget(new Vec3d(x, portalRect.lowerLeft.getY() + 1, z), entity.getVelocity(), entity.getYaw(), entity.getPitch());
+        TeleportTarget.PostDimensionTransition post = CustomTeleporter.sendTravelThroughPortalPacket(frameBlock).then(entityx -> entityx.addPortalChunkTicketAt(portalRect.lowerLeft));
+        return new TeleportTarget(world, new Vec3d(x, portalRect.lowerLeft.getY() + 1, z), entity.getVelocity(), entity.getYaw(), entity.getPitch(), post);
     }
 }

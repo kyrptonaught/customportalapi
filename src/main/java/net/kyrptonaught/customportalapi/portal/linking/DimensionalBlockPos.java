@@ -14,7 +14,7 @@ public class DimensionalBlockPos {
     }
 
     public static DimensionalBlockPos fromTag(NbtCompound tag) {
-        return new DimensionalBlockPos(new Identifier(tag.getString("dimID")), BlockPos.fromLong(tag.getLong("pos")));
+        return new DimensionalBlockPos(Identifier.of(tag.getString("dimID")), BlockPos.fromLong(tag.getLong("pos")));
     }
 
     public NbtCompound toTag(NbtCompound tag) {

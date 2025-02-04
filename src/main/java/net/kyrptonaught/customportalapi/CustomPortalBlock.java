@@ -3,15 +3,16 @@ package net.kyrptonaught.customportalapi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.kyrptonaught.customportalapi.client.CustomPortalsModClient;
-import net.kyrptonaught.customportalapi.interfaces.EntityInCustomPortal;
 import net.kyrptonaught.customportalapi.portal.frame.PortalFrameTester;
 import net.kyrptonaught.customportalapi.util.CustomPortalHelper;
 import net.kyrptonaught.customportalapi.util.CustomTeleporter;
 import net.kyrptonaught.customportalapi.util.PortalLink;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
@@ -21,11 +22,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.*;
+import net.minecraft.world.tick.ScheduledTickView;
+import org.jetbrains.annotations.Nullable;
 
-public class CustomPortalBlock extends Block {
+public class CustomPortalBlock extends Block implements Portal {
     public static final EnumProperty<Direction.Axis> AXIS = Properties.AXIS;
     protected static final VoxelShape X_SHAPE = Block.createCuboidShape(0.0D, 0.0D, 6.0D, 16.0D, 16.0D, 10.0D);
     protected static final VoxelShape Z_SHAPE = Block.createCuboidShape(6.0D, 0.0D, 0.0D, 10.0D, 16.0D, 16.0D);
@@ -45,25 +46,27 @@ public class CustomPortalBlock extends Block {
         };
     }
 
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState newState, WorldAccess world, BlockPos pos, BlockPos posFrom) {
+    @Override
+    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
         Block block = getPortalBase((World) world, pos);
         PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(block);
         if (link != null) {
-            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init(world, pos, CustomPortalHelper.getAxisFrom(state), block);
+            PortalFrameTester portalFrameTester = link.getFrameTester().createInstanceOfPortalFrameTester().init((WorldAccess) world, pos, CustomPortalHelper.getAxisFrom(state), block);
             if (portalFrameTester.isAlreadyLitPortalFrame())
-                return super.getStateForNeighborUpdate(state, direction, newState, world, pos, posFrom);
+                return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
         }
         //todo handle unknown portallink
 
         return Blocks.AIR.getDefaultState();
     }
 
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
     }
 
-    @Environment(EnvType.CLIENT)
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+    @Override
+    protected ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state, boolean includeData) {
         return ItemStack.EMPTY;
     }
 
@@ -98,21 +101,33 @@ public class CustomPortalBlock extends Block {
         }
     }
 
-
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        EntityInCustomPortal entityInPortal = (EntityInCustomPortal) entity;
-        entityInPortal.tickInPortal(pos.toImmutable());
-        if (!entityInPortal.didTeleport()) {
-            if (entityInPortal.getTimeInPortal() >= entity.getMaxNetherPortalTime()) {
-                entityInPortal.setDidTP(true);
-                if (!world.isClient)
-                    CustomTeleporter.TPToDim(world, entity, getPortalBase(world, pos), pos);
-            }
+        if (entity.canUsePortals(false)) {
+            entity.tryUsePortal(this, pos);
         }
     }
 
     public Block getPortalBase(World world, BlockPos pos) {
         return CustomPortalHelper.getPortalBaseDefault(world, pos);
+    }
+
+    @Override
+    public int getPortalDelay(ServerWorld world, Entity entity) {
+        if (entity instanceof PlayerEntity playerEntity) {
+            return Math.max(1, world.getGameRules().getInt(playerEntity.getAbilities().invulnerable ? GameRules.PLAYERS_NETHER_PORTAL_CREATIVE_DELAY : GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY));
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public @Nullable TeleportTarget createTeleportTarget(ServerWorld world, Entity entity, BlockPos pos) {
+        return CustomTeleporter.createTeleportTarget(world, entity, getPortalBase(world, pos), pos);
+    }
+
+    @Override
+    public Effect getPortalEffect() {
+        return Effect.CONFUSION;
     }
 }
