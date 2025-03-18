@@ -1,5 +1,7 @@
 package net.kyrptonaught.customportalapi.mixin.client;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.kyrptonaught.customportalapi.CustomPortalApiRegistry;
 import net.kyrptonaught.customportalapi.CustomPortalBlock;
 import net.kyrptonaught.customportalapi.util.PortalLink;
@@ -12,20 +14,19 @@ import net.minecraft.world.dimension.PortalManager;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ClientPlayerEntity.class)
 public class ClientPlayerEntityMixin {
 
-    @Redirect(method = "tickNausea", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sound/SoundManager;play(Lnet/minecraft/client/sound/SoundInstance;)V"))
-    public void playCustomPortalAmbiance(SoundManager instance, SoundInstance sound) {
+    @WrapOperation(method = "tickNausea", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/sound/SoundManager;play(Lnet/minecraft/client/sound/SoundInstance;)V"))
+    public void playCustomPortalAmbiance(SoundManager instance, SoundInstance sound, Operation<Void> original) {
         ClientPlayerEntity player = (ClientPlayerEntity) (Object) this;
         PortalLink link = isCustomPortal(player);
         if (link != null && link.getInPortalAmbienceEvent().hasEvent()) {
-            instance.play(link.getInPortalAmbienceEvent().execute(player).getInstance());
+            original.call(instance, link.getInPortalAmbienceEvent().execute(player).getInstance());
             return;
         }
-        instance.play(sound);
+        original.call(instance, sound);
     }
 
     @Unique
