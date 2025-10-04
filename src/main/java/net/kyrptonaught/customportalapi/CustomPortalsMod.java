@@ -46,7 +46,7 @@ public class CustomPortalsMod implements ModInitializer {
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         UseItemCallback.EVENT.register(((player, world, hand) -> {
             ItemStack stack = player.getStackInHand(hand);
-            if (!world.isClient) {
+            if (!world.isClient()) {
                 Item item = stack.getItem();
                 if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
                     HitResult hit = player.raycast(6, 1, false);
