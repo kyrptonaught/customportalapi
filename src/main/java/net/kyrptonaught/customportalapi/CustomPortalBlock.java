@@ -24,6 +24,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.*;
+import net.minecraft.world.rule.*;
 import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,9 +102,9 @@ public class CustomPortalBlock extends Block implements Portal {
             world.addParticleClient(new BlockStateParticleEffect(CustomPortalsModClient.CUSTOMPORTALPARTICLE, getPortalBase(world, pos).getDefaultState()), d, e, f, g, h, j);
         }
     }
-
+    
     @Override
-    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
         if (entity.canUsePortals(false)) {
             entity.tryUsePortal(this, pos);
         }
@@ -116,7 +117,7 @@ public class CustomPortalBlock extends Block implements Portal {
     @Override
     public int getPortalDelay(ServerWorld world, Entity entity) {
         if (entity instanceof PlayerEntity playerEntity) {
-            return Math.max(1, world.getGameRules().getInt(playerEntity.getAbilities().invulnerable ? GameRules.PLAYERS_NETHER_PORTAL_CREATIVE_DELAY : GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY));
+            return Math.max(1, world.getGameRules().getValue(playerEntity.getAbilities().invulnerable ? GameRules.PLAYERS_NETHER_PORTAL_CREATIVE_DELAY : GameRules.PLAYERS_NETHER_PORTAL_DEFAULT_DELAY));
         } else {
             return 0;
         }
