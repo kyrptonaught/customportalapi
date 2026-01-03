@@ -4,6 +4,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.kyrptonaught.customportalapi.api.*;
+import net.kyrptonaught.customportalapi.event.*;
 import net.kyrptonaught.customportalapi.networking.ForcePlacePacket;
 import net.kyrptonaught.customportalapi.networking.LinkSyncPacket;
 import net.kyrptonaught.customportalapi.portal.PortalIgnitionSource;
@@ -15,11 +17,10 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.piston.PistonBehavior;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.sound.*;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.BlockHitResult;
@@ -27,7 +28,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.PersistentStateManager;
 import net.minecraft.world.World;
-
 
 public class CustomPortalsMod implements ModInitializer {
     public static final String MOD_ID = "customportalapi";
@@ -46,7 +46,7 @@ public class CustomPortalsMod implements ModInitializer {
         CustomPortalApiRegistry.registerPortalFrameTester(FLATPORTAL_FRAMETESTER, FlatPortalAreaHelper::new);
         UseItemCallback.EVENT.register(((player, world, hand) -> {
             ItemStack stack = player.getStackInHand(hand);
-            if (!world.isClient) {
+            if (!world.isClient()) {
                 Item item = stack.getItem();
                 if (PortalIgnitionSource.isRegisteredIgnitionSourceWith(item)) {
                     HitResult hit = player.raycast(6, 1, false);
@@ -66,9 +66,9 @@ public class CustomPortalsMod implements ModInitializer {
         PayloadTypeRegistry.playS2C().register(ForcePlacePacket.PACKET_ID, ForcePlacePacket.codec);
 
         /*
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(Identifier.of("the_nether")).lightWithWater().setPortalSearchYRange(126, 256).tintColor(125, 20, 20).registerPortal();
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.OBSIDIAN).destDimID(Identifier.of("the_end")).tintColor(66, 135, 245).registerPortalForced();
-        CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(Identifier.of("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.GLOWSTONE).destDimID(Identifier.ofVanilla("the_nether")).lightWithWater().setPortalSearchYRange(126, 256).tintColor(125, 20, 20).registerPortal();
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.OBSIDIAN).destDimID(Identifier.ofVanilla("the_end")).tintColor(66, 135, 245).registerPortalForced();
+        CustomPortalBuilder.beginPortal().frameBlock(Blocks.COBBLESTONE).lightWithItem(Items.STICK).destDimID(Identifier.ofVanilla("the_end")).tintColor(45, 24, 45).flatPortal().registerPortal();
 
 
         CustomPortalBuilder.beginPortal()
@@ -80,7 +80,7 @@ public class CustomPortalsMod implements ModInitializer {
                 .registerInPortalAmbienceSound(player -> new CPASoundEventData(SoundEvents.BLOCK_ANVIL_LAND, player.getRandom().nextFloat() * 0.4F + 0.8F, 0.25F))
                 .registerPostTPPortalAmbience(player -> new CPASoundEventData(SoundEvents.BLOCK_ANVIL_LAND, player.getRandom().nextFloat() * 0.4F + 0.8F, 0.25F))
                 .registerPortal();
-*/
+        */
     }
 
     public static void logError(String message) {

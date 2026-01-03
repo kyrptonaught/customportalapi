@@ -63,7 +63,7 @@ public class InGameHudMixin {
         }
 
         if (portalBlock instanceof CustomPortalBlock) {
-            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(((CustomPortalBlock) portalBlock).getPortalBase(player.clientWorld, portalPos));
+            PortalLink link = CustomPortalApiRegistry.getPortalLinkFromBase(((CustomPortalBlock) portalBlock).getPortalBase(player.getEntityWorld(), portalPos));
             if (link != null) {
                 lastColor = link.colorID;
                 return;
