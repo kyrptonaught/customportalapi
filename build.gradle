@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.11-SNAPSHOT'
+	id 'fabric-loom' version '1.14-SNAPSHOT'
 	id 'maven-publish'
 }
 
@@ -51,19 +51,4 @@ jar {
 
 // configure the maven publication
 publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			artifactId archivesBaseName
-			from components.java
-		}
-	}
-	repositories {
-		maven {
-			url ='s3://maven.kyrptonaught.dev'
-			credentials(AwsCredentials) {
-				accessKey = System.getenv('maven-key-id')
-				secretKey = System.getenv('maven-key')
-			}
-		}
-	}
 }

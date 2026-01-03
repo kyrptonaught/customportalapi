@@ -37,7 +37,7 @@ public class ClientPlayerEntityMixin {
         BlockPos portalPos = portalManager != null && portalManager.isInPortal() ? ((PortalManagerAccessor) portalManager).getPos() : null;
 
         if (portalBlock instanceof CustomPortalBlock)
-            return CustomPortalApiRegistry.getPortalLinkFromBase(((CustomPortalBlock) portalBlock).getPortalBase(player.clientWorld, portalPos));
+            return CustomPortalApiRegistry.getPortalLinkFromBase(((CustomPortalBlock) portalBlock).getPortalBase(player.getEntityWorld(), portalPos));
 
         return null;
     }
